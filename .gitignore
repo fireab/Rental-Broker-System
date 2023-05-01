@@ -1,0 +1,17 @@
+# Ignore config and env folders
+client/config/
+client/.env
+server/src/config/
+server/.env
+
+client/dist/
+client/build/
+server/dist/
+server/build/
+
+# Ignore node_modules
+client/node_modules/
+server/node_modules/
+
+# Ignote vite cache
+client/.vite/
