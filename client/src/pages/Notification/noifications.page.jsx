@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Messages = () => {
+const Notifications = () => {
     return (
         <div className='h-screen'>
-            Messages
+            Notifications
         </div>
     );
 }
 
-export default Messages;
+export default Notifications;

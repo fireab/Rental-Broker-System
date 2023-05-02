@@ -18,6 +18,8 @@ import FavoriteRentalsPage from "./pages/User/Account/FavoriteRentals.page";
 import ProfilePage from "./pages/User/Profile.page";
 import CreateListingPage from "./pages/User/RentalProperty/CreateListing.page";
 import EditPropertyPage from "./pages/User/RentalProperty/EditProperty.page";
+import Navbar from "./components/common/Navbar";
+import Notifications from "./pages/Notification/noifications.page";
 
 const route = createBrowserRouter([
 	{
@@ -54,10 +56,6 @@ const route = createBrowserRouter([
 			{
 				path: "about",
 				Component: AboutPage,
-			},
-			{
-				path: "*",
-				Component: () => <div>404</div>,
 			},
 		],
 	},
@@ -116,6 +114,10 @@ const route = createBrowserRouter([
 				Component: Message,
 			},
 			{
+				path: "notifications",
+				Component: Notifications,
+			},
+			{
 				path: "rentals",
 				Component: PropertyListPage, // list of all user properties from a other user
 			},
@@ -132,6 +134,10 @@ const route = createBrowserRouter([
 				Component: EditProfilePage,
 			},
 		],
+	},
+	{
+		path: "*",
+		Component: () => <div>404</div>,
 	},
 ]);
 // const route = createBrowserRouter([
