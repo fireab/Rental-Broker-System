@@ -40,7 +40,7 @@ const LoginPage = () => {
 								</RouterLink>
 							</div>
 							<div>
-								<RouterLink to="/signup">
+								<RouterLink to="/register">
 									<Button backgroundColor={"#EDF2FA"} className="shadow-sm hover:shadow-xl hover:scale-110" _hover={{ backgroundColor: "#2b6cb0", color: "white", transition: "all 0.1s ease-in" }} colorScheme="facebook" variant={"outline"} leftIcon={<Plus size={18} />}>
 										<span className="text-xs font-bold">CREATE AN ACCOUNT</span>
 									</Button>
