@@ -25,12 +25,12 @@ const LoginPage = () => {
 	return (
 		<main className="bg-[#EDF2F4]">
 			<div className="fixed w-full">
-				<div className="flex  ">
-					<div className="w-1/2 p-4 ">
+				<div className="flex  items-center">
+					<div className="hidden md:block md:w-1/2 p-4 ">
 						<span className="bg-red-500 ">Logo</span>
 					</div>
-					<div className=" w-1/2">
-						<div className="flex justify-between items-center p-4 px-12">
+					<div className="w-full md:w-1/2">
+						<div className="flex justify-between items-center p-4">
 							<div>
 								<RouterLink to="/">
 									<div className="text-[#2b6cb0] font-bold p-3  flex justify-center items-center">
@@ -50,14 +50,17 @@ const LoginPage = () => {
 					</div>
 				</div>
 			</div>
-			<div className="flex h-screen w-screen">
+			<div className="flex h-screen w-screen ">
 				<Image className="hidden md:block lg:w-1/2  bg-contain" src="https://images.unsplash.com/photo-1590069261209-f8e9b8642343?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1376&q=80" />
-				<div className="w-full flex-1 ">
+				<div className="w-full flex-1 py-4	">
 					<div className="h-full w-full flex flex-col justify-center items-center space-y-6">
 						<div className=" text-center">
+							<div className="md:hidden block p-4 ">
+								<span className="bg-red-500 ">Logo</span>
+							</div>
 							<span className="font-bold text-2xl tracking-wider">Login to your account</span>
 						</div>
-						<div className="w-full px-20">
+						<div className="w-full px-8 md:px-24">
 							<form onSubmit={formik.handleSubmit}>
 								<Stack spacing="6">
 									<FormControl id="email">
@@ -84,8 +87,7 @@ const LoginPage = () => {
 										</InputGroup>
 									</FormControl>
 									{/* <Field as={Checkbox} id="rememberMe" name="rememberMe" colorScheme="purple"> */}
-									<Checkbox name="rememberMe" border={'20px'} borderColor={'#2b6aa0'} value={formik.values.rememberMe} onChange={formik.handleChange}>
-
+									<Checkbox name="rememberMe" border={"20px"} borderColor={"#2b6aa0"} value={formik.values.rememberMe} onChange={formik.handleChange}>
 										Remember me?
 									</Checkbox>
 									{/* </Field> */}
