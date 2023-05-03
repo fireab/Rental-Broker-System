@@ -1,7 +1,7 @@
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, IconButton, Input, useDisclosure } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { Link as RouterLink, NavLink } from "react-router-dom";
+import { NavLink, Link as RouterLink } from "react-router-dom";
 import styled from "styled-components";
 import { ChevronRight, Menu2, Search } from "tabler-icons-react";
 
@@ -125,7 +125,7 @@ const Navbar = () => {
 							</LoginButton>
 						</div>
 						<div className="md:hidden">
-							<IconButton ref={btnRef} onClick={onOpen} className="" aria-label="Search database" borderColor={"#2b6cb0"} variant="outline" fontSize={25} icon={<HamburgerIcon />} />
+							<IconButton ref={btnRef} onClick={onOpen} className="" aria-label="Search database" borderColor={"#2b6cb0"}  variant="outline" color={'#2b6cb0'} fontSize={25}  _hover={{backgroundColor:"#2b6cb0",color:"white"}}  icon={<HamburgerIcon />} />
 							<Drawer isOpen={isOpen} placement="right" onClose={onClose} finalFocusRef={btnRef}>
 								<DrawerOverlay />
 								<DrawerContent>
