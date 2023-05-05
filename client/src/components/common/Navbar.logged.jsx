@@ -2,7 +2,7 @@ import { BellIcon, ChatIcon, ChevronDownIcon, EditIcon, EmailIcon, ExternalLinkI
 import { Avatar, Box, Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, IconButton, Image, Input, Link, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, Text, useBoolean, useBreakpointValue, useDisclosure } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { ChevronRight, Logout, Plus, Search } from "tabler-icons-react";
+import { ChevronRight, ClipboardList, Heart, Help, Logout, Plus, Search, Settings, User } from "tabler-icons-react";
 
 import MessageNav from "./../Message/message.nav";
 import NotificationNav from "./../notification/notification.nav";
@@ -33,7 +33,7 @@ const Navbar = () => {
 	return (
 		<nav className="p-2 shadow-md lg:shadow-xl bottom-shadow">
 			<div className="w-full h-full">
-				<div className="h-full flex items-center justify-between">
+				<div className="h-full flex items-center justify-between px-2">
 					<div className="flex justify-between items-center md:w-2/5 w-1/2">
 						<div>
 							<a href="" className="font-bold p-3">
@@ -55,8 +55,8 @@ const Navbar = () => {
 							</form>
 						</div>
 					</div>
-					<div className="flex justify-center space-x-3">
-						<div className="flex px-2 items-center justify-center space-x-4">
+					<div className="flex justify-center space-x-1">
+						<div className="flex items-center justify-evenly space-x-2">
 							<div className="px-2 hidden md:block">
 								<ul className="flex h-full justify-center items-center space-x-4 list-none">
 									<li className="font-bold text-[13px] ">
@@ -66,8 +66,8 @@ const Navbar = () => {
 									</li>
 									<li className="font-bold ">
 										<RouterLink to="/">
-											<Button colorScheme="blue" variant={"outline"} fontWeight={"extrabold"} leftIcon={<Plus />}>
-												<span className="text-sm">CREATE A LISTING</span>
+											<Button colorScheme="blue" _hover={{ bgColor: "#2b6cb0", color: "white", scale: "1.2", transition: "all .2s ease-in" }} fontSize={12} variant={"outline"} fontWeight={"extrabold"} leftIcon={<Plus size={16} />}>
+												<span className="text-xs font-bold">CREATE A LISTING</span>
 											</Button>
 										</RouterLink>
 									</li>
@@ -76,17 +76,13 @@ const Navbar = () => {
 							<div className="h-full flex justify-center items-center ">
 								{isMobile ? (
 									<Link as={RouterLink} to="/user/messages">
-										<IconButton colorScheme="blue" aria-label="Chat" variant="ghost" fontSize={25} rounded={"full"} icon={<BellIcon />} />
+										<IconButton colorScheme="blue" aria-label="Chat" variant="ghost" fontSize={20} rounded={"full"} icon={<BellIcon />} />
 									</Link>
 								) : (
 									<Menu>
-										<MenuButton as={IconButton} aria-label="Options" icon={<BellIcon fontSize={25} />} variant="ghost" colorScheme="blue" rounded={"full"} />
+										<MenuButton as={IconButton} aria-label="Options" icon={<BellIcon fontSize={20} />} variant="ghost" colorScheme="blue" rounded={"full"} />
 										<MenuList width={"sm"}>
-											<NotificationNav
-												head="New Rental Application Received"
-												body="Lorem ipsum dolor, sit amet consectetur adipisicing elit. A magni, repellendus excepturi asperiores autem quidem fuga iste quas blanditiis minima exercitationem dignissimos fugit. Eius et consequatur voluptas expedita praesentium numquam?
-"
-											/>
+											<NotificationNav head="New Rental Application Received" body="Lorem ipsum dolor, sit amet consectetur adipisicing elit. A magni, repellendus excepturi asperiores autem quidem fuga iste quas blanditiis minima exercitationem dignissimos fugit. Eius et consequatur voluptas expedita praesentium numquam?" />
 										</MenuList>
 									</Menu>
 								)}
@@ -99,14 +95,14 @@ const Navbar = () => {
 											aria-label="Chat"
 											//   size='lg'
 											variant="ghost"
-											fontSize={25}
+											fontSize={20}
 											rounded={"full"}
 											icon={<ChatIcon />}
 										/>
 									</Link>
 								) : (
 									<Menu>
-										<MenuButton as={IconButton} aria-label="Options" icon={<ChatIcon fontSize={25} />} variant="ghost" colorScheme="blue" rounded={"full"} />
+										<MenuButton as={IconButton} aria-label="Options" icon={<ChatIcon fontSize={20} />} variant="ghost" colorScheme="blue" rounded={"full"} />
 										<MenuList width={"sm"}>
 											<MessageNav user="Dilamo Wondimu" message="This is the message" />
 										</MenuList>
@@ -127,34 +123,52 @@ const Navbar = () => {
 										<MenuList>
 											<MenuItem>
 												<RouterLink to="/">
-													<span className="text-sm font-semibold text-[#2b6cb0]">Profile</span>
+													<div className="flex items-center">
+														<User color="#2b6cb0" size={25} />
+														<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Profile</span>
+													</div>
 												</RouterLink>
 											</MenuItem>
 											<MenuItem>
 												<RouterLink to="/">
-													<span className="text-sm font-semibold text-[#2b6cb0]">Property Listings</span>
+													<div className="flex items-center">
+														<ClipboardList color="#2b6cb0" size={25} />
+														<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Property Listings</span>
+													</div>
 												</RouterLink>
 											</MenuItem>
 											<MenuItem>
 												<RouterLink to="/">
-													<span className="text-sm font-semibold text-[#2b6cb0]">Favorite Listings</span>
+													<div className="flex items-center">
+														<Heart color="#2b6cb0" size={25} />
+														<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Favorite Listings</span>
+													</div>
 												</RouterLink>
 											</MenuItem>
 											<MenuItem>
 												<RouterLink to="/">
-													<span className="text-sm 	font-semibold text-[#2b6cb0]">Account Settings</span>
+													<div className="flex items-center">
+														<Settings color="#2b6cb0" size={25} />
+														<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Account Settings</span>
+													</div>
 												</RouterLink>
 											</MenuItem>
 											<MenuDivider />
 
 											<MenuItem>
 												<RouterLink to="/">
-													<span className="text-sm font-semibold text-[#2b6cb0]">Help and Support</span>
+													<div className="flex items-center">
+														<Help color="#2b6cb0" size={25} />
+														<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Help and Support</span>
+													</div>
 												</RouterLink>
 											</MenuItem>
 											<MenuItem>
 												<RouterLink to="/">
-													<span className="text-sm font-semibold text-[#2b6cb0]">Logout</span>
+													<div className="flex items-center">
+														<Logout color="#2b6cb0" size={25} />
+														<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Logout</span>
+													</div>
 												</RouterLink>
 											</MenuItem>
 										</MenuList>
@@ -229,7 +243,7 @@ const Navbar = () => {
 															<span className="text-[#2b6cb0]">Help and Support</span>
 														</RouterLink>
 														<RouterLink to="">
-															<Button onClick={handleCloseDrawer}  leftIcon={<Logout />}  color={'red'} variant="solid">
+															<Button onClick={handleCloseDrawer} leftIcon={<Logout />} color={"red"} variant="solid">
 																Logout
 															</Button>
 														</RouterLink>
