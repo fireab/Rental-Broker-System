@@ -22,123 +22,127 @@ import Navbar from "./components/common/Navbar";
 import Notifications from "./pages/Notification/noifications.page";
 
 const route = createBrowserRouter([
-	{
-		path: "/",
-		element: <Outlet />,
-		children: [
-			{
-				path: "register",
-				Component: RegisterPage,
-			},
-			{
-				path: "login",
-				Component: LoginPage,
-			},
-		],
-	},
-	{
-		path: "/",
-		element: (
-			<Layout>
-				<Outlet />
-			</Layout>
-		),
-		children: [
-			{
-				index: true,
-				Component: Homepage,
-			},
-			{
-				path: "contact",
-				Component: ContactUsPage,
-			},
+  {
+    path: "ala",
+    element: <Homepage />,
+  },
+  {
+    path: "/",
+    element: <Outlet />,
+    children: [
+      {
+        path: "register",
+        Component: RegisterPage,
+      },
+      {
+        path: "login",
+        Component: LoginPage,
+      },
+    ],
+  },
+  {
+    path: "/",
+    element: (
+      <Layout>
+        <Outlet />
+      </Layout>
+    ),
+    children: [
+      {
+        index: true,
+        Component: Homepage,
+      },
+      {
+        path: "contact",
+        Component: ContactUsPage,
+      },
 
-			{
-				path: "about",
-				Component: AboutPage,
-			},
-		],
-	},
-	{
-		path: "rentals",
-		element: (
-			<Layout>
-				<Outlet />
-			</Layout>
-		),
-		children: [
-			{
-				index: true,
-				Component: RentalsPage, // list of properties for rent from all users
-			},
-			{
-				path: "search",
-				Component: SearchResultsPage, // list of searched properties from a users
-			},
-			{
-				path: ":id",
-				Component: PropertyDetailPage, // property detail page for a specific property from other user
-			},
-		],
-	},
-	{
-		path: ":user",
-		element: (
-			<Layout>
-				<Outlet />
-			</Layout>
-		),
-		children: [
-			{
-				index: true,
-				Component: ProfilePage,
-			},
-			{
-				path: "CreateAd",
-				Component: CreateListingPage,
-			},
-			{
-				path: "EditAd/:id",
-				Component: EditPropertyPage,
-			},
-			{
-				path: "Ad/:id",
-				Component: PropertyDetailPage,
-			},
-			{
-				path: "messages",
-				Component: Messages,
-			},
-			{
-				path: "messages/:id",
-				Component: Message,
-			},
-			{
-				path: "notifications",
-				Component: Notifications,
-			},
-			{
-				path: "rentals",
-				Component: PropertyListPage, // list of all user properties from a other user
-			},
-			{
-				path: "settings",
-				Component: AccountSettingPage,
-			},
-			{
-				path: "favorites",
-				Component: FavoriteRentalsPage,
-			},
-			{
-				path: "EditProfile",
-				Component: EditProfilePage,
-			},
-		],
-	},
-	{
-		path: "*",
-		Component: () => <div>404</div>,
-	},
+      {
+        path: "about",
+        Component: AboutPage,
+      },
+    ],
+  },
+  {
+    path: "rentals",
+    element: (
+      <Layout>
+        <Outlet />
+      </Layout>
+    ),
+    children: [
+      {
+        index: true,
+        Component: RentalsPage, // list of properties for rent from all users
+      },
+      {
+        path: "search",
+        Component: SearchResultsPage, // list of searched properties from a users
+      },
+      {
+        path: ":id",
+        Component: PropertyDetailPage, // property detail page for a specific property from other user
+      },
+    ],
+  },
+  {
+    path: ":user",
+    element: (
+      <Layout>
+        <Outlet />
+      </Layout>
+    ),
+    children: [
+      {
+        index: true,
+        Component: ProfilePage,
+      },
+      {
+        path: "CreateAd",
+        Component: CreateListingPage,
+      },
+      {
+        path: "EditAd/:id",
+        Component: EditPropertyPage,
+      },
+      {
+        path: "Ad/:id",
+        Component: PropertyDetailPage,
+      },
+      {
+        path: "messages",
+        Component: Messages,
+      },
+      {
+        path: "messages/:id",
+        Component: Message,
+      },
+      {
+        path: "notifications",
+        Component: Notifications,
+      },
+      {
+        path: "rentals",
+        Component: PropertyListPage, // list of all user properties from a other user
+      },
+      {
+        path: "settings",
+        Component: AccountSettingPage,
+      },
+      {
+        path: "favorites",
+        Component: FavoriteRentalsPage,
+      },
+      {
+        path: "EditProfile",
+        Component: EditProfilePage,
+      },
+    ],
+  },
+  {
+    path: "*",
+    Component: () => <div>404</div>,
+  },
 ]);
 // const route = createBrowserRouter([
 // 	{
