@@ -1,9 +1,8 @@
-import { BellIcon, EmailIcon, LockIcon } from "@chakra-ui/icons";
 import { Button, Checkbox, FormControl, FormErrorMessage, FormHelperText, FormLabel, Image, Input, InputGroup, InputLeftElement, Stack } from "@chakra-ui/react";
 import { Field, useFormik } from "formik";
 import React, { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { ChevronLeft, Plus } from "tabler-icons-react";
+import { ChevronLeft, Lock, Mail, Plus } from "tabler-icons-react";
 
 const LoginPage = () => {
 	const [loading, setLoding] = useState(false);
@@ -25,15 +24,15 @@ const LoginPage = () => {
 	return (
 		<main className="bg-[#EDF2F4]">
 			<div className="fixed w-full">
-				<div className="flex  items-center">
-					<div className="hidden md:block md:w-1/2 p-4 ">
+				<div className="flex  items-center p-4">
+					<div className="hidden md:block md:w-1/2 ">
 						<span className="bg-red-500 ">Logo</span>
 					</div>
-					<div className="w-full md:w-1/2">
-						<div className="flex justify-between items-center p-4">
+					<div className="w-full md:w-1/2 px-2">
+						<div className="flex justify-between items-center">
 							<div>
 								<RouterLink to="/">
-									<div className="text-[#2b6cb0] font-bold p-3  flex justify-center items-center">
+									<div className="text-[#2b6cb0] font-bold flex justify-center items-center">
 										<ChevronLeft />
 										<span>Back</span>
 									</div>
@@ -52,24 +51,24 @@ const LoginPage = () => {
 			</div>
 			<div className="flex h-screen w-screen ">
 				<Image className="hidden md:block lg:w-1/2  bg-contain" src="https://images.unsplash.com/photo-1590069261209-f8e9b8642343?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1376&q=80" />
-				<div className="w-full flex-1 py-4	">
-					<div className="h-full w-full flex flex-col justify-center items-center space-y-6">
+				<div className="w-full flex-1 py-4 flex justify-center items-center	">
+					<div className="h-full lg:w-3/4 w-full flex flex-col px-4 justify-center items-center space-y-6">
 						<div className=" text-center">
-							<div className="md:hidden block p-4 ">
+							<div className="md:hidden block px-4">
 								<span className="bg-red-500 ">Logo</span>
 							</div>
 							<span className="font-bold text-2xl tracking-wider">Login to your account</span>
 						</div>
-						<div className="w-full px-8 md:px-24">
+						<div className="w-full">
 							<form onSubmit={formik.handleSubmit}>
 								<Stack spacing="6">
 									<FormControl id="email">
 										<FormLabel>
 											<span className="text-sm">Email address</span>
 										</FormLabel>
-										<InputGroup className="bg-white/40">
+										<InputGroup size="lg" className="bg-white/40">
 											<InputLeftElement pointerEvents="none">
-												<EmailIcon color={"#2b6cb0"} />
+												<Mail color={"#2b6cb0"} />
 											</InputLeftElement>
 											<Input type="email" name="email" value={formik.values.email} onChange={formik.handleChange} border={"1px"} _hover={{ borderColor: "#2b6cb0" }} borderColor={"gray"} />
 										</InputGroup>
@@ -79,9 +78,9 @@ const LoginPage = () => {
 										<FormLabel>
 											<span className="text-sm">Password</span>
 										</FormLabel>
-										<InputGroup className="bg-white/40">
+										<InputGroup size="lg" className="bg-white/40" >
 											<InputLeftElement pointerEvents="none">
-												<LockIcon color={"#2b6cb0"} />
+												<Lock color={"#2b6cb0"} />
 											</InputLeftElement>
 											<Input type="password" name="password" value={formik.values.password} onChange={formik.handleChange} border={"1px"} _hover={{ borderColor: "#2b6cb0" }} borderColor={"gray"} />
 										</InputGroup>
