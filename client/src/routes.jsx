@@ -23,7 +23,7 @@ import Notifications from "./pages/Notification/noifications.page";
 
 const route = createBrowserRouter([
   {
-    path: "ala",
+    path: "cards",
     element: <Homepage />,
   },
   {

@@ -5,6 +5,7 @@ import { NavLink, Link as RouterLink } from "react-router-dom";
 import styled from "styled-components";
 import { ChevronRight, Menu2, Search } from "tabler-icons-react";
 
+
 const LoginButton = styled(NavLink)`
 	border: none;
 	transition: all 0.3s ease-in-out;

@@ -37,6 +37,7 @@ const ImageSlider = ({ images }) => {
             margin="auto"
             py={8}
             px={4}
+            
             rounded="2xl"
             position="relative"
         >
