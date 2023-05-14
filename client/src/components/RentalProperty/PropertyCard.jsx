@@ -74,6 +74,7 @@ export default function PropertyCard() {
                 <Flex position="absolute" top="50%" right="5" transform="translateY(-50%)" alignItems="center">
                     <IconButton
                         aria-label="Next Slide"
+                        
                         icon={<ChevronRightIcon/>}
                         size="lg"
                         onClick={nextSlide}
@@ -83,9 +84,9 @@ export default function PropertyCard() {
                         bg='none' 
                     />
                 </Flex>
-                <CardBody padding={0}>
-                    <Flex padding={3} alignItems='center' align='center'>
-                            <Heading size='md' >Nmae of the object</Heading>
+                <CardBody padding={3}>
+                    <Flex alignItems='center' align='center'>
+                            <Heading size='md' color={'gray.800'} >Nmae of the object</Heading>
                             <Spacer  />
                             <StarIcon 
                             color='gray.700'
@@ -93,36 +94,17 @@ export default function PropertyCard() {
                             />
                             <Text padding='2'>4.38</Text>
                     </Flex>
+                    <Box color={'gray.500'}>
+                        <Text >Product by,</Text>
+                        <Text>additiona info</Text>
+                    </Box>
                 </CardBody>       
                 
-               <CardFooter>
-                    <Button bg='gray.400'>View here</Button>
+               <CardFooter padding={3}>
+                    <Text color={'gray.700'}>$100</Text>
                 </CardFooter>
             </Card>            
-            <Card padding={0} bg='none'>
-                <Image className="rounded-t-md"
-                    objectFit='cover'
-                    src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
-                    alt='Green double couch with wooden legs'
-                    borderTopRadius='md'
-                />
-                <CardBody padding={0}>
-                <CardHeader>
-                    <Heading size='md'> Customer dashboard</Heading>
-                </CardHeader>       
-                <CardFooter>
-                    <Button size='sm' colorScheme='gray'>View here</Button>
-                </CardFooter>
-                </CardBody>
-            </Card>
         </Grid>
-            <Flex>
-                <Box w='70px' h='10' bg='red.500' />
-                <Spacer />
-                <Box w='170px' h='10' bg='blue.500' />
-                <Spacer />
-                <Box w='180px' h='10' bg='green.500' />
-            </Flex>
     </div>
   )
 }
