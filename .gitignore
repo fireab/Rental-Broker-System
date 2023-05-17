@@ -12,6 +12,7 @@ server/build/
 # Ignore node_modules
 client/node_modules/
 server/node_modules/
+**/node_modules
 
 # Ignote vite cache
 client/.vite/
