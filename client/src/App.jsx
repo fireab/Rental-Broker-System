@@ -1,8 +1,10 @@
-import "./App.css";
-import { RouterProvider } from "react-router-dom";
-import route from "./routes";
 import { ChakraProvider } from "@chakra-ui/react";
+import { RouterProvider } from "react-router-dom";
+
+import route from "./routes";
 import theme from "./styles/chakraUI.theme/theme.fonts";
+
+import "./App.css";
 
 function App() {
 	return (

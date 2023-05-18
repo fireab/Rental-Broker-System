@@ -23,11 +23,207 @@ const languages = [
 	{ name: "Amheric", value: "Amheric" },
 	{ name: "Afan Oromo", value: "Afan Oromo" },
 ];
-const cities = [
-	{ name: "Hossana", value: "Hossana" },
-	{ name: "Addis Ababa", value: "Addis Ababa" },
-	{ name: "Dukerm", value: "Dukerm" },
+const regions = [
+	{
+		name: "Addis Ababa",
+		value: "Addis Ababa",
+	},
+	{
+		name: "Afar",
+		value: "Afar",
+	},
+	{
+		name: "Amhara",
+		value: "Amhara",
+	},
+	{
+		name: "Benishangul-Gumuz",
+		value: "Benishangul-Gumuz",
+	},
+	{
+		name: "Dire Dawa",
+		value: "Dire Dawa",
+	},
+	{
+		name: "Gambela",
+		value: "Gambela",
+	},
+	{
+		name: "Harari",
+		value: "Harari",
+	},
+	{
+		name: "Oromia",
+		value: "Oromia",
+	},
+	{
+		name: "Sidama",
+		value: "Sidama",
+	},
+	{
+		name: "Somali",
+		value: "Somali",
+	},
+	{
+		name: "Southern Nations, Nationalities, and Peoples' Region",
+		value: "Southern Nations, Nationalities, and Peoples' Region",
+	},
+	{
+		name: "Tigray",
+		value: "Tigray",
+	},
 ];
+
+// list of city of every region {addis abab: [{addis abab}] }
+const cities = {
+	"Addis Ababa": [
+		{ name: "Addis Ababa", value: "Addis Ababa" },
+		{ name: "Addis Ketema", value: "Addis Ketema" },
+		{ name: "Akaki Kaliti", value: "Akaki Kaliti" },
+		{ name: "Arada", value: "Arada" },
+		{ name: "Bole", value: "Bole" },
+		{ name: "Gulele", value: "Gulele" },
+		{ name: "Kirkos", value: "Kirkos" },
+		{ name: "Kolfe Keranio", value: "Kolfe Keranio" },
+		{ name: "Lideta", value: "Lideta" },
+		{ name: "Nefas Silk Lafto", value: "Nefas Silk Lafto" },
+		{ name: "Yeka", value: "Yeka" },
+		{ name: "Addis Ababa", value: "Addis Ababa" },
+	],
+	Afar: [
+		{ name: "Semera", value: "Semera" },
+		{ name: "Awash", value: "Awash" },
+		{ name: "Gewane", value: "Gewane" },
+		{ name: "Dubti", value: "Dubti" },
+		{ name: "Mile", value: "Mile" },
+		{ name: "Asaita", value: "Asaita" },
+		{ name: "Elidar", value: "Elidar" },
+		{ name: "Chifra", value: "Chifra" },
+	],
+	Amhara: [
+		{ name: "Bahir Dar", value: "Bahir Dar" },
+		{ name: "Gondar", value: "Gondar" },
+		{ name: "Debre Markos", value: "Debre Markos" },
+		{ name: "Dessie", value: "Dessie" },
+		{ name: "Kombolcha", value: "Kombolcha" },
+		{ name: "Debre Birhan", value: "Debre Birhan" },
+		{ name: "Giyorgis", value: "Giyorgis" },
+		{ name: "Finote Selam", value: "Finote Selam" },
+		{ name: "Debre Tabor", value: "Debre Tabor" },
+		{ name: "Woldia", value: "Woldia" },
+		{ name: "Debre Sina", value: "Debre Sina" },
+		{ name: "Debre Berhan", value: "Debre Berhan" },
+	],
+	"Benishangul-Gumuz": [
+		{ name: "Assosa", value: "Assosa" },
+		{ name: "Menge", value: "Menge" },
+		{ name: "Bambasi", value: "Bambasi" },
+		{ name: "Guba", value: "Guba" },
+		{ name: "Kurmuk", value: "Kurmuk" },
+		{ name: "Mao-Komo special woreda", value: "Mao-Komo special woreda" },
+	],
+	"Dire Dawa": [{ name: "Dire Dawa", value: "Dire Dawa" }],
+	Gambela: [
+		{ name: "Gambela", value: "Gambela" },
+		{ name: "Abobo", value: "Abobo" },
+		{ name: "Dimma", value: "Dimma" },
+		{ name: "Gog", value: "Gog" },
+		{ name: "Itang", value: "Itang" },
+		{ name: "Jikawo", value: "Jikawo" },
+		{ name: "Lare", value: "Lare" },
+		{ name: "Mengesh", value: "Mengesh" },
+		{ name: "Nuer", value: "Nuer" },
+	],
+	Harari: [
+		{ name: "Harar", value: "Harar" },
+		{ name: "Gursum", value: "Gursum" },
+	],
+	Oromia: [
+		{ name: "Adama", value: "Adama" },
+		{ name: "Jimma", value: "Jimma" },
+		{ name: "Shashamane", value: "Shashamane" },
+		{ name: "Ambo", value: "Ambo" },
+		{ name: "Bale Robe", value: "Bale Robe" },
+		{ name: "Bishoftu", value: "Bishoftu" },
+		{ name: "Burayu", value: "Burayu" },
+		{ name: "Dukem", value: "Dukem" },
+		{ name: "Goba", value: "Goba" },
+		{ name: "Hawassa", value: "Hawassa" },
+		{ name: "Nekemte", value: "Nekemte" },
+		{ name: "Sebeta", value: "Sebeta" },
+		{ name: "Woliso", value: "Woliso" },
+		{ name: "Ziway", value: "Ziway" },
+		{ name: "Asella", value: "Asella" },
+		{ name: "Bako", value: "Bako" },
+		{ name: "Bedele", value: "Bedele" },
+		{ name: "Bekoji", value: "Bekoji" },
+		{ name: "Bonga", value: "Bonga" },
+	],
+	Somali: [
+		{ name: "Jijiga", value: "Jijiga" },
+		{ name: "Gode", value: "Gode" },
+		{ name: "Kebri Beyah", value: "Kebri Beyah" },
+		{ name: "Shilavo", value: "Shilavo" },
+		{ name: "Werder", value: "Werder" },
+		{ name: "Dollo", value: "Dollo" },
+		{ name: "Degehabur", value: "Degehabur" },
+		{ name: "Kelafo", value: "Kelafo" },
+		{ name: "Kebri Dahar", value: "Kebri Dahar" },
+	],
+	"Southern Nations, Nationalities, and Peoples' Region": [
+		{ name: "Awasa", value: "Awasa" },
+		{ name: "Arba Minch", value: "Arba Minch" },
+		{ name: "Hosaena", value: "Hosaena" },
+		{ name: "Jinka", value: "Jinka" },
+		{ name: "Sodo", value: "Sodo" },
+		{ name: "Yirga Alem", value: "Yirga Alem" },
+		{ name: "Yabelo", value: "Yabelo" },
+		{ name: "Wendo", value: "Wendo" },
+		{ name: "Wolkite", value: "Wolkite" },
+		{ name: "Waka", value: "Waka" },
+		{ name: "Shakiso", value: "Shakiso" },
+		{ name: "Sawla", value: "Sawla" },
+		{ name: "Soddo Zuria", value: "Soddo Zuria" },
+		{ name: "Silti", value: "Silti" },
+		{ name: "Shone", value: "Shone" },
+		{ name: "Sankura", value: "Sankura" },
+		{ name: "Sodo", value: "Sodo" },
+		{ name: "Soro", value: "Soro" },
+		{ name: "Shebedino", value: "Shebedino" },
+		{ name: "Sawla", value: "Sawla" },
+	],
+	Tigray: [
+		{ name: "Mekelle", value: "Mekelle" },
+		{ name: "Adwa", value: "Adwa" },
+		{ name: "Axum", value: "Axum" },
+		{ name: "Humera", value: "Humera" },
+		{ name: "Shire", value: "Shire" },
+		{ name: "Adigrat", value: "Adigrat" },
+		{ name: "Adwa", value: "Adwa" },
+		{ name: "Adigrat", value: "Adigrat" },
+		{ name: "Adwa", value: "Adwa" },
+		{ name: "Adigrat", value: "Adigrat" },
+		{ name: "Adwa", value: "Adwa" },
+		{ name: "Adigrat", value: "Adigrat" },
+		{ name: "Adwa", value: "Adwa" },
+		{ name: "Adigrat", value: "Adigrat" },
+		{ name: "Adwa", value: "Adwa" },
+		{ name: "Adigrat", value: "Adigrat" },
+		{ name: "Adwa", value: "Adwa" },
+		{ name: "Adigrat", value: "Adigrat" },
+	],
+	Sidama: [
+		{ name: "Hawassa", value: "Hawassa" },
+		{ name: "Yirgalem", value: "Yirgalem" },
+		{ name: "Aleta Wendo", value: "Aleta Wendo" },
+		{ name: "Boditi", value: "Boditi" },
+	],
+};
+// const cities = [
+// 	{ name: "Hossana", value: "Hossana" },
+// 	{ name: "Addis Ababa", value: "Addis Ababa" },
+// 	{ name: "Dukerm", value: "Dukerm" },
+// ];
 const RegisterPage = () => {
 	const { isOpen: isOTPOpen, onOpen: onOTPOpen, onClose: onOTPClose } = useDisclosure();
 	const [registrationLoading, setregistrationLoding] = useState(false);
@@ -65,7 +261,7 @@ const RegisterPage = () => {
 			preferedLanguage: yup.string().oneOf(["English", "Amheric", "Afan Oromo"], "Prefered Language is required").notRequired().default("English"),
 			// emailNotification: yup.boolean().oneOf([true, false], ""),
 			// phoneNotification: yup.boolean().oneOf([true, false], ""),
-			address: yup.string().oneOf(["Hossana", "Addis Ababa", "Dukerm"], "City is required").notRequired().default("Addis Ababa"),
+			region: yup.string(),
 		}),
 	];
 
@@ -80,7 +276,7 @@ const RegisterPage = () => {
 		preferedLanguage: "English",
 		emailNotification: false,
 		phoneNotification: false,
-		address: "Addis Ababa",
+		region: "",
 	};
 
 	const handleSubmit = (values) => {
@@ -142,27 +338,24 @@ const RegisterPage = () => {
 											<div className=" flex-grow flex flex-col justify-evenly space-y-4 ">
 												{activeStep === 0 && (
 													<>
-														<InputField name="firstName" label="Firstname" leftIcon={<User color={"#2b6cb0"} />} type="text" />
-														<InputField name="lastName" label="Lastname" leftIcon={<User color={"#2b6cb0"} />} type="text" />
-														<InputField name="email" label="Email" leftIcon={<Mail color={"#2b6cb0"} />} type="text" />
-														<InputField name="phoneNumber" label="Phone Number" inputLeftAddon="+251" rightIcon={<PhoneIcon color={"#2b6cb0"} />} type="text" />
+														<InputField name="firstName" label="Firstname" leftIcon={<User size={22} strokeWidth={1.5} color={"#2b6cb0"} />} type="text" />
+														<InputField name="lastName" label="Lastname" leftIcon={<User size={22} strokeWidth={1.5} color={"#2b6cb0"} />} type="text" />
+														<InputField name="email" label="Email" leftIcon={<Mail size={22} strokeWidth={1.5} color={"#2b6cb0"} />} type="text" />
+														<InputField name="phoneNumber" label="Phone Number" inputLeftAddon="+251" rightIcon={<PhoneIcon size={22} strokeWidth={1.5} color={"#2b6cb0"} />} type="text" />
 													</>
 												)}
 												{activeStep === 1 && (
 													<>
-														<InputField liveValidate={true} name="username" label="Username" leftIcon={<User color={"#2b6cb0"} />} type="text" />
-														<InputField name="password" label="Password" leftIcon={<Password color={"#2b6cb0"} />} type="password" />
-														<InputField name="confirmPassword" label="Confirm Password" leftIcon={<Password color={"#2b6cb0"} />} type="password" />
+														<InputField liveValidate={true} name="username" label="Username" leftIcon={<User size={22} strokeWidth={1.5} color={"#2b6cb0"} />} type="text" />
+														<InputField name="password" label="Password" leftIcon={<Password size={22} strokeWidth={1.5} color={"#2b6cb0"} />} type="password" />
+														<InputField name="confirmPassword" label="Confirm Password" leftIcon={<Password size={22} strokeWidth={1.5} color={"#2b6cb0"} />} type="password" />
 													</>
 												)}
 												{activeStep === 2 && (
 													<>
 														<InputFieldSelect options={languages} name="preferedLanguage" label="prefered Language" type="select" />
-														<InputFieldSelect options={cities} name="address" label="Address" type="select" />
-														{/* <div className="flex justify-evenly items-center my-2">
-															<InputFieldCheckbox name="emailNotification" label="Email Notification" />
-															<InputFieldCheckbox name="phoneNotification" label="Email Notification" />
-														</div> */}
+														<InputFieldSelect options={regions} name="region" label="Region" type="select" placeholder="Select Region" />
+														{formik.values.region && <InputFieldSelect options={cities[formik.values.region]} name="city" label="City" type="select" placeholder="Select City" />}
 													</>
 												)}
 											</div>
