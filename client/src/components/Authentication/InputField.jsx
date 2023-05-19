@@ -3,9 +3,7 @@ import { FormControl, FormErrorMessage, FormLabel, Input, InputGroup, InputLeftA
 import { Field, useField } from "formik";
 import React from "react";
 import { PulseLoader } from "react-spinners";
-import { Backspace } from "tabler-icons-react";
 
-import Capitalize from "../../utils/Capitalize";
 import capitalize from "../../utils/Capitalize";
 
 const InputField = ({ label, leftIcon, rightIcon, isValidating, liveValidate, inputLeftAddon, ...props }) => {
