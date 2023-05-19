@@ -1,4 +1,5 @@
 import { Box, Step, StepDescription, StepIcon, StepIndicator, StepNumber, Stepper, StepSeparator, StepStatus, StepTitle } from "@chakra-ui/react";
+import { motion } from "framer-motion";
 import React from "react";
 
 const RegistrationStepper = (props) => {
@@ -8,9 +9,9 @@ const RegistrationStepper = (props) => {
 			<Stepper size="lg" index={activeStep}>
 				{steps.map((step, index) => (
 					<Step
+						className="text-white"
 						key={index}
 						onClick={() => {
-							console.log(activeStep);
 							if (index < activeStep && activeStep !== 0 && activeStep !== 2) {
 								setActiveStep(index);
 							}
@@ -21,9 +22,16 @@ const RegistrationStepper = (props) => {
 						</StepIndicator>
 
 						<Box flexShrink="0" className="">
-							<StepTitle>{step.title}</StepTitle>
-							<StepDescription fontSize={11}>{step.description[0]}</StepDescription>
-							<StepDescription fontSize={11}>{step.description[1]}</StepDescription>
+							<StepTitle>
+								<span className="text-white">{step.title}</span>
+							</StepTitle>
+
+							<StepDescription color={"white"} fontSize={11}>
+								{step.description[0]}
+							</StepDescription>
+							<StepDescription color={"white"} fontSize={11}>
+								{step.description[1]}
+							</StepDescription>
 						</Box>
 						<StepSeparator />
 					</Step>

@@ -14,7 +14,7 @@ const InputField = ({ label, leftIcon, rightIcon, liveValidate, inputLeftAddon, 
 				<span className="whitespace-nowrap">{capitalize(label)}</span>
 			</FormLabel>
 
-			<InputGroup size="md" className="bg-white/40">
+			<InputGroup size="lg" className="bg-white/40">
 				{inputLeftAddon && (
 					<InputLeftAddon bgColor={"#2b6aa0"}>
 						<span className="text-white font-bold text-sm">{inputLeftAddon}</span>
@@ -22,6 +22,8 @@ const InputField = ({ label, leftIcon, rightIcon, liveValidate, inputLeftAddon, 
 				)}
 				{leftIcon && <InputLeftElement>{leftIcon}</InputLeftElement>}
 				<Input
+					fontSize={"sm"}
+					color={"black"}
 					{...field}
 					autoComplete="off"
 					{...props}

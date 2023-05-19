@@ -1,6 +1,7 @@
 import { FormControl, FormLabel, InputGroup, Switch } from "@chakra-ui/react";
 import { useField } from "formik";
 import React from "react";
+
 import capitalize from "../../utils/Capitalize";
 
 const InputFieldCheckbox = ({ label, ...props }) => {

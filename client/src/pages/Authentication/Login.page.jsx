@@ -1,5 +1,6 @@
-import { Button, Image } from "@chakra-ui/react";
+import { Button, chakra, Image, shouldForwardProp } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
+import { isValidMotionProp, motion } from "framer-motion";
 import React, { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { ChevronLeft, Lock, Mail, Plus } from "tabler-icons-react";
@@ -9,6 +10,7 @@ import Header from "../../components/Authentication/header";
 import InputField from "./../../components/Authentication/InputField";
 import InputFieldCheckbox from "./../../components/Authentication/InputField.checkbox";
 
+const MotionButton = motion(Button);
 const LoginPage = () => {
 	const [loading, setLoding] = useState(false);
 	const initialValues = {
@@ -29,7 +31,7 @@ const LoginPage = () => {
 		rememberMe: yup.boolean().oneOf([true, false], ""),
 	});
 	return (
-		<main className="min-h-screen flex flex-col bg-gray-700/20">
+		<main className="min-h-screen flex flex-col bg-gradient-to-r from-[#870bad] to-[#d60c60]">
 			<div className="w-full h-16">
 				<div className="flex  items-center p-4">
 					<div className="hidden md:block md:w-1/2 ">
@@ -39,14 +41,14 @@ const LoginPage = () => {
 						<div className="flex justify-end space-x-8 items-center">
 							<div>
 								<RouterLink to="/">
-									<div className="text-[#2b6cb0] font-bold flex justify-center items-center">
+									<div className="text-white font-bold flex justify-center items-center">
 										<span>Home</span>
 									</div>
 								</RouterLink>
 							</div>
 							<div>
 								<RouterLink to="/register">
-									<Button color={"#2b6cb0"} backgroundColor={"#EDF2FA"} className="shadow-sm hover:shadow-xl hover:scale-110" _hover={{ backgroundColor: "#2b6cb0", color: "white", transition: "all 0.1s ease-in", borderColor: "#2b6cb0" }} border={"1px"} variant={"outline"} leftIcon={<Plus size={18} />}>
+									<Button color={"white"} backgroundColor={"transparent"} className="shadow-sm hover:shadow-xl hover:scale-110" _hover={{ backgroundColor: "#2b6cb0", color: "white", transition: "all 0.2s ease-in", borderColor: "#2b6cb0" }} border={"1px"} variant={"outline"} leftIcon={<Plus size={18} />}>
 										<span className="text-xs font-bold ">CREATE AN ACCOUNT</span>
 									</Button>
 								</RouterLink>
@@ -56,9 +58,9 @@ const LoginPage = () => {
 				</div>
 			</div>
 
-			<div style={{ maxHeight: "calc(100vh - 4rem)" }} className="flex flex-1 rounded-2xl">
+			<div style={{ maxHeight: "calc(100vh - 4rem)" }} className="flex flex-1 rounded-2xl shadow-2xl">
 				{/* <Image height={"full"} className="hidden h- md:block lg:w-1/2  bg-" src="https://images.unsplash.com/photo-1590069261209-f8e9b8642343" /> */}
-				<div className="flex flex-1 md:my-5 sm:mx-10  sm:rounded-2xl overflow-auto">
+				<motion.div initial={{ opacity: 0.8, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.2 }} className="flex flex-1 md:my-5 sm:mx-10  sm:rounded-2xl overflow-auto">
 					<img className="hidden  md:block lg:w-1/2 object-cover bg-contain" src="https://images.unsplash.com/photo-1590069261209-f8e9b8642343" alt="" />
 
 					<div className="max-w-full flex-1 md:py-4 flex justify-center items-center bg-[#EDF2F4]	">
@@ -73,8 +75,7 @@ const LoginPage = () => {
 
 											<InputField placeholder="Password" name="password" label="Password" leftIcon={<Lock size={22} strokeWidth={1.5} color={"#2b6cb0"} />} type="password" />
 											<div className="flex justify-between">
-												<InputFieldCheckbox size={"md"}
-												 name="rememberMe" label="Remember me?" />
+												<InputFieldCheckbox size={"md"} name="rememberMe" label="Remember me?" />
 												<RouterLink to="/resetPassword">
 													<span className="text-sm whitespace-nowrap text-[#2b6cb0]"> Forgot password?</span>
 												</RouterLink>
@@ -89,7 +90,7 @@ const LoginPage = () => {
 							</div>
 						</div>
 					</div>
-				</div>
+				</motion.div>
 			</div>
 		</main>
 	);
