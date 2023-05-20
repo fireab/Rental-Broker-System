@@ -20,11 +20,22 @@ import CreateListingPage from "./pages/User/RentalProperty/CreateListing.page";
 import EditPropertyPage from "./pages/User/RentalProperty/EditProperty.page";
 import Navbar from "./components/common/Navbar";
 import Notifications from "./pages/Notification/noifications.page";
+import Sidebar from "./components/common/Sidebar";
+import Sidenav from './components/common/Sidenav';
+import ImageSlider from "./components/RentalProperty/ImageSlider";
 
 const route = createBrowserRouter([
   {
-    path: "cards",
-    element: <Homepage />,
+    path: "sidebar",
+    element: <Sidebar />,
+  },
+  {
+    path: "sidenav",
+    element: <Sidenav />,
+  },
+  {
+    path: "img",
+    element: <ImageSlider />,
   },
   {
     path: "/",
