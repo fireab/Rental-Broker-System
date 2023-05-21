@@ -14,6 +14,7 @@ import InputField from "../../components/Authentication/InputField";
 import InputFieldSelect from "../../components/Authentication/InputField.select";
 import OTPModal from "../../components/Authentication/OTP.modal";
 import RegistrationStepper from "../../components/Authentication/registration.stepper";
+import { signup } from "../../services/auth";
 
 const steps = [
 	{ title: "Personal Information", description: ["Enter your personal information ", "to create an account"] },
@@ -227,26 +228,7 @@ const cities = {
 // 	{ name: "Addis Ababa", value: "Addis Ababa" },
 // 	{ name: "Dukerm", value: "Dukerm" },
 // ];
-const plans = [
-	{
-		name: "Startup",
-		ram: "12GB",
-		cpus: "6 CPUs",
-		disk: "160 GB SSD disk",
-	},
-	{
-		name: "Business",
-		ram: "16GB",
-		cpus: "8 CPUs",
-		disk: "512 GB SSD disk",
-	},
-	{
-		name: "Enterprise",
-		ram: "32GB",
-		cpus: "12 CPUs",
-		disk: "1024 GB SSD disk",
-	},
-];
+
 const RegisterPage = () => {
 	const {
 		isOpen: isOTPOpen,
@@ -265,10 +247,7 @@ const RegisterPage = () => {
 	});
 	const [registrationLoading, setregistrationLoding] = useState(false);
 	const [OTPSending, setOTPSending] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
-	const [selected, setSelected] = useState(plans[0]);
-	const [validating, setvalidating] = useState(false);
-	const [timeoutId, setTimeoutId] = useState(null);
+	const [checkingUsernameAvaliablity, setcheckingUsernameAvaliablity] = useState(false);
 
 	const { activeStep, setActiveStep } = useSteps({
 		index: 0,
@@ -288,10 +267,12 @@ const RegisterPage = () => {
 				.string()
 				.required("Username is required")
 				.test("username-availability", "Username is already taken", async function (value) {
+					setcheckingUsernameAvaliablity(true);
 					// Simulating a 2-second delay
-					await new Promise((resolve) => setTimeout(resolve, 5000));
+					await new Promise((resolve) => setTimeout(resolve, 500));
 
 					const isAvailable = value !== "taken_username";
+					setcheckingUsernameAvaliablity(false);
 					return isAvailable;
 				}),
 			password: yup.string().required("Password is required").min(1, "Password must be at least 6 characters").max(20, "Password must not exceed 20 characters"),
@@ -329,30 +310,32 @@ const RegisterPage = () => {
 			city: "",
 		},
 	];
-	const handleSubmit = (values) => {
-		// console.log(values)
-		setvalidating(true);
-		validationSchema[activeStep].validate(values).then((valid) => {
-			setvalidating(false);
-			console.log(valid);
-			if (activeStep < 2) {
-				if (activeStep === 1) {
-					setOTPSending(true);
-					setTimeout(() => {
-						onOTPOpen();
-						setOTPSending(false);
-					}, 1000);
-				} else {
-					setActiveStep(activeStep + 1);
-				}
-			} else {
-				setregistrationLoding(true);
+	const handleSubmit = async (values) => {
+		if (activeStep < 2) {
+			if (activeStep === 1) {
+				setOTPSending(true);
 				setTimeout(() => {
-					setregistrationLoding(false);
-					alert(JSON.stringify(values, null, 2));
+					onOTPOpen();
+					setOTPSending(false);
 				}, 1000);
+			} else {
+				setActiveStep(activeStep + 1);
 			}
-		});
+		} else {
+			setregistrationLoding(true);
+
+			await signup(values)
+				.then((res) => {
+					alert("Registration Success");
+				})
+				.catch((err) => {
+					alert("Registration Failed");
+					// console.log(err);
+				})
+				.finally(() => {
+					setregistrationLoding(false);
+				});
+		}
 	};
 
 	return (
@@ -392,7 +375,7 @@ const RegisterPage = () => {
 						activeStep={activeStep}
 						steps={steps}
 					/>
-					<div className="bg-[#EDF2FA] overflow-hidden lg:rounded-lg w-full lg:w-1/2 pt-5 px-4 flex flex-1">
+					<div className="bg-[#EDF2FA] overflow-hidden lg:rounded-lg w-full lg:w-1/2 pt-5 px-4 flex ">
 						<div className=" flex  flex-col justify-center items-center space-y-6 flex-1">
 							<Header title={"Create an Account"} stepTitle={steps[activeStep].title} />
 							<div className="w-full flex-1 ">
@@ -416,7 +399,18 @@ const RegisterPage = () => {
 																)}
 																{activeStep === 1 && (
 																	<motion.div key={2} initial={{ opacity: 0.5, x: 100 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -100 }} transition={{ duration: 0.2 }}>
-																		<InputField liveValidate={true} isValidating={isValidating} name="username" label="Username" leftIcon={<User size={22} strokeWidth={1.5} color={"#2b6cb0"} />} type="text" placeholder="Enter your username" />
+																		<InputField
+																			liveValidate={true}
+																			// isValidating={
+																			// 	//check if username is being validated so i can show  loading icon
+																			// 	checkingUsernameAvaliablity && formik.values.username !== "" && formik.errors.username === undefined
+																			// }
+																			name="username"
+																			label="Username"
+																			leftIcon={<User size={22} strokeWidth={1.5} color={"#2b6cb0"} />}
+																			type="text"
+																			placeholder="Enter your username"
+																		/>
 																		<InputField name="password" label="Password" leftIcon={<Password size={22} strokeWidth={1.5} color={"#2b6cb0"} />} type="password" placeholder="Enter your password" />
 																		<InputField name="confirmPassword" label="Confirm Password" leftIcon={<Password size={22} strokeWidth={1.5} color={"#2b6cb0"} />} type="password" placeholder="Confirm your password" />
 																	</motion.div>
@@ -447,7 +441,7 @@ const RegisterPage = () => {
 														<div className=" py-4 flex items-center">
 															<div className="flex [&>*]:w-1/3 justify-between  items-center w-full">
 																{activeStep === 2 ? (
-																	<Button className="flex-1" type="submit" _loading={{ color: "white" }} isLoading={registrationLoading || validating} loadingText="Registering" _hover={{ bgColor: "#2b6aa0" }} bgColor="#2b6cb0" size="lg" fontSize="md">
+																	<Button className="flex-1" type="submit" disabled={!formik.isValid && isValidating} _loading={{ color: "white" }} isLoading={registrationLoading} loadingText="Registering" _hover={{ bgColor: "#2b6aa0" }} bgColor="#2b6cb0" size="lg" fontSize="md">
 																		<span className="text-white">Register</span>
 																	</Button>
 																) : (
@@ -460,7 +454,7 @@ const RegisterPage = () => {
 																			)}
 																		</div>
 
-																		<Button type="submit" _loading={{ color: "white" }} loadingText="Please wait" isLoading={validating} justifySelf={"end"} alignSelf={"end"} _hover={{ bgColor: "#2b6aa0" }} bgColor="#2b6cb0" size="lg" fontSize="md">
+																		<Button type="submit" _loading={{ color: "white" }} disabled={!formik.isValid && isValidating} loadingText="Please wait" isLoading={OTPSending} justifySelf={"end"} alignSelf={"end"} _hover={{ bgColor: "#2b6aa0" }} bgColor="#2b6cb0" size="lg" fontSize="md">
 																			<span className="text-white">Next</span>
 																		</Button>
 																	</>

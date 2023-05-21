@@ -1,39 +1,56 @@
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
-// install react query with its dependencies: npm install react-query
-
-import { login, logout, signup } from '../services/auth';
+import { login as loginApi, logout as logoutApi, signup as signupApi } from "./../services/auth";
 
 export const useAuth = () => {
-  const loginMutation = useMutation(login);
-  const signupMutation = useMutation(signup);
-  const logoutMutation = useMutation(logout);
+	const queryClient = useQueryClient();
 
-  const login = async (email, password) => {
-    await loginMutation.mutateAsync({ email, password });
-  };
+	const fetchUser = async () => {
+		// Implement your logic to fetch the authenticated user from the server using the JWT.
+		// Example: const response = await axios.get('/api/user', { headers: { Authorization: `Bearer ${token}` }});
+		// return response.data;
+	};
 
-  const signup = async (email, password) => {
-    await signupMutation.mutateAsync({ email, password });
-  };
+	const loginMutation = useMutation(loginApi, {
+		onSuccess: () => {
+			queryClient.invalidateQueries("user");
+		},
+	});
 
-  const logout = async () => {
-    await logoutMutation.mutateAsync();
-  };
+	const signupMutation = useMutation(signupApi, {
+		onSuccess: () => {
+			queryClient.invalidateQueries("user");
+		},
+	});
 
-  const { data: user, isLoading } = useQuery('user', fetchUser);
+	const logoutMutation = useMutation(logoutApi, {
+		onSuccess: () => {
+			queryClient.invalidateQueries("user");
+		},
+	});
 
-  const fetchUser = async () => {
-    // Implement your logic to fetch the authenticated user from the server using the JWT.
-    // Example: const response = await axios.get('/api/user', { headers: { Authorization: `Bearer ${token}` }});
-    // return response.data;
-  };
+	const { data: user, isLoading } = useQuery("user", fetchUser, {
+		staleTime: 0,
+		enabled: false,
+	});
 
-  return {
-    user,
-    isLoading,
-    login,
-    signup,
-    logout,
-  };
+	const login = async (email, password) => {
+		await loginMutation.mutateAsync({ email, password });
+	};
+
+	const signup = async (email, password) => {
+		await signupMutation.mutateAsync({ email, password });
+	};
+
+	const logout = async () => {
+		await logoutMutation.mutateAsync();
+	};
+
+	return {
+		user,
+		isLoading,
+		login,
+		signup,
+		logout,
+	};
 };

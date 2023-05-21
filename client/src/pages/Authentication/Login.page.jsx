@@ -1,29 +1,42 @@
 import { Button, chakra, Image, shouldForwardProp } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { isValidMotionProp, motion } from "framer-motion";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { ChevronLeft, Lock, Mail, Plus } from "tabler-icons-react";
 import * as yup from "yup";
 
 import Header from "../../components/Authentication/header";
+import { useAuth } from "../../hooks/useAuth";
 import InputField from "./../../components/Authentication/InputField";
 import InputFieldCheckbox from "./../../components/Authentication/InputField.checkbox";
 
 const MotionButton = motion(Button);
 const LoginPage = () => {
 	const [loading, setLoding] = useState(false);
+	const { login, isLoading } = useAuth();
+	useEffect(() => {
+		console.log(isLoading);
+	}, [isLoading]);
 	const initialValues = {
 		email: "",
 		password: "",
 		rememberMe: false,
 	};
-	const handelSubmit = (values) => {
+	const handelSubmit = async (values) => {
 		setLoding(true);
-		setTimeout(() => {
-			setLoding(false);
-			alert(JSON.stringify(values, null, 2));
-		}, 2000);
+
+		await login(values.email, values.password)
+			.then((res) => {
+				alert("Login Success");
+			})
+			.catch((err) => {
+				alert("Login Failed");
+				console.log(err);
+			})
+			.finally(() => {
+				setLoding(false);
+			});
 	};
 	const validationSchema = yup.object().shape({
 		email: yup.string().email("Invalid email").required("Email is required"),
