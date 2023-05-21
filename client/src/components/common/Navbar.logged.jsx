@@ -25,7 +25,7 @@ const Navbar = () => {
 	const handleCloseDrawer = () => {
 		setIsDrawerOpen(false);
 	};
-	
+
 	const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 	useEffect(() => {
 		const handleResize = () => {
@@ -74,7 +74,7 @@ const Navbar = () => {
 											</a>
 										</li>
 										<li className="font-bold ">
-											<RouterLink to="/dilamo/CreateAd">
+											<RouterLink to="/user/CreateAd">
 												<Button colorScheme="blue" _hover={{ bgColor: "#2b6cb0", color: "white", scale: "1.2", transition: "all .2s ease-in" }} fontSize={12} variant={"outline"} fontWeight={"extrabold"} leftIcon={<Plus size={16} />}>
 													<span className="text-xs font-bold">CREATE A LISTING</span>
 												</Button>
@@ -134,55 +134,43 @@ const Navbar = () => {
 												</MenuButton>
 											</div>
 											<MenuList>
-												<MenuItem>
-													<RouterLink to="/">
-														<div className="flex items-center">
-															<User color="#2b6cb0" size={25} />
-															<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Profile</span>
-														</div>
-													</RouterLink>
+												<MenuItem as={RouterLink} to={"/user/profile"}>
+													<div className="flex items-center">
+														<User color="#2b6cb0" size={25} />
+														<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Profile</span>
+													</div>
 												</MenuItem>
-												<MenuItem>
-													<RouterLink to="/">
-														<div className="flex items-center">
-															<ClipboardList color="#2b6cb0" size={25} />
-															<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Property Listings</span>
-														</div>
-													</RouterLink>
+												<MenuItem as={RouterLink} to={"/user/profile"}>
+													<div className="flex items-center">
+														<ClipboardList color="#2b6cb0" size={25} />
+														<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Property Listings</span>
+													</div>
 												</MenuItem>
-												<MenuItem>
-													<RouterLink to="/">
-														<div className="flex items-center">
-															<Heart color="#2b6cb0" size={25} />
-															<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Favorite Listings</span>
-														</div>
-													</RouterLink>
+												<MenuItem as={RouterLink} to={"/user/profile"}>
+													<div className="flex items-center">
+														<Heart color="#2b6cb0" size={25} />
+														<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Favorite Listings</span>
+													</div>
 												</MenuItem>
-												<MenuItem>
-													<RouterLink to="/">
-														<div className="flex items-center">
-															<Settings color="#2b6cb0" size={25} />
-															<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Account Settings</span>
-														</div>
-													</RouterLink>
+												<MenuItem as={RouterLink} to={"/user/profile"}>
+													<div className="flex items-center">
+														<Settings color="#2b6cb0" size={25} />
+														<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Account Settings</span>
+													</div>
 												</MenuItem>
 												<MenuDivider />
 
-												<MenuItem>
-													<RouterLink to="/">
-														<div className="flex items-center">
-															<Help color="#2b6cb0" size={25} />
-															<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Help and Support</span>
-														</div>
-													</RouterLink>
+												<MenuItem as={RouterLink} to={"/user/profile"}>
+													<div className="flex items-center">
+														<Help color="#2b6cb0" size={25} />
+														<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Help and Support</span>
+													</div>
 												</MenuItem>
-												<MenuItem>
-													<RouterLink to="/">
-														<div className="flex items-center">
-															<Logout color="#2b6cb0" size={25} />
-															<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Logout</span>
-														</div>
-													</RouterLink>
+												<MenuItem as={RouterLink} to={"/user/profile"}>
+													<div className="flex items-center">
+														<Logout color="#2b6cb0" size={25} />
+														<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Logout</span>
+													</div>
 												</MenuItem>
 											</MenuList>
 										</Menu>
