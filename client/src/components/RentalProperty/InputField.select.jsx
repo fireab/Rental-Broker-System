@@ -26,7 +26,7 @@ const InputFieldSelect = ({ label, leftIcon, rightIcon, options, ...props }) => 
 					{options.map((option, index) => {
 						return (
 							<option key={index} value={option.value}>
-								{option.name}
+								{capitalize(option.name)}
 							</option>
 						);
 					})}

@@ -1,14 +1,16 @@
-import { Button, FormControl, FormLabel, Heading, IconButton, Input, InputLeftElement, InputRightElement } from "@chakra-ui/react";
+import { AddIcon, CloseIcon, DeleteIcon } from "@chakra-ui/icons";
+import { Button, FormControl, FormLabel, Heading, IconButton, Input, InputLeftElement, InputRightElement, useDisclosure } from "@chakra-ui/react";
 import { InputGroup } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React from "react";
-import { Baguette } from "tabler-icons-react";
+import { Baguette, BrandFacebook, BrandInstagram, BrandTelegram, BrandTiktok, BrandTwitter, BrandWhatsapp, BrandYoutube, ClockCancel, Mail, PhoneCall } from "tabler-icons-react";
 import * as yup from "yup";
 
+import AdPreviewModal from "../../../components/RentalProperty/AdPreview.modal";
+import ImageDrop from "./../../../components/RentalProperty/ImageDrop";
 import InputField from "./../../../components/RentalProperty/InputField";
 import InputFieldSelect from "./../../../components/RentalProperty/InputField.select";
 import InputFieldTextarea from "./../../../components/RentalProperty/InputField.textarea";
-import { AddIcon } from "@chakra-ui/icons";
 
 const Price_Type = [
 	{
@@ -50,38 +52,47 @@ const Contact_Type = [
 	{
 		name: "email",
 		value: "email",
+		icon: <Mail />,
 	},
 	{
 		name: "phone",
 		value: "phone",
+		icon: <PhoneCall />,
 	},
 	{
 		name: "whatsapp",
 		value: "whatsapp",
+		icon: <BrandWhatsapp />,
 	},
 	{
 		name: "telegram",
 		value: "telegram",
+		icon: <BrandTelegram />,
 	},
 	{
 		name: "facebook",
 		value: "facebook",
+		icon: <BrandFacebook />,
 	},
 	{
 		name: "instagram",
 		value: "instagram",
+		icon: <BrandInstagram />,
 	},
 	{
 		name: "twitter",
 		value: "twitter",
+		icon: <BrandTwitter />,
 	},
 	{
 		name: "youtube",
 		value: "youtube",
+		icon: <BrandYoutube />,
 	},
 	{
 		name: "tiktok",
 		value: "tiktok",
+		icon: <BrandTiktok />,
 	},
 ];
 const regions = [
@@ -135,7 +146,6 @@ const regions = [
 	},
 ];
 
-// list of city of every region {addis abab: [{addis abab}] }
 const cities = {
 	"Addis Ababa": [
 		{ name: "Addis Ababa", value: "Addis Ababa" },
@@ -373,6 +383,7 @@ const Property_Type = [
 
 const CreateListingPage = () => {
 	// creat me a yup validaton with fields to create a rental ad for my rental findet system
+	const { isOpen: isAdPreviewOpen, onOpen: onAdPreviewOpen, onClose: onAdPreviewClose } = useDisclosure();
 
 	const validationSchema = yup.object().shape({
 		PropertyTitle: yup.string().required("Please enter a property title"),
@@ -387,7 +398,7 @@ const CreateListingPage = () => {
 				priceType: yup.string().required("Please select a price type"),
 			}),
 		),
-		propertyQuantity: yup.number().required("Please enter a quantity"),
+		propertyQuantity: yup.string().required("Please enter a quantity"),
 		propertyDescription: yup.string().required("Please enter a property description"),
 		propertyImages: yup.array().of(
 			yup.object().shape({
@@ -397,12 +408,12 @@ const CreateListingPage = () => {
 
 		// MaxLeaseLength with a value and with a type
 		MaxLeaseLength: yup.object().shape({
-			value: yup.number().required("Please enter a max lease length"),
+			value: yup.string().required("Please enter a max lease length"),
 			type: yup.string().required("Please select a max lease length type"),
 		}),
 		MinLeaseLength: yup.object().shape({
-			value: yup.number().required("Please enter a min lease length"),
-			type: yup.string().required("Please select a min lease length type"),
+			value: yup.string(),
+			type: yup.string(),
 		}),
 
 		propertyContact: yup.array().of(
@@ -416,11 +427,9 @@ const CreateListingPage = () => {
 	const initialValues = {
 		PropertyTitle: "",
 		propertyType: "",
-
 		propertyRegion: "",
 		propertyCity: "",
 		propertyAddress: "",
-		// array of prices like for a day or mothet or year
 		propertyPrice: [
 			{
 				price: "",
@@ -434,7 +443,6 @@ const CreateListingPage = () => {
 				image: "",
 			},
 		],
-		// MaxLeaseLength with a value and with a type
 		MaxLeaseLength: {
 			value: "",
 			type: "",
@@ -452,8 +460,14 @@ const CreateListingPage = () => {
 			},
 		],
 	};
+
+	const handelSubmit = (values) => {
+		onAdPreviewOpen();
+	};
+
 	return (
 		<div className="bg-[#EDF2FA] px-20 py-10">
+			<AdPreviewModal isOpen={isAdPreviewOpen} onClose={onAdPreviewClose} />
 			<div className="flex flex-col space-y-8">
 				<Heading color={"#2b6aa0"} size={"lg"}>
 					Create Listing
@@ -461,16 +475,14 @@ const CreateListingPage = () => {
 				<div className="p-4 bg-white rounded-lg shadow-2xl">
 					<Formik
 						initialValues={initialValues}
-						validationSchema={validationSchema}
-						onSubmit={(values) => {
-							console.log(values);
-						}}
+						// validationSchema={validationSchema}
+						onSubmit={handelSubmit}
 					>
 						{/* { values, errors, touched, handleChange, handleBlur, handleSubmit } */}
 						{(formik) => (
 							<Form>
 								<div className="flex w-full">
-									<div className="flex flex-col flex-1 justify-center space-y-2">
+									<div className="flex flex-col flex-1 justify-start space-y-2">
 										<div>
 											<Heading color={"#2b6aa0"} size={"sm"}>
 												Property Details
@@ -517,8 +529,20 @@ const CreateListingPage = () => {
 												<div className="flex flex-col space-y-2">
 													{formik.values.propertyPrice.map((price, index) => (
 														<div key={index} className="flex space-x-1">
-															<InputField name={`propertyPrice[${index}].value`} label="Property Price" placeholder="Property Price" type="number" />
+															<InputField name={`propertyPrice[${index}].value`} label="Property Price" placeholder="Property Price" type="number" inputRightAddon={"Birr"} />
 															<InputFieldSelect name={`propertyPrice[${index}].type`} label="Property Price Type" options={Price_Type} />
+															<IconButton
+																onClick={() => {
+																	formik.setFieldValue(
+																		"propertyPrice",
+																		formik.values.propertyPrice.filter((_, i) => i !== index),
+																	);
+																}}
+																backgroundColor={"red.400"}
+																color={"white"}
+																alignSelf={"end"}
+																icon={<DeleteIcon />}
+															/>
 														</div>
 													))}
 													<IconButton
@@ -561,7 +585,7 @@ const CreateListingPage = () => {
 												<div className="flex flex-col space-y-2">
 													{formik.values.propertyContact.map((contact, index) => (
 														<div key={index} className="flex space-x-1">
-															<InputField name={`propertyContact[${index}].value`} label="Property Contact" placeholder="Property Contact" />
+															<InputField name={`propertyContact[${index}].value`} label="Property Contact" placeholder="Property Contact" type="text" />
 															<InputFieldSelect name={`propertyContact[${index}].type`} label="Property Contact Type" options={Contact_Type} />
 														</div>
 													))}
@@ -579,7 +603,9 @@ const CreateListingPage = () => {
 											Create Listing
 										</Button>
 									</div>
-									<div className="w-2/5">Upload Image</div>
+									<div className="w-2/5 p-4 mt-10">
+										<ImageDrop />
+									</div>
 								</div>
 							</Form>
 						)}
