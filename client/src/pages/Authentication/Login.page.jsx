@@ -1,6 +1,7 @@
 import { Button, chakra, Image, shouldForwardProp } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { isValidMotionProp, motion } from "framer-motion";
+import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { ChevronLeft, Lock, Mail, Plus } from "tabler-icons-react";
@@ -28,10 +29,11 @@ const LoginPage = () => {
 
 		await login(values.email, values.password)
 			.then((res) => {
-				alert("Login Success");
+				// console.log(res);
+				console.log("Login Success");
 			})
 			.catch((err) => {
-				alert("Login Failed");
+				console.log("Login Error");
 				console.log(err);
 			})
 			.finally(() => {
@@ -43,6 +45,8 @@ const LoginPage = () => {
 		password: yup.string().required("Password is required").min(1, "Password must be at least 6 characters").max(20, "Password must not exceed 20 characters"),
 		rememberMe: yup.boolean().oneOf([true, false], ""),
 	});
+	const cookieValue = Cookies.get('access_token');
+	console.log("cookieValue ",cookieValue);
 	return (
 		<main className="min-h-screen flex flex-col bg-gradient-to-r from-[#870bad] to-[#d60c60]">
 			<div className="w-full h-16">

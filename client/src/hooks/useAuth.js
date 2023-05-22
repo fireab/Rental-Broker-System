@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
-import { login as loginApi, logout as logoutApi, signup as signupApi } from "./../services/auth";
+import { checkOTP as checkOTPApi, login as loginApi, logout as logoutApi, setupOTP as setupOTPApi, signup as signupApi } from "./../services/auth";
 
 export const useAuth = () => {
 	const queryClient = useQueryClient();
@@ -22,6 +22,20 @@ export const useAuth = () => {
 			queryClient.invalidateQueries("user");
 		},
 	});
+	const setupOTPMutation = useMutation(setupOTPApi, {
+		onSuccess: () => {
+			queryClient.invalidateQueries("user");
+		},
+	});
+	const checkOTPMutation = useMutation(checkOTPApi, {
+		onSuccess: () => {
+			queryClient.invalidateQueries("user");
+		},
+	});
+
+	// const setupOTP = async (email,phoneNumber) => {
+	// 	await setupOTPMutation.mutateAsync({ email , phoneNumber});});
+	// }
 
 	const logoutMutation = useMutation(logoutApi, {
 		onSuccess: () => {
@@ -38,8 +52,24 @@ export const useAuth = () => {
 		await loginMutation.mutateAsync({ email, password });
 	};
 
-	const signup = async (email, password) => {
-		await signupMutation.mutateAsync({ email, password });
+	const signup = async ({ firstName, lastName, email, phoneNumber, username, password, region, city,accountType }) => {
+		await signupMutation.mutateAsync({
+			accountType,
+			firstName,
+			lastName,
+			email,
+			phoneNumber,
+			username,
+			password,
+			region,
+			city,
+		});
+	};
+	const setupOTP = async ({ email, phoneNumber, username }) => {
+		await setupOTPMutation.mutateAsync({ email, phoneNumber, username });
+	};
+	const checkOTP = async ({ email, otp }) => {
+		await checkOTPMutation.mutateAsync({ email, otp });
 	};
 
 	const logout = async () => {
@@ -51,6 +81,8 @@ export const useAuth = () => {
 		isLoading,
 		login,
 		signup,
+		setupOTP,
+		checkOTP,
 		logout,
 	};
 };

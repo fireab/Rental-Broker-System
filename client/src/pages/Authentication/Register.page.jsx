@@ -14,6 +14,7 @@ import InputField from "../../components/Authentication/InputField";
 import InputFieldSelect from "../../components/Authentication/InputField.select";
 import OTPModal from "../../components/Authentication/OTP.modal";
 import RegistrationStepper from "../../components/Authentication/registration.stepper";
+import { useAuth } from "../../hooks/useAuth";
 import { signup } from "../../services/auth";
 
 const steps = [
@@ -78,7 +79,6 @@ const regions = [
 	},
 ];
 
-// list of city of every region {addis abab: [{addis abab}] }
 const cities = {
 	"Addis Ababa": [
 		{ name: "Addis Ababa", value: "Addis Ababa" },
@@ -223,13 +223,9 @@ const cities = {
 		{ name: "Boditi", value: "Boditi" },
 	],
 };
-// const cities = [
-// 	{ name: "Hossana", value: "Hossana" },
-// 	{ name: "Addis Ababa", value: "Addis Ababa" },
-// 	{ name: "Dukerm", value: "Dukerm" },
-// ];
 
 const RegisterPage = () => {
+	const { signup, setupOTP, checkOTP } = useAuth();
 	const {
 		isOpen: isOTPOpen,
 		onOpen: onOTPOpen,
@@ -255,6 +251,8 @@ const RegisterPage = () => {
 	});
 	let [plan, setPlan] = useState("");
 
+	// save every step values
+	const [stepValues, setStepValues] = useState([]);
 	const validationSchema = [
 		yup.object().shape({
 			firstName: yup.string().required("First Name is required"),
@@ -314,23 +312,32 @@ const RegisterPage = () => {
 		if (activeStep < 2) {
 			if (activeStep === 1) {
 				setOTPSending(true);
-				setTimeout(() => {
-					onOTPOpen();
-					setOTPSending(false);
-				}, 1000);
+				await setupOTP({ email: stepValues[0].email, phoneNumber: stepValues[0].phoneNumber, username: values.username })
+					.then((res) => {
+						setStepValues([...stepValues, values]);
+						console.log("setupOTP success");
+						onOTPOpen();
+					})
+					.catch((err) => {
+						console.log("setupOTP failed");
+					})
+					.finally(() => {
+						setOTPSending(false);
+					});
 			} else {
+				setStepValues([...stepValues, values]);
 				setActiveStep(activeStep + 1);
 			}
 		} else {
 			setregistrationLoding(true);
+			// setStepValues([...stepValues, values]);
 
-			await signup(values)
+			await signup({ ...values, accountType: plan })
 				.then((res) => {
-					alert("Registration Success");
+					console.log(res);
 				})
 				.catch((err) => {
-					alert("Registration Failed");
-					// console.log(err);
+					console.log(err);
 				})
 				.finally(() => {
 					setregistrationLoding(false);
@@ -342,7 +349,7 @@ const RegisterPage = () => {
 		<main className="bg-gradient-to-r from-[#870bad] to-[#d60c60] min-h-screen  flex flex-col">
 			<AccountTypeModal plan={plan} setPlan={setPlan} isOpenModalAccountType={isOpenModalAccountType} onCloseModalAccountType={onCloseModalAccountType} />
 
-			<OTPModal setActiveStep={setActiveStep} activeStep={activeStep} onClose={onOTPClose} isOpen={isOTPOpen} />
+			<OTPModal email={stepValues[0]?.email} setActiveStep={setActiveStep} activeStep={activeStep} onClose={onOTPClose} isOpen={isOTPOpen} />
 			<div className="w-full h-16 flex-none">
 				<div className="flex  items-center">
 					<div className="hidden md:block md:w-1/2 p-4 ">
