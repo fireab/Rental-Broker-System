@@ -29,12 +29,10 @@ const LoginPage = () => {
 
 		await login(values.email, values.password)
 			.then((res) => {
-				// console.log(res);
 				console.log("Login Success");
 			})
 			.catch((err) => {
 				console.log("Login Error");
-				console.log(err);
 			})
 			.finally(() => {
 				setLoding(false);

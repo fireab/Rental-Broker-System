@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, Heading, Input, InputLeftElement, InputRightElement } from "@chakra-ui/react";
+import { Button, FormControl, FormLabel, Heading, IconButton, Input, InputLeftElement, InputRightElement } from "@chakra-ui/react";
 import { InputGroup } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React from "react";
@@ -8,6 +8,7 @@ import * as yup from "yup";
 import InputField from "./../../../components/RentalProperty/InputField";
 import InputFieldSelect from "./../../../components/RentalProperty/InputField.select";
 import InputFieldTextarea from "./../../../components/RentalProperty/InputField.textarea";
+import { AddIcon } from "@chakra-ui/icons";
 
 const Price_Type = [
 	{
@@ -513,19 +514,20 @@ const CreateListingPage = () => {
 												Pricing
 											</Heading>
 											<div className="flex flex-col space-y-2">
-												<div className="flex flex-col">
-													<div className="flex space-x-1">
-														<InputField name="propertyPrice.value" label="Property Price" placeholder="Property Price" type="number" />
-														<div>
-															<InputFieldSelect name="propertyPrice.type" label="Property Price Type" options={Price_Type} />
+												<div className="flex flex-col space-y-2">
+													{formik.values.propertyPrice.map((price, index) => (
+														<div key={index} className="flex space-x-1">
+															<InputField name={`propertyPrice[${index}].value`} label="Property Price" placeholder="Property Price" type="number" />
+															<InputFieldSelect name={`propertyPrice[${index}].type`} label="Property Price Type" options={Price_Type} />
 														</div>
-													</div>
-													<div className="flex space-x-1">
-														<InputField name="propertyPrice.value" label="Property Price" placeholder="Property Price" type="number" />
-														<div>
-															<InputFieldSelect name="propertyPrice.type" label="Property Price Type" options={Price_Type} />
-														</div>
-													</div>
+													))}
+													<IconButton
+														onClick={() => {
+															formik.setFieldValue("propertyPrice", [...formik.values.propertyPrice, { type: "", value: "" }]);
+														}}
+														aria-label="Add Price"
+														icon={<AddIcon />}
+													/>
 												</div>
 												<InputField name="propertyQuantity" label="Property Quantity" placeholder="Property Quantity" type="number" />
 											</div>
@@ -554,20 +556,28 @@ const CreateListingPage = () => {
 											<Heading color={"#2b6aa0"} size={"sm"}>
 												Contact Information
 											</Heading>
-											<div className="flex space-x-2">
+											<div>
 												{/* <InputField name="propertyContact" label="Property Contact" placeholder="Property Contact" /> */}
-												<InputField name="propertyContact.type" label="Property Contact Type" placeholder="Property Contact Type" />
-												<div>
-													<InputFieldSelect name="propertyContact.type" label="Property Contact Type" options={Contact_Type} />
+												<div className="flex flex-col space-y-2">
+													{formik.values.propertyContact.map((contact, index) => (
+														<div key={index} className="flex space-x-1">
+															<InputField name={`propertyContact[${index}].value`} label="Property Contact" placeholder="Property Contact" />
+															<InputFieldSelect name={`propertyContact[${index}].type`} label="Property Contact Type" options={Contact_Type} />
+														</div>
+													))}
+													<IconButton
+														onClick={() => {
+															formik.setFieldValue("propertyContact", [...formik.values.propertyContact, { type: "", value: "" }]);
+														}}
+														aria-label="Add Contact"
+														icon={<AddIcon />}
+													/>
 												</div>
 											</div>
 										</div>
 										<Button type="submit" className="!bg-[#2b6aa0] text-white p-2 rounded-md mt-4 w-full">
 											Create Listing
 										</Button>
-										{/* <button type="submit"  className="bg-[#2b6aa0] text-white p-2 rounded-md mt-4 w-full">
-											Create Listing
-										</button> */}
 									</div>
 									<div className="w-2/5">Upload Image</div>
 								</div>

@@ -1,0 +1,25 @@
+{
+  "name": "rental-broker-system",
+  "version": "1.0.0",
+  "description": "This is A rental broker system",
+  "main": "index.js",
+  "scripts": {
+    "install-server": "npm install --prefix server",
+    "install-client": "npm install --prefix client",
+    "install": "npm run install-server && install-client",
+    "server": "npm run dev --prefix server",
+    "client": "npm run dev --prefix client ",
+    "watch": "concurrently \"npm run server\" \"npm run client\"",
+    "deploy": "npm run build --prefix client && npm start --prefix server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dilamowonde/Rental-Broker-System.git"
+  },
+  "author": "Dilamo Wondimu, Freab Tesfaye, Alaa Ali, Chrestian Abara,Mintesnot W/Micheal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dilamowonde/Rental-Broker-System/issues"
+  },
+  "homepage": "https://github.com/dilamowonde/Rental-Broker-System#readme"
+}

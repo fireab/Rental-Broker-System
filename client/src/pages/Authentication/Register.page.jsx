@@ -231,7 +231,6 @@ const RegisterPage = () => {
 		onOpen: onOTPOpen,
 		onClose: onOTPClose,
 	} = useDisclosure(
-		// set it true to open the modal
 		true,
 	);
 	const {
@@ -243,7 +242,7 @@ const RegisterPage = () => {
 	});
 	const [registrationLoading, setregistrationLoding] = useState(false);
 	const [OTPSending, setOTPSending] = useState(false);
-	const [checkingUsernameAvaliablity, setcheckingUsernameAvaliablity] = useState(false);
+	// const [checkingUsernameAvaliablity, setcheckingUsernameAvaliablity] = useState(false);
 
 	const { activeStep, setActiveStep } = useSteps({
 		index: 0,
@@ -251,8 +250,8 @@ const RegisterPage = () => {
 	});
 	let [plan, setPlan] = useState("");
 
-	// save every step values
-	const [stepValues, setStepValues] = useState([]);
+
+	
 	const validationSchema = [
 		yup.object().shape({
 			firstName: yup.string().required("First Name is required"),
@@ -265,12 +264,10 @@ const RegisterPage = () => {
 				.string()
 				.required("Username is required")
 				.test("username-availability", "Username is already taken", async function (value) {
-					setcheckingUsernameAvaliablity(true);
 					// Simulating a 2-second delay
 					await new Promise((resolve) => setTimeout(resolve, 500));
 
 					const isAvailable = value !== "taken_username";
-					setcheckingUsernameAvaliablity(false);
 					return isAvailable;
 				}),
 			password: yup.string().required("Password is required").min(1, "Password must be at least 6 characters").max(20, "Password must not exceed 20 characters"),
@@ -281,12 +278,11 @@ const RegisterPage = () => {
 		}),
 		yup.object().shape({
 			preferedLanguage: yup.string().oneOf(["English", "Amheric", "Afan Oromo"], "Prefered Language is required").notRequired().default("English"),
-			// emailNotification: yup.boolean().oneOf([true, false], ""),
-			// phoneNotification: yup.boolean().oneOf([true, false], ""),
 			region: yup.string().required("Region is required"),
 			city: yup.string().required("City is required"),
 		}),
 	];
+	const [stepValues, setStepValues] = useState({});
 
 	const initialValues = [
 		{
@@ -302,8 +298,6 @@ const RegisterPage = () => {
 		},
 		{
 			preferedLanguage: "English",
-			// emailNotification: false,
-			// phoneNotification: false,
 			region: "",
 			city: "",
 		},
@@ -312,9 +306,9 @@ const RegisterPage = () => {
 		if (activeStep < 2) {
 			if (activeStep === 1) {
 				setOTPSending(true);
-				await setupOTP({ email: stepValues[0].email, phoneNumber: stepValues[0].phoneNumber, username: values.username })
+				setStepValues((stepValues) => ({ ...stepValues, ...values }))
+				await setupOTP({ email:values.email, phoneNumber: values.phoneNumber, username: values.username })
 					.then((res) => {
-						setStepValues([...stepValues, values]);
 						console.log("setupOTP success");
 						onOTPOpen();
 					})
@@ -325,12 +319,11 @@ const RegisterPage = () => {
 						setOTPSending(false);
 					});
 			} else {
-				setStepValues([...stepValues, values]);
+				setStepValues((stepValues) => ({ ...stepValues, ...values }))
 				setActiveStep(activeStep + 1);
 			}
 		} else {
 			setregistrationLoding(true);
-			// setStepValues([...stepValues, values]);
 
 			await signup({ ...values, accountType: plan })
 				.then((res) => {
@@ -344,12 +337,12 @@ const RegisterPage = () => {
 				});
 		}
 	};
-
+	
 	return (
 		<main className="bg-gradient-to-r from-[#870bad] to-[#d60c60] min-h-screen  flex flex-col">
 			<AccountTypeModal plan={plan} setPlan={setPlan} isOpenModalAccountType={isOpenModalAccountType} onCloseModalAccountType={onCloseModalAccountType} />
 
-			<OTPModal email={stepValues[0]?.email} setActiveStep={setActiveStep} activeStep={activeStep} onClose={onOTPClose} isOpen={isOTPOpen} />
+			<OTPModal emeail={stepValues.email} setActiveStep={setActiveStep} activeStep={activeStep} onClose={onOTPClose} isOpen={isOTPOpen} />
 			<div className="w-full h-16 flex-none">
 				<div className="flex  items-center">
 					<div className="hidden md:block md:w-1/2 p-4 ">
