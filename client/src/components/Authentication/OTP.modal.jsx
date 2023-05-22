@@ -1,35 +1,40 @@
 import { Button, FormControl, FormErrorMessage, FormLabel, HStack, Icon, IconButton, InputGroup, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, PinInput, PinInputField, useDisclosure } from "@chakra-ui/react";
 import { Form, Formik, useFormik } from "formik";
 import React, { useState } from "react";
-import * as yup from "yup";
-import capitalize from "../../utils/Capitalize";
 import { Refresh, RefreshDot } from "tabler-icons-react";
+import * as yup from "yup";
+
+import { useAuth } from "../../hooks/useAuth";
+import capitalize from "../../utils/Capitalize";
 
 const OTPModal = (props) => {
+	const { checkOTP } = useAuth();
 	const [OTPLoading, setOTPLoding] = useState(false);
+
+	const validationSchema = yup.object().shape({
+		otp: yup.string().required("OTP is required").min(4, "OTP must be at least 4 characters").max(4, "OTP must not exceed 4 characters").matches(/^[0-9]+$/, "Must be only digits").trim(),
+	});
 
 	const formik = useFormik({
 		initialValues: {
 			otp: "",
 		},
 
-		onSubmit: (values) => {
-			if (values.otp.length !== 4) {
-				formik.setErrors({ otp: "Invalid OTP" });
-				return;
-			}
+		onSubmit: async (values) => {
+			console.log(values);
+		
 			setOTPLoding(true);
-			setTimeout(() => {
-				console.log(values);
-				if (values.otp !== "1234") {
-					formik.setErrors({ otp: "Invalid OTP" });
-					setOTPLoding(false);
-					return;
-				}
-				setOTPLoding(false);
+			await checkOTP({email:props.email, otp:values.otp}).then((res) => {
+				console.log("OTP correct");
 				props.onClose();
 				props.setActiveStep(props.activeStep + 1);
-			}, 2000);
+			}).catch((err) => {
+				formik.setErrors({ otp: "Invalid OTP" });
+				console.log("OTP not correct");
+			}).finally(() => {
+				setOTPLoding(false);
+			});
+			
 		},
 	});
 
@@ -38,6 +43,7 @@ const OTPModal = (props) => {
 			<Modal
 				onClose={() => {
 					formik.resetForm();
+					setOTPLoding(false);
 					props.onClose();
 				}}
 				isOpen={props.isOpen}

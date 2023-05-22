@@ -416,9 +416,9 @@ const CreateListingPage = () => {
 		PropertyTitle: "",
 		propertyType: "",
 
-		propertyAddress: "",
-		propertyCity: "",
 		propertyRegion: "",
+		propertyCity: "",
+		propertyAddress: "",
 		// array of prices like for a day or mothet or year
 		propertyPrice: [
 			{
@@ -476,7 +476,8 @@ const CreateListingPage = () => {
 											</Heading>
 											<div>
 												<InputField name="PropertyTitle" label="Name of Property" placeholder="Property Title" />
-												<InputField name="propertyType" label="Property Type" placeholder="Property Type" />
+												<InputFieldSelect name="propertyType" label="Property Type" options={Property_Type} />
+												{/* <InputField name="propertyType" label="Property Type" placeholder="Property Type" /> */}
 												<InputFieldTextarea name="propertyDescription" label="Property Description" placeholder="Property Description" />
 											</div>
 										</div>
