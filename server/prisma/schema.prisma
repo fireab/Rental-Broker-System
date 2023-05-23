@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id                        String       @id @default(uuid())
+  username                  String       @unique
+  email                     String       @unique
+  firstName                 String
+  lastName                  String
+  image                     String?      @db.VarChar(255)
+  password                  String
+  phoneNumber               String?
+  birthday                  String?
+  sex                       String?
+  role                      String       @default("user")
+  accountType               String?
+  verificationCode          String?
+  isVerified                Boolean      @default(false)
+  verificationCodeExpiresAt DateTime?
+  createdAt                 DateTime     @default(now())
+  updatedAt                 DateTime     @updatedAt
+  address                   Address[]
+  savedPosts                SavedPosts[]
+  follower                  Followers[]
+  following                 Followings[]
+  posts                     Posts[]
+}
+
+model Otp {
+  id         String  @id @default(uuid())
+  email      String? @unique
+  username   String  @unique
+  otp        String
+  isVerified Boolean @default(false)
+}
+
+model Address {
+  id      String  @id @default(uuid())
+  region  String
+  city    String
+  street  String?
+  user    Users?  @relation(fields: [usersId], references: [id])
+  usersId String?
+}
+
+model SavedPosts {
+  id      String   @id @default(uuid())
+  Users   Users?   @relation(fields: [usersId], references: [id])
+  usersId String?
+  Posts   Posts?   @relation(fields: [postsId], references: [id])
+  postsId String?
+  savedAt DateTime @default(now())
+}
+
+model Followers {
+  id          String   @id @default(uuid())
+  Users       Users?   @relation(fields: [usersId], references: [id])
+  usersId     String?
+  followingAt DateTime @default(now())
+}
+
+model Followings {
+  id       String   @id @default(uuid())
+  Users    Users?   @relation(fields: [usersId], references: [id])
+  usersId  String?
+  followAt DateTime @default(now())
+}
+
+model Posts {
+  id             String       @id @default(uuid())
+  title          String       @db.VarChar(255)
+  description    String
+  catagory       String
+  postType       String       @default("product")
+  state          String
+  city           String
+  street         String?
+  author         Users?       @relation(fields: [authorId], references: [id])
+  authorId       String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  postExpiration DateTime
+  isAvailable    Boolean      @default(true)
+  savedBy        SavedPosts[]
+  postImage      PostImages[]
+}
+
+model PostImages {
+  id      String  @id @default(uuid())
+  image   String  @db.VarChar(255)
+  Posts   Posts?  @relation(fields: [postsId], references: [id])
+  postsId String?
+}

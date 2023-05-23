@@ -9,9 +9,14 @@ client/build/
 server/dist/
 server/build/
 
+// Ignore .vscode folder
+**/.vscode
+
 # Ignore node_modules
 client/node_modules/
 server/node_modules/
+**/node_modules
+**/dist
 
 # Ignote vite cache
 client/.vite/

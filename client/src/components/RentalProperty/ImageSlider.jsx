@@ -11,21 +11,21 @@ const ImageSlider = ({ }) => {
     ]
     const [currentIndex, setCurrentIndex] = useState(0)
 
-    const prevSlide = () => {
-    const isSlider = currentIndex === 0
-    const newIndex = isSlider ? slides.length - 1 : currentIndex - 1
-    setCurrentIndex(newIndex)
-    }
+	const prevSlide = () => {
+		const isSlider = currentIndex === 0;
+		const newIndex = isSlider ? slides.length - 1 : currentIndex - 1;
+		setCurrentIndex(newIndex);
+	};
 
-    const nextSlide = () => {
-    const isSlider = currentIndex === slides.length - 1
-    const newIndex = isSlider ? 0 : currentIndex + 1
-    setCurrentIndex(newIndex)
-    }
+	const nextSlide = () => {
+		const isSlider = currentIndex === slides.length - 1;
+		const newIndex = isSlider ? 0 : currentIndex + 1;
+		setCurrentIndex(newIndex);
+	};
 
-    const goToSlide = (slideIndex) => {
-    setCurrentIndex(slideIndex)
-    }
+	const goToSlide = (slideIndex) => {
+		setCurrentIndex(slideIndex);
+	};
 
     return (
         <Box
@@ -61,6 +61,6 @@ const ImageSlider = ({ }) => {
         </Flex>
         </Box>
     )
-}
-        
+};
+
 export default ImageSlider;
