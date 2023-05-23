@@ -25,8 +25,8 @@ const ImageDrop = () => {
         <FilePond
 				ref={pondRef}
 				files={files}
+				maxFiles={8}
 				allowMultiple={true}
-				//   maxFiles={3}
 				server="/api"
 				oninit={handleInit}
 				onupdatefiles={handleUpdateFiles}

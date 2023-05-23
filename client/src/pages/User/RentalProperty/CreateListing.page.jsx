@@ -386,8 +386,11 @@ const CreateListingPage = () => {
 	const { isOpen: isAdPreviewOpen, onOpen: onAdPreviewOpen, onClose: onAdPreviewClose } = useDisclosure();
 
 	const validationSchema = yup.object().shape({
-		PropertyTitle: yup.string().required("Please enter a property title"),
-		propertyType: yup.string().required("Please select a property type"),
+		propertyTitle: yup.string().required("Please enter a property title"),
+		propertyType: yup
+			.string()
+			.oneOf(Property_Type.map((type) => type.value))
+			.required("Please select a property type"),
 		propertyRegion: yup.string().required("Please enter a property state"),
 		propertyCity: yup.string().required("Please enter a property city"),
 		propertyAddress: yup.string().required("Please enter a property address"),
@@ -395,37 +398,37 @@ const CreateListingPage = () => {
 		propertyPrice: yup.array().of(
 			yup.object().shape({
 				price: yup.number().required("Please enter a price"),
-				priceType: yup.string().required("Please select a price type"),
+				priceType: yup.string().oneOf(["per day", "per week", "per month", "per year"]).required("Please select a price type").default("per day"),
 			}),
 		),
-		propertyQuantity: yup.string().required("Please enter a quantity"),
-		propertyDescription: yup.string().required("Please enter a property description"),
-		propertyImages: yup.array().of(
-			yup.object().shape({
-				image: yup.string().required("Please select an image"),
-			}),
-		),
+		propertyQuantity: yup.number().required("Please enter a quantity"),
+		propertyDescription: yup.string(),
+		// propertyImages: yup.array().of(
+		// 	yup.object().shape({
+		// 		image: yup.string().required("Please select an image"),
+		// 	}),
+		// ),
 
 		// MaxLeaseLength with a value and with a type
 		MaxLeaseLength: yup.object().shape({
-			value: yup.string().required("Please enter a max lease length"),
-			type: yup.string().required("Please select a max lease length type"),
+			value: yup.number().required("Please enter a maximum lease length"),
+			type: yup.string().oneOf(["days", "weeks", "months", "years"]).default("days"),
 		}),
 		MinLeaseLength: yup.object().shape({
-			value: yup.string(),
-			type: yup.string(),
+			value: yup.number().required("Please enter a minimum lease length"),
+			type: yup.string().oneOf(["days", "weeks", "months", "years"]).default("days"),
 		}),
 
 		propertyContact: yup.array().of(
 			yup.object().shape({
-				type: yup.string().required("Please select a contact type"),
-				value: yup.string().required("Please enter a contact value"),
+				value: yup.string().required("Please select a contact type"),
+				type: yup.string().oneOf(["email", "phone", "whatsapp", "telegram", "facebook", "instagram", "twitter", "youtube", "tiktok"]).required("Please enter a contact value").default("email"),
 			}),
 		),
 	});
 
 	const initialValues = {
-		PropertyTitle: "",
+		propertyTitle: "",
 		propertyType: "",
 		propertyRegion: "",
 		propertyCity: "",
@@ -433,65 +436,67 @@ const CreateListingPage = () => {
 		propertyPrice: [
 			{
 				price: "",
-				priceType: "",
+				priceType: "per day",
 			},
 		],
 		propertyQuantity: "",
 		propertyDescription: "",
-		propertyImages: [
-			{
-				image: "",
-			},
-		],
+		// propertyImages: [
+		// 	{
+		// 		image: "",
+		// 	},
+		// ],
 		MaxLeaseLength: {
 			value: "",
-			type: "",
+			type: "days",
 		},
 		MinLeaseLength: {
 			value: "",
-			type: "",
+			type: "days",
 		},
 
 		propertyLeaseTerm: "",
 		propertyContact: [
 			{
-				type: "",
+				type: "email",
 				value: "",
 			},
 		],
 	};
 
-	const handelSubmit = (values) => {
-		onAdPreviewOpen();
-	};
+	const [previewAdValues, setpreviewAdValues] = React.useState(initialValues);
 
+	const handelSubmit = (values) => {
+		alert(JSON.stringify(values.MinLeaseLength, null, 2));
+	};
+	const handelPreview = (values) => {
+		setpreviewAdValues(values);
+		onAdPreviewOpen();
+		
+	}
 	return (
-		<div className="bg-[#EDF2FA] px-20 py-10">
-			<AdPreviewModal isOpen={isAdPreviewOpen} onClose={onAdPreviewClose} />
+		<div className="bg-[#EDF2FA] lg:px-20 py-10">
+			<AdPreviewModal previewAdValues={previewAdValues} isOpen={isAdPreviewOpen} onClose={onAdPreviewClose} />
 			<div className="flex flex-col space-y-8">
 				<Heading color={"#2b6aa0"} size={"lg"}>
 					Create Listing
 				</Heading>
-				<div className="p-4 bg-white rounded-lg shadow-2xl">
-					<Formik
-						initialValues={initialValues}
-						// validationSchema={validationSchema}
-						onSubmit={handelSubmit}
-					>
+				<div className="p-4 bg-white lg:rounded-lg lg:shadow-2xl px-10">
+					<Formik initialValues={initialValues} validationSchema={validationSchema} validateOnBlur={true} onSubmit={handelSubmit}>
 						{/* { values, errors, touched, handleChange, handleBlur, handleSubmit } */}
 						{(formik) => (
 							<Form>
-								<div className="flex w-full">
+								<div className="flex flex-col-reverse lg:flex-row w-full">
 									<div className="flex flex-col flex-1 justify-start space-y-2">
 										<div>
 											<Heading color={"#2b6aa0"} size={"sm"}>
 												Property Details
 											</Heading>
 											<div>
-												<InputField name="PropertyTitle" label="Name of Property" placeholder="Property Title" />
-												<InputFieldSelect name="propertyType" label="Property Type" options={Property_Type} />
+												<InputField name="propertyTitle" label="Name of Property" placeholder="Property Title" />
+												<InputFieldSelect placeholder="Please Select" name="propertyType" label="Property Type" options={Property_Type} />
 												{/* <InputField name="propertyType" label="Property Type" placeholder="Property Type" /> */}
-												<InputFieldTextarea name="propertyDescription" label="Property Description" placeholder="Property Description" />
+												<InputFieldTextarea name="propertyDescription" label="Property Description" placeholder="Property Description" type="text" />
 											</div>
 										</div>
 										<div className="p-2">
@@ -500,7 +505,16 @@ const CreateListingPage = () => {
 											</Heading>
 											<div className="flex flex-col space-y-2">
 												<div className="flex space-x-2">
-													<InputFieldSelect name="propertyRegion" label="Property Region" options={regions} />
+													<InputFieldSelect
+														name="propertyRegion"
+														label="Property Region"
+														options={regions}
+														onChange={(e) => {
+															formik.setFieldValue("propertyRegion", e.target.value);
+															formik.setFieldValue("propertyCity", e.target.value == "" ? "" : cities[e.target.value][0].value);
+														}}
+														placeholder="Please select a region"
+													/>
 													{/* {formik.values.region && ( */}
 													{/* // city based on region and clear the city value if region is changed */}
 													<InputFieldSelect
@@ -514,10 +528,11 @@ const CreateListingPage = () => {
 																  Object.values(cities).reduce((acc, curr) => acc.concat(curr), [])
 															// : cities
 														}
+														placeholder="Please select a city"
 													/>
 													{/* )} */}
 												</div>
-												<InputField name="propertyAddress" label="Property Address" placeholder="Property Address" />
+												<InputField name="propertyAddress" label="Property Address" placeholder="Property Address" type="text" />
 											</div>
 										</div>
 
@@ -529,8 +544,10 @@ const CreateListingPage = () => {
 												<div className="flex flex-col space-y-2">
 													{formik.values.propertyPrice.map((price, index) => (
 														<div key={index} className="flex space-x-1">
-															<InputField name={`propertyPrice[${index}].value`} label="Property Price" placeholder="Property Price" type="number" inputRightAddon={"Birr"} />
-															<InputFieldSelect name={`propertyPrice[${index}].type`} label="Property Price Type" options={Price_Type} />
+															<InputField name={`propertyPrice[${index}].price`} label="Property Price" placeholder="Property Price" type="number" inputRightAddon={"Birr"} />
+															<div className="flex">
+
+															<InputFieldSelect name={`propertyPrice[${index}].priceType`} label="Property Price Type" options={Price_Type} />
 															<IconButton
 																onClick={() => {
 																	formik.setFieldValue(
@@ -540,14 +557,14 @@ const CreateListingPage = () => {
 																}}
 																backgroundColor={"red.400"}
 																color={"white"}
-																alignSelf={"end"}
 																icon={<DeleteIcon />}
 															/>
+															</div>
 														</div>
 													))}
 													<IconButton
 														onClick={() => {
-															formik.setFieldValue("propertyPrice", [...formik.values.propertyPrice, { type: "", value: "" }]);
+															formik.setFieldValue("propertyPrice", [...formik.values.propertyPrice, { price: "", priceType: "" }]);
 														}}
 														aria-label="Add Price"
 														icon={<AddIcon />}
@@ -586,7 +603,21 @@ const CreateListingPage = () => {
 													{formik.values.propertyContact.map((contact, index) => (
 														<div key={index} className="flex space-x-1">
 															<InputField name={`propertyContact[${index}].value`} label="Property Contact" placeholder="Property Contact" type="text" />
+															<div className="flex">
+
 															<InputFieldSelect name={`propertyContact[${index}].type`} label="Property Contact Type" options={Contact_Type} />
+															<IconButton
+																onClick={() => {
+																	formik.setFieldValue(
+																		"propertyContact",
+																		formik.values.propertyContact.filter((_, i) => i !== index),
+																	);
+																}}
+																backgroundColor={"red.400"}
+																color={"white"}
+																icon={<DeleteIcon />}
+															/>
+															</div>
 														</div>
 													))}
 													<IconButton
@@ -599,11 +630,20 @@ const CreateListingPage = () => {
 												</div>
 											</div>
 										</div>
-										<Button type="submit" className="!bg-[#2b6aa0] text-white p-2 rounded-md mt-4 w-full">
-											Create Listing
-										</Button>
+										<div className="flex space-x-2 justify-between ">
+											<div>
+												<Button type="button" variant="outline" className=" p-2 rounded-md mt-4 " borderColor={"#2b6aa0"} size="lg" fontSize="md" onClick={()=>{handelPreview(formik.values)} }>
+													<span className="text-[#2b6aa0]">Preview</span>
+												</Button>
+											</div>
+											<div className="w-1/2">
+												<Button type="submit" className="!bg-[#2b6aa0] text-white p-2 rounded-md mt-4 w-full">
+													Create Listing
+												</Button>
+											</div>
+										</div>
 									</div>
-									<div className="w-2/5 p-4 mt-10">
+									<div className="w-full lg:w-2/5 p-4 mt-10 ">
 										<ImageDrop />
 									</div>
 								</div>

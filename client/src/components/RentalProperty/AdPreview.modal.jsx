@@ -3,7 +3,8 @@ import React from "react";
 
 import ImageSlider from "./ImageSlider";
 
-const AdPreviewModal = ({ isOpen, onClose }) => {
+const AdPreviewModal = ({ isOpen, onClose,previewAdValues }) => {
+	console.log("modal ",previewAdValues);
 	return (
 		<Modal
 			onClose={onClose}
@@ -16,10 +17,12 @@ const AdPreviewModal = ({ isOpen, onClose }) => {
 				<ModalHeader>Modal Title</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody>
-					<ImageSlider />
+					<ImageSlider  />
 				</ModalBody>
 				<ModalFooter>
 					<Button onClick={onClose}>Close</Button>
+					
+					
 				</ModalFooter>
 			</ModalContent>
 		</Modal>

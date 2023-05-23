@@ -4,8 +4,10 @@ import React from "react";
 
 import capitalize from "../../utils/Capitalize";
 
-const InputFieldSelect = ({ label, leftIcon, rightIcon, options, ...props }) => {
+const InputFieldSelect = ({ label, leftIcon, rightIcon, options,defaultValue, ...props }) => {
 	const [field, meta] = useField(props);
+	
+
 	return (
 		<FormControl isInvalid={meta.error && meta.touched}>
 			<FormLabel fontSize={"sm"}>
@@ -13,15 +15,7 @@ const InputFieldSelect = ({ label, leftIcon, rightIcon, options, ...props }) => 
 			</FormLabel>
 			<InputGroup size="lg" className="bg-white/40 ">
 				{leftIcon && <InputLeftElement>{leftIcon}</InputLeftElement>}
-				<Select
-					fontSize={"sm"}
-					color={"black"}
-					{...field}
-					{...props}
-					className="border-[0.8px !important] border-[#2b6aa0]"
-					_placeholder={{ color: "#ced4da", fontSize: "sm" }}
-					spellCheck={false}
-					autoComplete="off"
+				<Select fontSize={"sm"} color={"black"} {...field} {...props} className="border-[0.8px !important] border-[#2b6aa0]" _placeholder={{ color: "red", fontSize: "sm" }} spellCheck={false} autoComplete="off" 
 				>
 					{options.map((option, index) => {
 						return (

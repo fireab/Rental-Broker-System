@@ -5,7 +5,7 @@ import React from "react";
 
 import capitalize from "../../utils/Capitalize";
 
-const InputField = ({ label, leftIcon, rightIcon, isValidating, liveValidate, inputLeftAddon, inputRightAddon, ...props }) => {
+const InputField = ({ label, leftIcon, rightIcon, inputLeftAddon, inputRightAddon, ...props }) => {
 	const [field, meta] = useField(props);
 	return (
 		<FormControl isInvalid={meta.error && meta.touched}>
@@ -20,9 +20,18 @@ const InputField = ({ label, leftIcon, rightIcon, isValidating, liveValidate, in
 					</InputLeftAddon>
 				)}
 				{leftIcon && <InputLeftElement>{leftIcon}</InputLeftElement>}
-				<Input />
+				<Input
+					fontSize={"sm"}
+					color={"black"}
+					{...field}
+					autoComplete="off"
+					{...props}
+					spellCheck={false}
+					// border={0.8}
+					className="border-[0.8px !important] border-[#2b6aa0]"
+					_placeholder={{ color: "#ced4da", fontSize: "sm" }}
+				/>
 
-				<InputRightElement>{liveValidate && (meta.error ? <SmallCloseIcon fontSize={"2xl"} color="red" /> : <CheckIcon fontSize={"lg"} color="green.600" />)}</InputRightElement>
 				{rightIcon && <InputRightElement>{rightIcon}</InputRightElement>}
 				{inputRightAddon && (
 					<InputRightAddon bgColor={"#2b6aa0"}>

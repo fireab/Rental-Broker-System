@@ -35,3 +35,12 @@ body {
 	font-weight: normal;
 	/* font-size: medium; */
 }
+
+.filepond--item {
+    width: calc(50% - 0.5em) !important;
+}
+@media screen and (max-width: 1024px) {
+	.filepond--item {
+		width: calc(25% - 0.5em) !important;
+	}
+}

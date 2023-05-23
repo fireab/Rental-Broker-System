@@ -14,7 +14,20 @@ const InputFieldTextarea = ({ label, leftIcon, rightIcon, isValidating, liveVali
 			</FormLabel>
 
 			<InputGroup size="lg" className="bg-white/40">
-				<Textarea placeholder="Here is a sample placeholder" size="sm" resize="vertical" />
+				<Textarea
+					placeholder="Here is a sample placeholder"
+					size="sm"
+					resize="vertical"
+					fontSize={"sm"}
+					color={"black"}
+					{...field}
+					autoComplete="off"
+					{...props}
+					spellCheck={false}
+					// border={0.8}
+					className="border-[0.8px !important] border-[#2b6aa0]"
+					_placeholder={{ color: "#ced4da", fontSize: "sm" }}
+				/>
 			</InputGroup>
 			<FormErrorMessage>{meta.error}</FormErrorMessage>
 		</FormControl>
