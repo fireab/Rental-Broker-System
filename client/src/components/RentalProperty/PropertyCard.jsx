@@ -2,7 +2,8 @@ import React, {useState} from 'react';
 import { Card, CardHeader, CardBody, CardFooter, Center, Spacer, Square, Grid, Box, Heading, Image, Flex, Icon, IconButton, Text, Button} from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon, StarIcon } from '@chakra-ui/icons';
 import styled from "styled-components";
-import { MdSettings } from 'react-icons/md';
+import { BsBookmarkHeart,BsBookmark, BsBookmarkFill } from 'react-icons/bs';
+
 
 const img = styled(Image)`
 	border: none;
@@ -39,6 +40,12 @@ export default function PropertyCard() {
     const goToSlide = (slideIndex) => {
     setCurrentIndex(slideIndex)
     }
+
+    const [isFav, setIsFav] = useState(false);
+
+    const handleFav = () => {
+        setIsFav(!isFav);
+    };
     
   return (
     <div>
@@ -53,6 +60,7 @@ export default function PropertyCard() {
                     alt='Chakra UI'
                     borderTopRadius='md'
                     maxHeight="235px"
+                    minHeight="230px"
                     maxWidth="400px"
                     width="100%"
                     transitionDuration='1s'
@@ -74,7 +82,6 @@ export default function PropertyCard() {
                 <Flex position="absolute" top="50%" right="5" transform="translateY(-50%)" alignItems="center">
                     <IconButton
                         aria-label="Next Slide"
-                        
                         icon={<ChevronRightIcon/>}
                         size="lg"
                         onClick={nextSlide}
@@ -85,12 +92,11 @@ export default function PropertyCard() {
                     />
                 </Flex>
                 <CardBody padding={3}>
-                    <Flex alignItems='center' align='center'>
-                            <Heading size='md' color={'gray.800'} >Nmae of the object</Heading>
+                    <Flex alignItems='center' >
+                            <Heading size='md' color={'gray.700'} >Nmae of the object</Heading>
                             <Spacer  />
                             <StarIcon 
                             color='gray.700'
-                            
                             />
                             <Text padding='2'>4.38</Text>
                     </Flex>
@@ -100,8 +106,17 @@ export default function PropertyCard() {
                     </Box>
                 </CardBody>       
                 
-               <CardFooter padding={3}>
-                    <Text color={'gray.700'}>$100</Text>
+               <CardFooter alignItems={'center'} justifyContent={'space-between'} padding={3}>
+                    <Button size={'sm'}>See detail</Button>
+                    <Flex alignItems={'center'}>
+                        <Text pr={4} color={'gray.700'} right={'5%'}>$100</Text>
+                        <Icon as={BsBookmarkFill}
+                        outline={'black'}
+                        onClick={handleFav}
+                        variant='outline'
+                        color={isFav ? 'red.500' : 'gray.300'} 
+                        />
+                    </Flex>
                 </CardFooter>
             </Card>            
         </Grid>

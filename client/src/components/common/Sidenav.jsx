@@ -1,18 +1,33 @@
-import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Avatar, Box, Button, Divider, Flex, Heading, Icon, Text, VStack } from '@chakra-ui/react';
+import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Avatar, Box, Button, Checkbox, Divider, Flex, FormControl, FormLabel, Heading, Icon, Stack, Text, VStack } from '@chakra-ui/react';
 import React, {useState} from 'react';
 import { FiChevronLeft, FiChevronRight, FiHome,
     FiTrendingUp,
     FiCompass,
     FiStar,
     FiSettings, } from 'react-icons/fi';
+import { GrCatalog } from 'react-icons/gr';
+import { FaFunnelDollar } from 'react-icons/fa';
 
 const sidebarItems = [
-    { name: "Catagories", icon: FiHome, content: "Home content" },
-    { name: "Price range", icon: FiTrendingUp, content: "Trending content" },
+    { name: "Catagories", icon: GrCatalog, content: "Home content" },
+    { name: "Price range", icon: FaFunnelDollar, content: "Trending content" },
     { name: "Location", icon: FiCompass, content: "Explore content" },
   ];
 
 const Sidenav = () => {
+  const [selectedFilters, setSelectedFilters] = React.useState([]);
+
+  const handleFilterChange = (event) => {
+    const { value, checked } = event.target;
+
+    if (checked) {
+      setSelectedFilters((prevFilters) => [...prevFilters, value]);
+    } else {
+      setSelectedFilters((prevFilters) =>
+        prevFilters.filter((filter) => filter !== value)
+      );
+    }
+  };
     const [isOpen, setIsOpen] = useState(true);
 
     const handleToggle = () => {
@@ -55,17 +70,35 @@ const Sidenav = () => {
           </Accordion>
         ))}
       </VStack>
-
+      <VStack alignItems={'center'} spacing={4} align="start">
+        {sidebarItems.map((item) => (
+          <FormControl key={item.name}>
+            <FormLabel fontWeight="bold">{item.name}</FormLabel>
+            <Stack spacing={2}>
+              <Checkbox
+                value={item.name.toLowerCase()}
+                onChange={handleFilterChange}
+                isChecked={selectedFilters.includes(item.name.toLowerCase())}
+              >
+              <Stack direction={'row'}> 
+                <Icon as={item.icon} mr="2" />
+                <Text>{item.name}</Text>
+              </Stack>
+              </Checkbox>
+            </Stack>
+          </FormControl>
+        ))}
+      </VStack>
         <Flex p='5%'
             flexDir='column'
             w='100%'
             alignItems='flex-start' mb={4}
         >
         <Divider   />
-        <Flex   alignItems={'center'} justifyContent={'space-around'} mt={5}>
+        <Stack direction={'row'} align={'center'} justify={'space-between'} mt={5}>
           <Button >Apply</Button>
           <Button >Reset</Button>
-        </Flex>
+        </Stack>
 
         </Flex>
          

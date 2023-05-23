@@ -23,11 +23,16 @@ import Notifications from "./pages/Notification/noifications.page";
 import Sidebar from "./components/common/Sidebar";
 import Sidenav from './components/common/Sidenav';
 import ImageSlider from "./components/RentalProperty/ImageSlider";
+import PropertyCard from "./components/RentalProperty/PropertyCard";
 
 const route = createBrowserRouter([
   {
     path: "sidebar",
     element: <Sidebar />,
+  },
+  {
+    path: "card",
+    element: <PropertyCard />,
   },
   {
     path: "sidenav",

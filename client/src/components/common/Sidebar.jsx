@@ -36,18 +36,17 @@ const Sidebar = () => {
 
   return (
     <Box bg="gray.100" p={4} w="250px">
-      <VStack spacing={4} align="start" >
+      <VStack alignItems={'center'} spacing={4} align="start">
         {sidebarItems.map((item) => (
-          <FormControl alignItems={'start'} key={item.name}>
-            <Icon as={item.icon} mr="2" />
+          <FormControl key={item.name}>
             <FormLabel fontWeight="bold">{item.name}</FormLabel>
-            <Stack direction={'row'} spacing={2}>
+            <Stack spacing={2}>
               <Checkbox
-                value={item.content.toLowerCase()}
+                value={item.name.toLowerCase()}
                 onChange={handleFilterChange}
                 isChecked={selectedFilters.includes(item.name.toLowerCase())}
               >
-                
+                <Icon as={item.icon} mr="2" />
                 <Text>{item.name}</Text>
               </Checkbox>
             </Stack>
