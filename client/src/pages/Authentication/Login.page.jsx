@@ -11,6 +11,7 @@ import Header from "../../components/Authentication/header";
 import { useAuth } from "../../hooks/useAuth";
 import InputField from "./../../components/Authentication/InputField";
 import InputFieldCheckbox from "./../../components/Authentication/InputField.checkbox";
+import { loginValidationSchema as validationSchema} from "../../utils/validation";
 
 const MotionButton = motion(Button);
 const LoginPage = () => {
@@ -38,11 +39,7 @@ const LoginPage = () => {
 				setLoding(false);
 			});
 	};
-	const validationSchema = yup.object().shape({
-		email: yup.string().email("Invalid email").required("Email is required"),
-		password: yup.string().required("Password is required").min(1, "Password must be at least 6 characters").max(20, "Password must not exceed 20 characters"),
-		rememberMe: yup.boolean().oneOf([true, false], ""),
-	});
+	
 	const cookieValue = Cookies.get('access_token');
 	console.log("cookieValue ",cookieValue);
 	return (
