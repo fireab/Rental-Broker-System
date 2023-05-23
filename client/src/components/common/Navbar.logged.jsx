@@ -15,6 +15,8 @@ const Navbar = () => {
 	const isMobile = useBreakpointValue({ base: true, md: false });
 	const { isOpen: isMesssageModalOpen, onOpen: onMessageModalOpen, onClose: onMessageModalClose } = useDisclosure();
 	const { isOpen: isNotificationModalOpen, onOpen: onNotificationModalOpen, onClose: onNotificationModalClose } = useDisclosure();
+	const { isOpen: isMessageMenuOpen, onOpen: onMessageMenuOpen, onClose: onMessageMenuClose } = useDisclosure(false);
+	const { isOpen: isNotificationMenuOpen, onOpen: onNotificationMenuOpen, onClose: onNotificationMenuClose } = useDisclosure(false);
 
 	const handleAvatarClick = () => {
 		if (isMobile) {
@@ -88,13 +90,20 @@ const Navbar = () => {
 											<IconButton colorScheme="blue" aria-label="Chat" variant="ghost" fontSize={20} rounded={"full"} icon={<BellIcon />} />
 										</Link>
 									) : (
-										<Menu>
+										<Menu onOpen={onNotificationMenuOpen} isOpen={isNotificationMenuOpen} onClose={onNotificationMenuClose}>
 											<MenuButton as={IconButton} aria-label="Options" icon={<BellIcon fontSize={20} />} variant="ghost" colorScheme="blue" rounded={"full"} />
 											<MenuList width={"sm"}>
 												<NotificationNav head="New Rental Application Received" body="Lorem ipsum dolor, sit amet consectetur adipisicing elit. A magni, repellendus excepturi asperiores autem quidem fuga iste quas blanditiis minima exercitationem dignissimos fugit. Eius et consequatur voluptas expedita praesentium numquam?" />
-
-												<Link to="/" onClick={onNotificationModalOpen}>
-													See more
+												<Link
+													to="/"
+													onClick={() => {
+														onNotificationMenuClose()
+														onNotificationModalOpen();
+													}}
+												>
+													<div className="flex justify-center">
+														<span className="text-sm font-semibold">See more</span>
+													</div>
 												</Link>
 											</MenuList>
 										</Menu>
@@ -114,10 +123,18 @@ const Navbar = () => {
 											/>
 										</Link>
 									) : (
-										<Menu>
+										<Menu onOpen={onMessageMenuOpen} isOpen={isMessageMenuOpen} onClose={onMessageMenuClose}>
 											<MenuButton as={IconButton} aria-label="Options" icon={<ChatIcon fontSize={20} />} variant="ghost" colorScheme="blue" rounded={"full"} />
 											<MenuList width={"sm"}>
 												<MessageNav user="Dilamo Wondimu" message="This is the message" onMessageModalOpen={onMessageModalOpen} />
+												<Link to="/"onClick={() => {
+														onMessageMenuClose()
+														onMessageModalOpen();
+													}}>
+													<div className="flex justify-center">
+														<span className="text-sm font-semibold">See more</span>
+													</div>
+												</Link>
 											</MenuList>
 										</Menu>
 									)}
