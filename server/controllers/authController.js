@@ -71,7 +71,6 @@ const checkOtp = async (req, res) => {
     });
 
     // If the user already exists, return an error
-    console.log(otpExists);
     if (otpExists) {
       await prisma.Otp.update({
         where: {
@@ -134,6 +133,11 @@ const register = async (req, res) => {
         },
       },
     });
+    await prisma.otp.update({
+      where: { email: req.body.email },
+      data: { userid: user.id },
+    });
+
     const { password, id, ...other } = user;
 
     return res.status(200).json({
@@ -194,7 +198,6 @@ const resendVerificationCode = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  console.log(req.body);
   const { email, username } = req.body;
 
   try {

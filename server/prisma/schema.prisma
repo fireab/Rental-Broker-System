@@ -41,6 +41,7 @@ model Otp {
   username   String  @unique
   otp        String
   isVerified Boolean @default(false)
+  userid     String?
 }
 
 model Address {
@@ -49,7 +50,7 @@ model Address {
   city    String
   street  String?
   user    Users?  @relation(fields: [usersId], references: [id])
-  usersId String?
+  usersId String? @unique
 }
 
 model SavedPosts {
@@ -76,22 +77,46 @@ model Followings {
 }
 
 model Posts {
-  id             String       @id @default(uuid())
-  title          String       @db.VarChar(255)
-  description    String
-  catagory       String
-  postType       String       @default("product")
-  state          String
-  city           String
-  street         String?
-  author         Users?       @relation(fields: [authorId], references: [id])
-  authorId       String?
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  postExpiration DateTime
-  isAvailable    Boolean      @default(true)
-  savedBy        SavedPosts[]
-  postImage      PostImages[]
+  id                  String             @id @default(uuid())
+  propertyTitle       String             @db.VarChar(255)
+  propertyDescription String
+  propertyType        String
+  postType            String             @default("product")
+  propertyRegion      String
+  propertyCity        String
+  propertyStreet      String?
+  maxLeaseLengthValue Int?
+  maxLeaseLengthType  String?
+  minLeaseLengthValue Int?
+  minLeaseLengthType  String?
+  propertyLeaseTerm   String?
+  author              Users?             @relation(fields: [authorId], references: [id])
+  authorId            String?
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  postExpiration      DateTime?
+  isAvailable         Boolean            @default(true)
+  propertyQuantity    Int?
+  propertyContact     propertyContacts[]
+  propertyPrice       propertyPrices[]
+  savedBy             SavedPosts[]
+  propertyImages      PostImages[]
+}
+
+model propertyContacts {
+  id      String  @id @default(uuid())
+  type    String?
+  value   String?
+  Posts   Posts?  @relation(fields: [postsId], references: [id])
+  postsId String?
+}
+
+model propertyPrices {
+  id        String  @id @default(uuid())
+  price     Decimal
+  priceType String
+  Posts     Posts?  @relation(fields: [postsId], references: [id])
+  postsId   String?
 }
 
 model PostImages {
