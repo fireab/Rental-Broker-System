@@ -1,6 +1,5 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
 
-import Navbar from "./components/common/Navbar";
 import Layout from "./Layout";
 import AboutPage from "./pages/About.page";
 import LoginPage from "./pages/Authentication/Login.page";
@@ -17,9 +16,14 @@ import SearchResultsPage from "./pages/Rentals/SearchResults.page";
 import AccountSettingPage from "./pages/User/Account/AccountSetting.page";
 import EditProfilePage from "./pages/User/Account/EditProfile.page";
 import FavoriteRentalsPage from "./pages/User/Account/FavoriteRentals.page";
-import ProfilePage from "./pages/User/Profile.page";
 import CreateListingPage from "./pages/User/RentalProperty/CreateListing.page";
 import EditPropertyPage from "./pages/User/RentalProperty/EditProperty.page";
+
+import ProfileLayout from './Profile.Layout';
+import ProfilePageView from "./components/Account/ProfilePage.view";
+import EditProfileView from "./components/Account/EditProfile.view";
+import ChangePasswordView from "./components/Account/ChangePassword.view";
+
 import Sidebar from "./components/common/Sidebar";
 import Sidenav from './components/common/Sidenav';
 import ImageSlider from "./components/RentalProperty/ImageSlider";
@@ -69,6 +73,30 @@ const route = createBrowserRouter([
         Component: Homepage,
       },
       {
+        path: "user",
+        element: (
+          <ProfileLayout>
+            <Outlet />
+          </ProfileLayout>
+
+        ),
+        children: [
+          {
+            path: "profile",
+            Component: ProfilePageView,
+          },
+          {
+            path: "Edit",
+            Component: EditProfileView,
+          },
+          {
+            path: "changePassword",
+            Component: ChangePasswordView,
+          }
+        ]
+      },
+      
+      {
         path: "contact",
         Component: ContactUsPage,
       },
@@ -109,11 +137,11 @@ const route = createBrowserRouter([
       </Layout>
     ),
     children: [
-      {
-        // index: true,
-        path: "profile",
-        Component: ProfilePage,
-      },
+      // {
+      //   // index: true,
+      //   path: "profile",
+      //   Component: ProfilePage,
+      // },
       {
         path: "CreateAd",
         Component: CreateListingPage,

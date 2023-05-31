@@ -44,3 +44,13 @@ body {
 		width: calc(25% - 0.5em) !important;
 	}
 }
+.filepond--credits{
+	display: none;
+}
+/* .filepond--wrapper{
+	height: 300px !important;	
+}
+*/
+.filepond--wrapper .filepond--root{
+	height: 200px !important;	
+} 

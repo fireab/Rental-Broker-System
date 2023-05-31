@@ -9,14 +9,15 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings } from "react-icons/fi";
+// import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings } from "react-icons/fi";
+import { Home } from 'tabler-icons-react';
 
 const sidebarItems = [
-  { name: "Categories", icon: FiHome, content: "Home content" },
-  { name: "Price range", icon: FiTrendingUp, content: "Trending content" },
-  { name: "Location", icon: FiCompass, content: "Explore content" },
-  { name: "Brand", icon: FiStar, content: "Brand content" },
-  { name: "Color", icon: FiSettings, content: "Color content" },
+  { name: "Categories", icon: Home, content: "Home content" },
+  { name: "Price range", icon: Home, content: "Trending content" },
+  { name: "Location", icon: Home, content: "Explore content" },
+  { name: "Brand", icon: Home, content: "Brand content" },
+  { name: "Color", icon: Home, content: "Color content" },
 ];
 
 const Sidebar = () => {
