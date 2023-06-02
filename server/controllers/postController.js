@@ -6,7 +6,7 @@ const addPost = async (req, res) => {
     const token = req.cookies.access_token;
     if (!token) return res.status(401).json("Not authenticated!");
 
-    jwt.verify(token, "jwtkey", async (err, userInfo) => {
+    jwt.verify(token, process.env.MY_KEY, async (err, userInfo) => {
       if (err) return res.status(403).json("Token is not valid!");
 
       // Extract data from request body
@@ -63,7 +63,7 @@ const deletePost = async (req, res) => {
     const token = req.cookies.access_token;
     if (!token) return res.status(401).json("Not authenticated!");
 
-    jwt.verify(token, "jwtkey", async (err, userInfo) => {
+    jwt.verify(token, process.env.MY_KEY, async (err, userInfo) => {
       if (err) return res.status(403).json("Token is not valid!");
 
       const Post = await prisma.posts.findFirst({

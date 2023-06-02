@@ -16,6 +16,6 @@ app.use("/api/posts", postRoutes);
 app.use("/api/user", userRouter);
 
 // Start the server and listen on port 3030
-app.listen(3030, () => {
-  console.log("Server is running on port 3030");
+app.listen(3032, () => {
+  console.log("Server is running on port 3032");
 });
