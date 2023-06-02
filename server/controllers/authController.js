@@ -210,7 +210,7 @@ const login = async (req, res) => {
 
     // Check if the user exists
     if (!user) {
-      return res.status(404).json("User not found!");
+      return res.status(400).json("Wrong username or password!");
     }
 
     // Compare the provided password with the stored password
@@ -225,7 +225,7 @@ const login = async (req, res) => {
     }
 
     // Generate a JWT token with the user's ID
-    const token = jwt.sign({ id: user.id }, "jwtkey");
+    const token = jwt.sign({ id: user.id }, process.env.MY_KEY);
 
     // Exclude the password field from the response
     const { password, ...userData } = user;
