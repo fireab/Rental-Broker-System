@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Card, CardHeader, CardBody, CardFooter, Center, Spacer, Square, Grid, Box, Heading, Image, Flex, Icon, IconButton, Text, Button} from '@chakra-ui/react';
+import { Card, CardHeader, CardBody, CardFooter, Center, Spacer, Square, Grid, Box, Heading, Image, Flex, Icon, IconButton, Text, Button, Stack} from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon, StarIcon } from '@chakra-ui/icons';
 import styled from "styled-components";
 import { BsBookmarkHeart,BsBookmark, BsBookmarkFill } from 'react-icons/bs';
@@ -49,6 +49,7 @@ export default function PropertyCard() {
     
   return (
     <div>
+    
         <Grid className='p-4' gap={6} templateColumns='repeat(auto-fill, minmax(300px, 1fr))'>       
             <Card padding={0} margin={0} bg='none' border='transparent' objectFit='cover'
                     overflow='hidden' shadow='md'>
@@ -92,13 +93,19 @@ export default function PropertyCard() {
                     />
                 </Flex>
                 <CardBody padding={3}>
+                        <Stack spacing="0">
+                <Flex justifyContent="space-between">
+                
+                
+                </Flex>
+            </Stack>
                     <Flex alignItems='center' >
-                            <Heading size='md' color={'gray.700'} >Nmae of the object</Heading>
+                            <Heading size='md' color={'gray.700'} >'name'</Heading>
                             <Spacer  />
                             <StarIcon 
                             color='gray.700'
                             />
-                            <Text padding='2'>4.38</Text>
+                            <Text padding='2'>'rating4.38'</Text>
                     </Flex>
                     <Box color={'gray.500'}>
                         <Text >Product by,</Text>

@@ -40,6 +40,7 @@ const ImageSlider = ({ }) => {
             m={5}
             rounded="2xl"
             position="relative"
+            
         >
         <Flex position="absolute" top="50%" left="5" transform="translateY(-50%)" alignItems="center">
         <IconButton

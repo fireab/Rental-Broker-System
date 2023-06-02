@@ -25,8 +25,12 @@ import Sidenav from './components/common/Sidenav';
 import ImageSlider from "./components/RentalProperty/ImageSlider";
 import PropertyCard from "./components/RentalProperty/PropertyCard";
 
+
 const route = createBrowserRouter([
   {
+    path: "detail",
+    element: <PropertytDetailPage />,
+  },{
     path: "sidebar",
     element: <Sidebar />,
   },

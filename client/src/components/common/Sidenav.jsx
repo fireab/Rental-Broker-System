@@ -9,7 +9,7 @@ import { GrCatalog } from 'react-icons/gr';
 import { FaFunnelDollar } from 'react-icons/fa';
 
 const sidebarItems = [
-    { name: "Catagories", icon: GrCatalog, content: "Home content" },
+    { name: "Categories", icon: GrCatalog, content: "Home content" },
     { name: "Price range", icon: FaFunnelDollar, content: "Trending content" },
     { name: "Location", icon: FiCompass, content: "Explore content" },
   ];
