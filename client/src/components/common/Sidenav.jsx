@@ -1,15 +1,16 @@
 import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Avatar, Box, Button, Checkbox, Divider, Flex, FormControl, FormLabel, Heading, Icon, Stack, Text, VStack } from '@chakra-ui/react';
 import React, {useState} from 'react';
 import { FiChevronLeft, FiChevronRight, FiHome,
-    FiTrendingUp,
-    FiCompass,
-    FiStar,
-    FiSettings, } from 'react-icons/fi';
+  FiTrendingUp,
+  FiCompass,
+  FiStar,
+  FiSettings, } from 'react-icons/fi';
 import { GrCatalog } from 'react-icons/gr';
 import { FaFunnelDollar } from 'react-icons/fa';
+import { Home } from 'tabler-icons-react';
 
 const sidebarItems = [
-    { name: "Categories", icon: GrCatalog, content: "Home content" },
+    { name: "Catagories", icon: GrCatalog, content: "Home content" },
     { name: "Price range", icon: FaFunnelDollar, content: "Trending content" },
     { name: "Location", icon: FiCompass, content: "Explore content" },
   ];
@@ -46,7 +47,7 @@ const Sidenav = () => {
          >
         <Flex bg={'gray.100'} onClick={handleToggle} justifyContent={"space-between"} flexDir={'row'} align={'center'}>
           Logo
-          {isOpen ? <FiChevronLeft /> : <FiChevronRight />}
+          {isOpen ? <Home /> : <Home />}
         </Flex>
         <Flex bg={'gray.100'} justifyContent={"space-between"}>
             <Heading fontWeight={'medium'} size={'md'}>Filter</Heading>
@@ -106,4 +107,4 @@ const Sidenav = () => {
   )
 }
 
-export default Sidenav
+export default Sidenav;

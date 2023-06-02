@@ -223,7 +223,7 @@ const Navbar = () => {
 														<div>
 															<ul className="space-y-2">
 																<li>
-																	<RouterLink to="user/profile">
+																	<RouterLink to="/user/profile">
 																		<div className="flex text-[#2b6cb0] items-center justify-between border p-2 rounded">
 																			<span>Profile</span>
 																			<ChevronRight />
@@ -241,7 +241,7 @@ const Navbar = () => {
 																<li>
 																	<RouterLink to="profile">
 																		<div className="flex text-[#2b6cb0] items-center justify-between border p-2 rounded">
-																			<span>Favorite Listings</span>
+																			<span>Saved Listings</span>
 																			<ChevronRight />
 																		</div>
 																	</RouterLink>

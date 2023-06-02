@@ -8,7 +8,7 @@ const PropertyDetailPage = () => {
         <Image src="https://placekitten.com/400/300" alt="Post" />
         <Stack spacing={4} mt={4}>
             <Text fontSize="2xl" fontWeight="bold">
-            Beautiful Airbnb Listing
+            Beautiful  Listing
             </Text>
             <Text fontSize="lg">Description of the listing goes here...</Text>
             <Badge variant="outline" colorScheme="teal">

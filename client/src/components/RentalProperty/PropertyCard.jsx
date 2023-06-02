@@ -5,48 +5,33 @@ import styled from "styled-components";
 import { BsBookmarkHeart,BsBookmark, BsBookmarkFill } from 'react-icons/bs';
 
 
-const img = styled(Image)`
-	border: none;
-	transition: all 0.3s ease-in-out;
-
-	&:hover {
-		transform: scale(1.06);
-		box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
-	}
-`;
 
 export default function PropertyCard() {
+	const slides = [{ src: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" }, { src: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" }, { src: "https://images.unsplash.com/photo-1665678272951-f4ca1e7a8fe5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=343&q=80" }, { src: "../../assets/imgs/b.jpg" }];
+	const [currentIndex, setCurrentIndex] = useState(0);
 
-    const slides = [
-        { src: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80' },
-        { src: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80' },
-        { src: 'https://images.unsplash.com/photo-1665678272951-f4ca1e7a8fe5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=343&q=80'},
-        { src: "../../assets/imgs/b.jpg"}
-    ]
-    const [currentIndex, setCurrentIndex] = useState(0)
+	const prevSlide = () => {
+		const isSlider = currentIndex === 0;
+		const newIndex = isSlider ? slides.length - 1 : currentIndex - 1;
+		setCurrentIndex(newIndex);
+	};
 
-    const prevSlide = () => {
-    const isSlider = currentIndex === 0
-    const newIndex = isSlider ? slides.length - 1 : currentIndex - 1
-    setCurrentIndex(newIndex)
-    }
+	const nextSlide = () => {
+		const isSlider = currentIndex === slides.length - 1;
+		const newIndex = isSlider ? 0 : currentIndex + 1;
+		setCurrentIndex(newIndex);
+	};
 
-    const nextSlide = () => {
-    const isSlider = currentIndex === slides.length - 1
-    const newIndex = isSlider ? 0 : currentIndex + 1
-    setCurrentIndex(newIndex)
-    }
+	const goToSlide = (slideIndex) => {
+		setCurrentIndex(slideIndex);
+	};
 
-    const goToSlide = (slideIndex) => {
-    setCurrentIndex(slideIndex)
-    }
+	const [isBookmarked, setIsBookmarked] = useState(false);
 
-    const [isFav, setIsFav] = useState(false);
+	const handleBookmarked = () => {
+		setIsBookmarked(!isBookmarked);
+	};
 
-    const handleFav = () => {
-        setIsFav(!isFav);
-    };
-    
   return (
     <div>
     
@@ -119,14 +104,15 @@ export default function PropertyCard() {
                         <Text pr={4} color={'gray.700'} right={'5%'}>$100</Text>
                         <Icon as={BsBookmarkFill}
                         outline={'black'}
-                        onClick={handleFav}
+                        onClick={handleBookmarked}
                         variant='outline'
-                        color={isFav ? 'red.500' : 'gray.300'} 
+                        color={isBookmarked ? 'red.500' : 'gray.300'} 
                         />
                     </Flex>
                 </CardFooter>
             </Card>            
         </Grid>
     </div>
-  )
+  );
+
 }

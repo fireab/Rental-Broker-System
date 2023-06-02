@@ -8,7 +8,7 @@ const PropertyListPage = () => {
         </Heading>
 
         <Heading as="h1" mb="10">
-            Chakra UI Airbnb
+            Chakra UI 
         </Heading>
             <Grid className='p-4' gap={6} templateColumns='repeat(auto-fill, minmax(300px, 1fr))'>
 

@@ -9,7 +9,7 @@ export default defineConfig({
 	// 		"/api": "http://192.168.8.106:3030",
 	// 	},
 	// },
-	build: {
-		outDir: "../server/public",
-	}
+	// build: {
+	// 	outDir: "../server/public",
+	// }
 });
