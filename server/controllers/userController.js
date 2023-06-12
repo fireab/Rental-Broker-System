@@ -107,6 +107,7 @@ const updateProfile = async (req, res) => {
 
 const getUserProfile = async (req, res) => {
   try {
+    console.log("dile user profile");
     // Retrieve user profile from the database
     const user = await prisma.users.findFirst({
       where: { id: req.userInfo.id },

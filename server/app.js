@@ -18,8 +18,4 @@ app.use("/api/user", userRouter);
 // Start the server and listen on port 3030
 app.listen(3032, () => {
   console.log("Server is running on port 3032");
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> bf94a866ff8dc04cc7dfbde42f17cfda617e1a43
