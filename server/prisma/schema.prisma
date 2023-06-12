@@ -33,8 +33,7 @@ model Users {
   posts                     Posts[]
   following                 UserFollower[] @relation("Following")
   followers                 UserFollower[] @relation("Followers")
-  Followers                 Followers[]
-  Followings                Followings[]
+  Report                    Report[]
 }
 
 model UserFollower {
@@ -77,20 +76,6 @@ model SavedPosts {
   savedAt DateTime @default(now())
 }
 
-model Followers {
-  id          String   @id @default(uuid())
-  Users       Users?   @relation(fields: [usersId], references: [id])
-  usersId     String?
-  followingAt DateTime @default(now())
-}
-
-model Followings {
-  id       String   @id @default(uuid())
-  Users    Users?   @relation(fields: [usersId], references: [id])
-  usersId  String?
-  followAt DateTime @default(now())
-}
-
 model Posts {
   id                  String             @id @default(uuid())
   propertyTitle       String             @db.VarChar(255)
@@ -116,6 +101,18 @@ model Posts {
   propertyPrice       propertyPrices[]
   savedBy             SavedPosts[]
   propertyImages      PostImages[]
+  reports             Report[]
+}
+
+model Report {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  reason     String
+  postId     String
+  post       Posts    @relation(fields: [postId], references: [id])
+  reporterId String
+  reporter   Users    @relation(fields: [reporterId], references: [id])
 }
 
 model propertyContacts {
