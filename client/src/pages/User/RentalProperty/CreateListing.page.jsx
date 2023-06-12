@@ -7,6 +7,7 @@ import { Baguette, BrandFacebook, BrandInstagram, BrandTelegram, BrandTiktok, Br
 import * as yup from "yup";
 
 import AdPreviewModal from "../../../components/RentalProperty/AdPreview.modal";
+import { useRentalPosts } from "../../../hooks/rentalPost";
 import ImageDrop from "./../../../components/RentalProperty/ImageDrop";
 import InputField from "./../../../components/RentalProperty/InputField";
 import InputFieldSelect from "./../../../components/RentalProperty/InputField.select";
@@ -385,6 +386,8 @@ const CreateListingPage = () => {
 	// creat me a yup validaton with fields to create a rental ad for my rental findet system
 	const { isOpen: isAdPreviewOpen, onOpen: onAdPreviewOpen, onClose: onAdPreviewClose } = useDisclosure();
 
+	const { createRentalPost} = useRentalPosts();
+
 	const validationSchema = yup.object().shape({
 		propertyTitle: yup.string().required("Please enter a property title"),
 		propertyType: yup
@@ -410,11 +413,11 @@ const CreateListingPage = () => {
 		// ),
 
 		// MaxLeaseLength with a value and with a type
-		MaxLeaseLength: yup.object().shape({
+		maxLeaseLength: yup.object().shape({
 			value: yup.number().required("Please enter a maximum lease length"),
 			type: yup.string().oneOf(["days", "weeks", "months", "years"]).default("days"),
 		}),
-		MinLeaseLength: yup.object().shape({
+		minLeaseLength: yup.object().shape({
 			value: yup.number().required("Please enter a minimum lease length"),
 			type: yup.string().oneOf(["days", "weeks", "months", "years"]).default("days"),
 		}),
@@ -446,11 +449,11 @@ const CreateListingPage = () => {
 		// 		image: "",
 		// 	},
 		// ],
-		MaxLeaseLength: {
+		maxLeaseLength: {
 			value: "",
 			type: "days",
 		},
-		MinLeaseLength: {
+		minLeaseLength: {
 			value: "",
 			type: "days",
 		},
@@ -462,18 +465,23 @@ const CreateListingPage = () => {
 				value: "",
 			},
 		],
+		propertyImages: [
+			{
+				image: "",
+			}
+		]
 	};
 
 	const [previewAdValues, setpreviewAdValues] = React.useState(initialValues);
 
 	const handelSubmit = (values) => {
 		alert(JSON.stringify(values, null, 2));
+		createRentalPost(values);
 	};
 	const handelPreview = (values) => {
 		setpreviewAdValues(values);
 		onAdPreviewOpen();
-		
-	}
+	};
 	return (
 		<div className="bg-[#EDF2FA] lg:px-20 py-10">
 			<AdPreviewModal previewAdValues={previewAdValues} isOpen={isAdPreviewOpen} onClose={onAdPreviewClose} />
@@ -546,19 +554,18 @@ const CreateListingPage = () => {
 														<div key={index} className="flex space-x-1">
 															<InputField name={`propertyPrice[${index}].price`} label="Property Price" placeholder="Property Price" type="number" inputRightAddon={"Birr"} />
 															<div className="flex">
-
-															<InputFieldSelect name={`propertyPrice[${index}].priceType`} label="Property Price Type" options={Price_Type} />
-															<IconButton
-																onClick={() => {
-																	formik.setFieldValue(
-																		"propertyPrice",
-																		formik.values.propertyPrice.filter((_, i) => i !== index),
-																	);
-																}}
-																backgroundColor={"red.400"}
-																color={"white"}
-																icon={<DeleteIcon />}
-															/>
+																<InputFieldSelect name={`propertyPrice[${index}].priceType`} label="Property Price Type" options={Price_Type} />
+																<IconButton
+																	onClick={() => {
+																		formik.setFieldValue(
+																			"propertyPrice",
+																			formik.values.propertyPrice.filter((_, i) => i !== index),
+																		);
+																	}}
+																	backgroundColor={"red.400"}
+																	color={"white"}
+																	icon={<DeleteIcon />}
+																/>
 															</div>
 														</div>
 													))}
@@ -579,15 +586,15 @@ const CreateListingPage = () => {
 											</Heading>
 											<div className="flex flex-col space-y-2">
 												<div className="flex space-x-1">
-													<InputField name="MinLeaseLength.value" label="Minimum Lease Length" placeholder="Min Lease Length" type="number" />
+													<InputField name="minLeaseLength.value" label="Minimum Lease Length" placeholder="Min Lease Length" type="number" />
 													<div>
-														<InputFieldSelect name="MinLeaseLength.type" label="Min Lease Length Type" options={Lease_Length_Type} />
+														<InputFieldSelect name="minLeaseLength.type" label="Min Lease Length Type" options={Lease_Length_Type} />
 													</div>
 												</div>
 												<div className="flex space-x-1">
-													<InputField name="MaxLeaseLength.value" label="Maximum Lease Length" placeholder="Max Lease Length" type="number" />
+													<InputField name="maxLeaseLength.value" label="Maximum Lease Length" placeholder="Max Lease Length" type="number" />
 													<div>
-														<InputFieldSelect name="MaxLeaseLength.type" label="Max Lease Length Type" options={Lease_Length_Type} />
+														<InputFieldSelect name="maxLeaseLength.type" label="Max Lease Length Type" options={Lease_Length_Type} />
 													</div>
 												</div>
 												<InputFieldTextarea name="propertyLeaseTerm" label="Property Lease Term" placeholder="Property Lease Term" />
@@ -604,19 +611,18 @@ const CreateListingPage = () => {
 														<div key={index} className="flex space-x-1">
 															<InputField name={`propertyContact[${index}].value`} label="Property Contact" placeholder="Property Contact" type="text" />
 															<div className="flex">
-
-															<InputFieldSelect name={`propertyContact[${index}].type`} label="Property Contact Type" options={Contact_Type} />
-															<IconButton
-																onClick={() => {
-																	formik.setFieldValue(
-																		"propertyContact",
-																		formik.values.propertyContact.filter((_, i) => i !== index),
-																	);
-																}}
-																backgroundColor={"red.400"}
-																color={"white"}
-																icon={<DeleteIcon />}
-															/>
+																<InputFieldSelect name={`propertyContact[${index}].type`} label="Property Contact Type" options={Contact_Type} />
+																<IconButton
+																	onClick={() => {
+																		formik.setFieldValue(
+																			"propertyContact",
+																			formik.values.propertyContact.filter((_, i) => i !== index),
+																		);
+																	}}
+																	backgroundColor={"red.400"}
+																	color={"white"}
+																	icon={<DeleteIcon />}
+																/>
 															</div>
 														</div>
 													))}
@@ -632,7 +638,17 @@ const CreateListingPage = () => {
 										</div>
 										<div className="flex space-x-2 justify-between ">
 											<div>
-												<Button type="button" variant="outline" className=" p-2 rounded-md mt-4 " borderColor={"#2b6aa0"} size="lg" fontSize="md" onClick={()=>{handelPreview(formik.values)} }>
+												<Button
+													type="button"
+													variant="outline"
+													className=" p-2 rounded-md mt-4 "
+													borderColor={"#2b6aa0"}
+													size="lg"
+													fontSize="md"
+													onClick={() => {
+														handelPreview(formik.values);
+													}}
+												>
 													<span className="text-[#2b6aa0]">Preview</span>
 												</Button>
 											</div>

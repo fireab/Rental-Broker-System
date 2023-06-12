@@ -168,7 +168,7 @@ const RentalsPage = () => {
 		},
 	];
 
-	const { rentalsPosts, isLoading, error } = useRentalPosts();
+	const { rentalsPosts, saveRentalPost, isLoading, error } = useRentalPosts();
 
 	if (isLoading) {
 		return <div>Loading...</div>;

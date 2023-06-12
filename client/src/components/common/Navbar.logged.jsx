@@ -114,7 +114,9 @@ const NavbarLogged = () => {
 								</div>
 							</RouterLink>
 							<div className="hidden lg:block">
-								<form action="/search">
+								<form action="/rentals/search" onSubmit={()=>{
+									console.log("search")
+								}}>
 									<div className="relative">
 										<div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
 											<Search size={18} strokeWidth={3} color={"#2b6cb0"} />
