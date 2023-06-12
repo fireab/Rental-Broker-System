@@ -199,7 +199,8 @@ const resendVerificationCode = async (req, res) => {
 
 const login = async (req, res) => {
   const { email, username } = req.body;
-
+  console.log(req.body);
+  
   try {
     // Find the user based on the provided username
     const user = await prisma.users.findUnique({
@@ -223,20 +224,20 @@ const login = async (req, res) => {
     if (!isPasswordCorrect) {
       return res.status(400).json("Wrong username or password!");
     }
-
+    
     // Generate a JWT token with the user's ID
     const token = jwt.sign({ id: user.id }, "jwtkey");
-
+    
     // Exclude the password field from the response
     const { password, ...userData } = user;
-
+    
     // Set the token as an HTTP-only cookie and send the user data in the response
     res
-      .cookie("access_token", token, {
-        httpOnly: true,
-      })
-      .status(200)
-      .json(userData);
+    .cookie("access_token", token, {
+      httpOnly: true,
+    })
+    .status(200)
+    .json(userData);
   } catch (error) {
     // Handle any internal server errors
     res.status(500).json("Internal server error");
