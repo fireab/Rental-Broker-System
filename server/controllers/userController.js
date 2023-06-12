@@ -4,14 +4,6 @@ const bcrypt = require("bcryptjs");
 
 const updateProfile = async (req, res) => {
   try {
-    const token = req.cookies.access_token;
-
-    if (!token) {
-      return res.status(401).json("Not authenticated!");
-    }
-
-    const userInfo = jwt.verify(token, process.env.MY_KEY);
-
     const {
       firstName,
       lastName,
@@ -64,7 +56,7 @@ const updateProfile = async (req, res) => {
     if (region || state || street) {
       // Find the address for the user
       const userAddress = await prisma.address.findFirst({
-        where: { usersId: userInfo.id },
+        where: { usersId: req.userInfo.id },
       });
 
       if (userAddress) {
@@ -86,7 +78,7 @@ const updateProfile = async (req, res) => {
             region,
             state,
             street,
-            userId: userInfo.id,
+            userId: req.userInfo.id,
           },
         });
       }
@@ -94,7 +86,7 @@ const updateProfile = async (req, res) => {
 
     // Update the user profile in the database
     const updatedUser = await prisma.users.update({
-      where: { id: userInfo.id },
+      where: { id: req.userInfo.id },
       data,
       select: {
         firstName: true,
@@ -114,86 +106,57 @@ const updateProfile = async (req, res) => {
 };
 
 const getUserProfile = async (req, res) => {
-  console.log("req.body");
   try {
-    const token = req.cookies.access_token;
-    if (!token) {
-      // If token is missing, return 401 Unauthorized
-      return res.status(401).json("Not authenticated!");
-    }
-
-    // Verify the token
-    jwt.verify(token, process.env.MY_KEY, async (err, userInfo) => {
-      if (err) {
-        // If token is invalid, return 403 Forbidden
-        return res.status(403).json("Token is not valid!");
-      }
-
-      // Retrieve user profile from the database
-      const user = await prisma.users.findFirst({
-        where: { id: userInfo.id },
-        select: {
-          id: true,
-          username: true,
-          email: true,
-          firstName: true,
-          lastName: true,
-          phoneNumber: true,
-          address: {
-            select: {
-              region: true,
-              street: true,
-              region: true,
-            },
+    // Retrieve user profile from the database
+    const user = await prisma.users.findFirst({
+      where: { id: req.userInfo.id },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        phoneNumber: true,
+        address: {
+          select: {
+            region: true,
+            street: true,
+            region: true,
           },
         },
-      });
-      // Return the user profile
-      return res.status(200).json(user);
+      },
     });
+    // Return the user profile
+    return res.status(200).json(user);
   } catch (error) {
     // Return error message for internal server error
     res.status(500).json("Internal server error");
   }
 };
 
-const deleteAccount = (req, res) => {
+const deleteAccount = async (req, res) => {
   try {
-    const token = req.cookies.access_token;
-    if (!token) {
-      // If token is missing, return 401 Unauthorized
-      return res.status(401).json("Not authenticated!");
-    }
-
-    // Verify the token
-    jwt.verify(token, process.env.MY_KEY, async (err, userInfo) => {
-      if (err) {
-        // If token is invalid, return 403 Forbidden
-        return res.status(403).json("Token is not valid!");
-      }
-
-      // Retrieve user profile from the database
-      const userExist = await prisma.users.findFirst({
-        where: { id: userInfo.id },
-      });
-      if (userExist) {
-        const otp = await prisma.otp.findFirst({
-          where: { userid: userInfo.id },
-        });
-
-        if (!otp) return res.status(404).json("verfied account is not found");
-        await prisma.otp.delete({
-          where: { id: otp.id },
-        });
-
-        await prisma.users.delete({
-          where: { id: userInfo.id },
-        });
-
-        return res.status(200).json("delete successful");
-      }
-      return res.status(404).json("user doesn't exist");
+    // Retrieve user profile from the database
+    const userExist = await prisma.users.findFirst({
+      where: { id: req.userInfo.id },
     });
+    if (userExist) {
+      const otp = await prisma.otp.findFirst({
+        where: { userid: req.userInfo.id },
+      });
+
+      if (!otp) return res.status(404).json("verfied account is not found");
+      await prisma.otp.delete({
+        where: { id: otp.id },
+      });
+
+      await prisma.users.delete({
+        where: { id: req.userInfo.id },
+      });
+
+      return res.status(200).json("delete successful");
+    }
+    return res.status(404).json("user doesn't exist");
   } catch (error) {
     return res.status(500).json("internal server error");
   }
@@ -202,31 +165,32 @@ const deleteAccount = (req, res) => {
 // Follow a user
 const followUser = async (req, res) => {
   try {
-    const token = req.cookies.access_token;
-    if (!token) {
-      // If token is missing, return 401 Unauthorized
-      return res.status(401).json("Not authenticated!");
-    }
-
     const { followingId } = req.body;
     // Verify the token
-    jwt.verify(token, process.env.MY_KEY, async (err, userInfo) => {
-      console.log(req.body);
-      // const follow = await prisma.UserFollower.create({
-      //   data: {
-      //     followerId: userInfo.id,
-      //     followingId,
-      //   },
-      // });
-      const follow = await prisma.UserFollower.create({
-        data: {
-          followingId,
-          followerId: userInfo.id,
-        },
-      });
 
-      return res.status(200).json({ message: "User followed successfully" });
+    const userExists = await prisma.users.findFirst({
+      where: { id: followingId },
     });
+
+    if (!userExists) return res.status(404).json({ error: "User not found" });
+
+    const isFollowing = await prisma.userFollower.findFirst({
+      where: {
+        AND: [{ followingId: followingId }, { followerId: req.userInfo.id }],
+      },
+    });
+
+    if (isFollowing)
+      return res.status(400).json({ error: "User is already being followed" });
+
+    const follow = await prisma.UserFollower.create({
+      data: {
+        followingId,
+        followerId: req.userInfo.id,
+      },
+    });
+
+    return res.status(200).json({ message: "User followed successfully" });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal server error" });
@@ -236,45 +200,28 @@ const followUser = async (req, res) => {
 const unfollowUser = async (req, res) => {
   try {
     const { followingId } = req.body;
-    const token = req.cookies.access_token;
-
-    if (!token) {
-      return res.status(401).json("Not authenticated!");
-    }
 
     // Verify the token
-    jwt.verify(token, process.env.MY_KEY, async (err, userInfo) => {
-      if (err) {
-        return res.status(401).json("Token verification failed");
-      }
 
-      try {
-        const isFollowing = await prisma.userFollower.findFirst({
-          where: {
-            followerId: userInfo.id,
-            followingId,
-          },
-        });
-        if (isFollowing) {
-          const unfollow = await prisma.userFollower.deleteMany({
-            where: {
-              followerId: userInfo.id,
-              followingId,
-            },
-          });
-
-          return res
-            .status(200)
-            .json({ message: "User unfollowed successfully", unfollow });
-        }
-        return res
-          .status(403)
-          .json({ message: "You are not following this user" });
-      } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
-      }
+    const isFollowing = await prisma.userFollower.findFirst({
+      where: {
+        followerId: req.userInfo.id,
+        followingId,
+      },
     });
+    if (isFollowing) {
+      const unfollow = await prisma.userFollower.deleteMany({
+        where: {
+          followerId: req.userInfo.id,
+          followingId,
+        },
+      });
+
+      return res
+        .status(200)
+        .json({ message: "User unfollowed successfully", unfollow });
+    }
+    return res.status(403).json({ message: "You are not following this user" });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal server error" });
@@ -283,29 +230,32 @@ const unfollowUser = async (req, res) => {
 
 const getFollowersAndFollowing = async (req, res) => {
   try {
-    const { userId } = req.params;
+    // const { userId } = req.params;
+
+    // Verify the token
 
     const followersCount = await prisma.userFollower.count({
       where: {
-        followingId: userId,
+        followingId: req.userInfo.id,
       },
     });
 
     const followingCount = await prisma.userFollower.count({
       where: {
-        followerId: userId,
+        followerId: req.userInfo.id,
       },
     });
 
     const followers = await prisma.userFollower.findMany({
       where: {
-        followingId: userId,
+        followingId: req.userInfo.id,
       },
       select: {
         follower: {
           select: {
             id: true,
             username: true,
+            image: true,
           },
         },
       },
@@ -313,13 +263,14 @@ const getFollowersAndFollowing = async (req, res) => {
 
     const following = await prisma.userFollower.findMany({
       where: {
-        followerId: userId,
+        followerId: req.userInfo.id,
       },
       select: {
         following: {
           select: {
             id: true,
             username: true,
+            image: true,
           },
         },
       },

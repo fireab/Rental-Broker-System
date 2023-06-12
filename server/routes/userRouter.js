@@ -7,13 +7,18 @@ const {
   unfollowUser,
   getFollowersAndFollowing,
 } = require("../controllers/userController.js");
+const authenticateUser = require("../middleware/autorization.js");
 const router = express.Router();
 
-router.put("/updateProfile", updateProfile);
-router.get("/userprofile", getUserProfile);
-router.delete("/deleteaccount", deleteAccount);
-router.post("/follow", followUser);
-router.post("/unfollow", unfollowUser);
-router.post("/getfollowersandfollowing", getFollowersAndFollowing);
+router.put("/updateProfile", authenticateUser, updateProfile);
+router.get("/userprofile", authenticateUser, getUserProfile);
+router.delete("/deleteaccount", authenticateUser, deleteAccount);
+router.post("/follow", authenticateUser, followUser);
+router.post("/unfollow", authenticateUser, unfollowUser);
+router.post(
+  "/getfollowersandfollowing",
+  authenticateUser,
+  getFollowersAndFollowing
+);
 
 module.exports = router;
