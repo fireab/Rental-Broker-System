@@ -21,10 +21,5 @@
   "bugs": {
     "url": "https://github.com/dilamowonde/Rental-Broker-System/issues"
   },
-  "homepage": "https://github.com/dilamowonde/Rental-Broker-System#readme",
-  "dependencies": {
-    "react-cookie": "^4.1.1",
-    "react-icons": "^4.9.0",
-    "react-slick": "^0.29.0"
-  }
+  "homepage": "https://github.com/dilamowonde/Rental-Broker-System#readme"
 }

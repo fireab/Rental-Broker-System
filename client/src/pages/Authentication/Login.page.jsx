@@ -4,18 +4,17 @@ import { isValidMotionProp, motion } from "framer-motion";
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { redirect, Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 import { ChevronLeft, Lock, Mail, Plus } from "tabler-icons-react";
 import * as yup from "yup";
 
 import Header from "../../components/Authentication/header";
+import { useLoginUserMutation } from "../../redux/api/authApi";
+import { loginValidationSchema as validationSchema } from "../../utils/validation";
 // import { useAuth } from "../../hooks/useAuth";
 import InputField from "./../../components/Authentication/InputField";
 import InputFieldCheckbox from "./../../components/Authentication/InputField.checkbox";
-import { loginValidationSchema as validationSchema } from "../../utils/validation";
 import Message from './../Message/Message';
-import { toast } from 'react-toastify';
-import { useLoginUserMutation } from "../../redux/api/authApi";
-
 
 const MotionButton = motion(Button);
 const LoginPage = () => {
@@ -33,7 +32,6 @@ const LoginPage = () => {
 	const from = ((location.state)?.from.pathname) || '/rentals';
 	useEffect(() => {
 		if (isSuccess) {
-			console.log("Login Success");
 		  toast.success('You successfully logged in');
 		  navigate(from);
 		}
@@ -59,8 +57,7 @@ const LoginPage = () => {
 		rememberMe: false,
 	};
 	const handelSubmit = async (values) => {
-		navigate(from);
-		// loginUser(values);
+		loginUser(values);
 		// setLoding(true);
 
 		// await login(values.email, values.password)

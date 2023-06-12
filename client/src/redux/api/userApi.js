@@ -1,8 +1,9 @@
-import { createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
-import { setUser } from "../features/user.slice";
-import { redirect } from 'react-router-dom';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { redirect } from "react-router-dom";
 
-const BASE_URL = "http://localhost:3032";
+import { logoutUser, setUser } from "../features/user.slice";
+
+const BASE_URL = "";
 
 export const userApi = createApi({
 	reducerPath: "userApi",
@@ -16,23 +17,24 @@ export const userApi = createApi({
 			query() {
 				return {
 					url: "userprofile",
-					credentials: 'include',
+					credentials: "include",
 				};
 			},
 			async onQueryStarted(args, { dispatch, queryFulfilled }) {
 				try {
 					const { data } = await queryFulfilled;
 					console.log("data userApi getMe");
+					console.log(data);
 					dispatch(setUser(data));
 				} catch (error) {
-					console.log(error);
-					console.log("error userApi getMe");
-					redirect("/login");
+					if (error.error.status) {
+						dispatch(logoutUser());
+						return redirect("/login");
+					}
 				}
 			},
 		}),
 	}),
 });
 
-
-export const { useUserQuery} = userApi;
+export const { useUserQuery } = userApi;

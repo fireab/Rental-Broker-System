@@ -3,7 +3,7 @@ import { Button, useDisclosure, useSteps } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import { Mail, Password, User } from "tabler-icons-react";
 
 import AccountTypeModal from "../../components/Authentication/AccountType.modal";
@@ -12,13 +12,17 @@ import InputField from "../../components/Authentication/InputField";
 import InputFieldSelect from "../../components/Authentication/InputField.select";
 import OTPModal from "../../components/Authentication/OTP.modal";
 import RegistrationStepper from "../../components/Authentication/registration.stepper";
-// import { useAuth } from "../../hooks/useAuth";
-import { cities, languages, regions, steps } from "./../../utils/list";
+import { useRegisterUserMutation, useSetupOTPMutation } from "../../redux/api/authApi";
 import { signupValidationSchema as validationSchema } from "../../utils/validation";
-import { useRegisterUserMutation } from "../../redux/api/authApi";
+// import { cities, languages, regions, steps } from "../../hooks/useAuth";
+import { cities, languages, regions, steps } from "./../../utils/list";
 
 const RegisterPage = () => {
 	// const { signup, setupOTP, checkOTP } = useAuth();
+
+	const [registerUser, { isLoading: registrationLoading, isError: registrationError, error: registrationErrorData, isSuccess: registrationSuccess }] = useRegisterUserMutation();
+	const [setupOTP, { isLoading: setupOTPLoading, isError: setupOTPError, error: setupOTPErrorData, isSuccess: setupOTPSuccess }] = useSetupOTPMutation();
+
 	const { isOpen: isOTPOpen, onOpen: onOTPOpen, onClose: onOTPClose } = useDisclosure(true);
 	const {
 		isOpen: isOpenModalAccountType,
@@ -27,12 +31,9 @@ const RegisterPage = () => {
 	} = useDisclosure({
 		defaultIsOpen: true,
 	});
-	const [registrationLoading, setregistrationLoding] = useState(false);
+	// const [registrationLoading, setregistrationLoding] = useState(false);
 	const [OTPSending, setOTPSending] = useState(false);
 	// const [checkingUsernameAvaliablity, setcheckingUsernameAvaliablity] = useState(false);
-
-	const [registerUser, { isLoading, isSuccess, error, isError }] =
-    useRegisterUserMutation();
 
 	const { activeStep, setActiveStep } = useSteps({
 		index: 0,
@@ -60,48 +61,30 @@ const RegisterPage = () => {
 			city: "",
 		},
 	];
+	const navigate = useNavigate();
 	const handleSubmit = async (values) => {
-		// if (activeStep < 2) {
-		// 	if (activeStep === 1) {
-				// setOTPSending(true);
+		if (activeStep < 2) {
+			if (activeStep === 1) {
+				setOTPSending(true);
+				console.log({ email: values.email, phoneNumber: values.phoneNumber, username: values.username });
 				// setStepValues((stepValues) => ({ ...stepValues, ...values }));
-				// await setupOTP({ email: values.email, phoneNumber: values.phoneNumber, username: values.username })
-				// 	.then((res) => {
-				// 		console.log("setupOTP success");
-				// 		onOTPOpen();
-				// 	})
-				// 	.catch((err) => {
-				// 		console.log("setupOTP failed");
-				// 	})
-				// 	.finally(() => {
-				// 		setOTPSending(false);
-				// 	});
-			// }
-			//  else {
-		// 		setStepValues((stepValues) => ({ ...stepValues, ...values }));
-		// 		setActiveStep(activeStep + 1);
-		// 	}
-		// } else {
-		// 	setregistrationLoding(true);
-
-			// await signup({ ...values, accountType: plan })
-			// 	.then((res) => {
-			// 		console.log(res);
-			// 	})
-			// 	.catch((err) => {
-			// 		console.log(err);
-			// 	})
-			// 	.finally(() => {
-			// 		setregistrationLoding(false);
-			// 	});
-		// }
+				setupOTP({ email: values.email, phoneNumber: values.phoneNumber, username: values.username });
+				onOTPOpen();
+			} else {
+				// setStepValues((stepValues) => ({ ...stepValues, ...values }));
+				setActiveStep(activeStep + 1);
+			}
+		} else {
+			registerUser(values);
+			navigate('/rentals');
+		}
 	};
 
 	return (
 		<main className="bg-gradient-to-r from-[#870bad] to-[#d60c60] min-h-screen  flex flex-col">
 			<AccountTypeModal plan={plan} setPlan={setPlan} isOpenModalAccountType={isOpenModalAccountType} onCloseModalAccountType={onCloseModalAccountType} />
 
-			<OTPModal emeail={stepValues.email} setActiveStep={setActiveStep} activeStep={activeStep} onClose={onOTPClose} isOpen={isOTPOpen} />
+			<OTPModal email={stepValues.email} setActiveStep={setActiveStep} activeStep={activeStep} onClose={onOTPClose} isOpen={isOTPOpen} />
 			<div className="w-full h-16 flex-none">
 				<div className="flex  items-center">
 					<div className="hidden md:block md:w-1/2 p-4 ">
@@ -159,7 +142,7 @@ const RegisterPage = () => {
 																{activeStep === 1 && (
 																	<motion.div key={2} initial={{ opacity: 0.5, x: 100 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -100 }} transition={{ duration: 0.2 }}>
 																		<InputField
-																			liveValidate={true}
+																			// liveValidate={true}
 																			// isValidating={
 																			// 	//check if username is being validated so i can show  loading icon
 																			// 	checkingUsernameAvaliablity && formik.values.username !== "" && formik.errors.username === undefined
@@ -214,7 +197,7 @@ const RegisterPage = () => {
 																			)}
 																		</div>
 
-																		<Button type="submit" _loading={{ color: "white" }} disabled={!formik.isValid && isValidating || formik.isSubmitting} loadingText="Please wait" isLoading={OTPSending} justifySelf={"end"} alignSelf={"end"} _hover={{ bgColor: "#2b6aa0" }} bgColor="#2b6cb0" size="lg" fontSize="md">
+																		<Button type="submit" _loading={{ color: "white" }} disabled={(!formik.isValid && isValidating) || formik.isSubmitting} loadingText="Please wait" isLoading={OTPSending} justifySelf={"end"} alignSelf={"end"} _hover={{ bgColor: "#2b6aa0" }} bgColor="#2b6cb0" size="lg" fontSize="md">
 																			<span className="text-white">Next</span>
 																		</Button>
 																	</>

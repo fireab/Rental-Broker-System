@@ -20,6 +20,7 @@ const NavbarLogged = () => {
 	// const { logout, isLoading } = useAuth();
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const isMobile = useBreakpointValue({ base: true, md: false });
+	const [logoutUser, { isLoading: LogoutLoading, isError: LogoutError, error: LogoutErrorData, isSuccess: LogoutSuccess }] = useLogoutUserMutation();
 
 	const { isOpen: isMessageMenuOpen, onOpen: onMessageMenuOpen, onClose: onMessageMenuClose } = useDisclosure(false);
 	const { isOpen: isNotificationMenuOpen, onOpen: onNotificationMenuOpen, onClose: onNotificationMenuClose } = useDisclosure(false);
@@ -54,7 +55,6 @@ const NavbarLogged = () => {
 		setIsDrawerOpen(false);
 	};
 	// useLogoutUserMutation
-	const [logoutUser, { isLoading, isError, error, isSuccess }] = useLogoutUserMutation();
 
 	const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 	useEffect(() => {
@@ -68,32 +68,35 @@ const NavbarLogged = () => {
 	}, [viewportWidth]);
 
 	const location = useLocation();
-	// const from = ((location.state)?.from.pathname) || '/login';
+	const from = location.state?.from.pathname || "/login";
 	useEffect(() => {
-		if (isSuccess) {
+		if (LogoutSuccess) {
 			window.location.href = "/login";
-			//   navigate('/login');
+			navigate("/login");
 		}
 
-		if (isError) {
-			if (Array.isArray(error.data.error)) {
-				error.data.error.forEach((el) =>
+		if (LogoutError) {
+			if (Array.isArray(LogoutErrorData.data.error)) {
+				LogoutErrorData.data.error.forEach((el) =>
 					toast.error(el.message, {
 						position: "top-right",
 					}),
 				);
 			} else {
-				toast.error(error.data.message, {
+				toast.error(LogoutErrorData.data.message, {
 					position: "top-right",
 				});
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isLoading]);
+	}, [LogoutLoading]);
 	const onLogoutHandler = async () => {
-		logoutUser();
-		// navigate("/login");
-		window.location.href = "/login";
+		await logoutUser()
+			.unwrap()
+			.then((res) => {
+				navigate("/login");
+				window.location.href = "/login";
+			});
 	};
 	return (
 		<>
@@ -327,7 +330,12 @@ const NavbarLogged = () => {
 																<span className="text-[#2b6cb0]">Help and Support</span>
 															</RouterLink>
 															<RouterLink to="">
-																<Button onClick={handleCloseDrawer} leftIcon={<Logout />} color={"red"} variant="solid">
+																<Button
+																	onClick={onLogoutHandler}
+																	leftIcon={<Logout />}
+																	color={"red"}
+																	variant="solid"
+																>
 																	Logout
 																</Button>
 															</RouterLink>

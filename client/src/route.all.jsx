@@ -1,5 +1,16 @@
+import axios from "axios";
 import { createBrowserRouter, Outlet } from "react-router-dom";
 
+import ChangePasswordView from "./components/Account/ChangePassword.view";
+import EditProfileView from "./components/Account/EditProfile.view";
+import ProfilePageView from "./components/Account/ProfilePage.view";
+import Sidebar from "./components/common/Sidebar";
+import Sidenav from "./components/common/Sidenav";
+import IsAuthorized from "./components/isAuthorized";
+import IsNotAuthorized from "./components/isNotAuthorized";
+import Layout from "./Layout";
+import LayoutLogged from "./Layout.logged";
+import LayoutLoggedMin from "./Layout.logged.min";
 import AboutPage from "./pages/About.page";
 import LoginPage from "./pages/Authentication/Login.page";
 import RegisterPage from "./pages/Authentication/Register.page";
@@ -13,35 +24,15 @@ import PropertyListPage from "./pages/Rentals/PropertyList.page";
 import RentalsPage from "./pages/Rentals/Rentals.page";
 import SearchResultsPage from "./pages/Rentals/SearchResults.page";
 import AccountSettingPage from "./pages/User/Account/AccountSetting.page";
-import EditProfilePage from "./pages/User/Account/EditProfile.page";
 import FavoriteRentalsPage from "./pages/User/Account/FavoriteRentals.page";
 import CreateListingPage from "./pages/User/RentalProperty/CreateListing.page";
 import EditPropertyPage from "./pages/User/RentalProperty/EditProperty.page";
-
 import ProfileLayout from "./Profile.Layout";
-import ProfilePageView from "./components/Account/ProfilePage.view";
-import EditProfileView from "./components/Account/EditProfile.view";
-import ChangePasswordView from "./components/Account/ChangePassword.view";
-
-import Sidebar from "./components/common/Sidebar";
-import Sidenav from "./components/common/Sidenav";
-import ImageSlider from "./components/RentalProperty/ImageSlider";
-import PropertyCard from "./components/RentalProperty/PropertyCard";
-import axios from "axios";
-import LayoutLogged from "./Layout.logged";
-import IsAuthorized from "./components/isAuthorized";
-import Layout from "./Layout";
-import IsNotAuthorized from "./components/isNotAuthorized";
-import LayoutLoggedMin from "./Layout.logged.min";
 
 const route = createBrowserRouter([
 	{
 		path: "/",
-		element: (
-			<IsNotAuthorized>
-				<Outlet />
-			</IsNotAuthorized>
-		),
+		element: <IsNotAuthorized />,
 
 		children: [
 			{
@@ -78,16 +69,11 @@ const route = createBrowserRouter([
 	},
 	{
 		path: "/",
-		element: (
-			// <IsAuthorized>
-
-			<Outlet />
-			// </IsAuthorized>
-		),
+		element: <IsAuthorized />,
 		children: [
 			{
 				index: true,
-				Component: <LayoutLogged>Homepage</LayoutLogged>,
+				element: <LayoutLogged>Homepage</LayoutLogged>,
 			},
 			{
 				path: "user",
@@ -102,11 +88,11 @@ const route = createBrowserRouter([
 					{
 						path: "profile",
 						Component: ProfilePageView,
-						loader: async ({ request }) => {
-							return await axios.get(`https://jsonplaceholder.typicode.com/users/`).then((res) => {
-								return res.data;
-							});
-						},
+						// loader: async ({ request }) => {
+						// return await axios.get(`https://jsonplaceholder.typicode.com/users/`).then((res) => {
+						// 	return res.data;
+						// });
+						// },
 					},
 					{
 						path: "Edit",

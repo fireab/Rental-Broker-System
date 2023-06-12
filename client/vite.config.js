@@ -6,11 +6,11 @@ export default defineConfig({
 	plugins: [react()],
 	server: {
 		proxy: {
-			"/api": "http://localhost:3032",
+			"/api": "http://192.168.8.113:3032",
 		},
 	},
 	build: {
-		outDir: "./../server/public",
+		// outDir: "./../server/public",
 		// 	// watch: {
 		// 	// 	""
 		// 	// },

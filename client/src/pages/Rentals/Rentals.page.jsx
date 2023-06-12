@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
 import PropertyCard from "../../components/RentalProperty/PropertyCard";
+import { useRentalPosts } from "../../hooks/rentalPost";
 import InputFieldSelect from "./../../components/RentalProperty/InputField.select";
 import { cities, citiesList, regions } from "./../../utils/list";
 
@@ -167,7 +168,17 @@ const RentalsPage = () => {
 		},
 	];
 
+	const { rentalsPosts, isLoading, error } = useRentalPosts();
 
+	if (isLoading) {
+		return <div>Loading...</div>;
+	}
+
+	if (error) {
+		return <div>Error: {error.message}</div>;
+	}
+
+	console.log(rentalsPosts);
 	return (
 		<div className="">
 			<Modal isOpen={isOpenFilter} onClose={onCloseFilter}>
