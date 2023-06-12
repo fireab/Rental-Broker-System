@@ -211,7 +211,7 @@ const login = async (req, res) => {
 
     // Check if the user exists
     if (!user) {
-      return res.status(404).json("User not found!");
+      return res.status(400).json("Wrong username or password!");
     }
 
     // Compare the provided password with the stored password

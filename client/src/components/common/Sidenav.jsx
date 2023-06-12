@@ -1,18 +1,18 @@
 import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Avatar, Box, Button, Checkbox, Divider, Flex, FormControl, FormLabel, Heading, Icon, Stack, Text, VStack } from '@chakra-ui/react';
 import React, {useState} from 'react';
-// import { FiChevronLeft, FiChevronRight, FiHome,
-//     FiTrendingUp,
-//     FiCompass,
-//     FiStar,
-//     FiSettings, } from 'react-icons/fi';
-// import { GrCatalog } from 'react-icons/gr';
-// import { FaFunnelDollar } from 'react-icons/fa';
+import { FiChevronLeft, FiChevronRight, FiHome,
+  FiTrendingUp,
+  FiCompass,
+  FiStar,
+  FiSettings, } from 'react-icons/fi';
+import { GrCatalog } from 'react-icons/gr';
+import { FaFunnelDollar } from 'react-icons/fa';
 import { Home } from 'tabler-icons-react';
 
 const sidebarItems = [
-    { name: "Catagories", icon: Home, content: "Home content" },
-    { name: "Price range", icon: Home, content: "Trending content" },
-    { name: "Location", icon: Home, content: "Explore content" },
+    { name: "Catagories", icon: GrCatalog, content: "Home content" },
+    { name: "Price range", icon: FaFunnelDollar, content: "Trending content" },
+    { name: "Location", icon: FiCompass, content: "Explore content" },
   ];
 
 const Sidenav = () => {
@@ -107,4 +107,4 @@ const Sidenav = () => {
   )
 }
 
-export default Sidenav
+export default Sidenav;

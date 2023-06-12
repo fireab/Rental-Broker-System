@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { BsBookmarkFill } from "react-icons/bs";
 import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 import { MdLocalShipping } from "react-icons/md";
+import {  Badge, Divider } from '@chakra-ui/react';
+
 
 const PropertyDetailPage = () => {
 	const [isSavedPost, setIsSavePost] = useState(false);

@@ -99,7 +99,7 @@ const NavbarLogged = () => {
 		<>
 			<MessagesModal chatWindow={chatWindow} isOpen={isMesssageModalOpen} onClose={onMessageModalClose} />
 			<NotificationsModal isOpen={isNotificationModalOpen} onClose={onNotificationModalClose} />
-			<nav className="p-2 shadow-md lg:shadow-xl bottom-shadow border-b bg-[#EDF2F4]">
+			<nav className="p-2 shadow-md lg:shadow-xl bottom-shadow border-b bg-[#EDF2F4] z-20">
 				<div className="w-full h-full">
 					<div className="h-full flex items-center justify-between px-2">
 						<div className="flex justify-between items-center md:w-2/5 w-1/2">
@@ -126,7 +126,7 @@ const NavbarLogged = () => {
 							</div>
 						</div>
 						<div className="flex justify-center space-x-1">
-							<div className="flex items-center justify-evenly space-x-2">
+							<div className="flex items-center justify-evenly space-x-2 z-20">
 								<div className="px-2 hidden md:block">
 									<ul className="flex h-full justify-center items-center space-x-4 list-none">
 										<li className="font-bold text-[13px] ">

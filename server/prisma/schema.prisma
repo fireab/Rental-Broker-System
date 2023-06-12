@@ -11,28 +11,43 @@ datasource db {
 }
 
 model Users {
-  id                        String       @id @default(uuid())
-  username                  String       @unique
-  email                     String       @unique
+  id                        String         @id @default(uuid())
+  username                  String         @unique
+  email                     String         @unique
   firstName                 String
   lastName                  String
-  image                     String?      @db.VarChar(255)
+  image                     String?        @db.VarChar(255)
   password                  String
   phoneNumber               String?
   birthday                  String?
   sex                       String?
-  role                      String       @default("user")
+  role                      String         @default("user")
   accountType               String?
   verificationCode          String?
-  isVerified                Boolean      @default(false)
+  isVerified                Boolean        @default(false)
   verificationCodeExpiresAt DateTime?
-  createdAt                 DateTime     @default(now())
-  updatedAt                 DateTime     @updatedAt
+  createdAt                 DateTime       @default(now())
+  updatedAt                 DateTime       @updatedAt
   address                   Address[]
   savedPosts                SavedPosts[]
-  follower                  Followers[]
-  following                 Followings[]
   posts                     Posts[]
+  following                 UserFollower[] @relation("Following")
+  followers                 UserFollower[] @relation("Followers")
+  Followers                 Followers[]
+  Followings                Followings[]
+}
+
+model UserFollower {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  follower  Users? @relation("Following", fields: [followerId], references: [id])
+  following Users? @relation("Followers", fields: [followingId], references: [id])
+
+  followerId  String
+  followingId String
+
+  @@unique([followerId, followingId])
 }
 
 model Otp {
