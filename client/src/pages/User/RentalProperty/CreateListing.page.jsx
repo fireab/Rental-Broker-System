@@ -467,7 +467,7 @@ const CreateListingPage = () => {
 	const [previewAdValues, setpreviewAdValues] = React.useState(initialValues);
 
 	const handelSubmit = (values) => {
-		alert(JSON.stringify(values.MinLeaseLength, null, 2));
+		alert(JSON.stringify(values, null, 2));
 	};
 	const handelPreview = (values) => {
 		setpreviewAdValues(values);

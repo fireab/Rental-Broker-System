@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&family=Orbitron&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&family=Orbitron&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -28,29 +28,53 @@
 	font-style: normal;
 } */
 
-
+.scrollbar-hidden {
+	-ms-overflow-style: none;
+	scrollbar-width: none; /* Firefox */
+}
+.scrollbar-hidden::-webkit-scrollbar {
+	display: none;
+}
 body {
 	/* font-family: 'SegoeUI', sans-serif; */
-    font-family: 'Roboto', sans-serif;
+	font-family: "Roboto", sans-serif;
 	font-weight: normal;
 	/* font-size: medium; */
 }
 
 .filepond--item {
-    width: calc(50% - 0.5em) !important;
+	width: calc(50% - 0.5em) !important;
 }
 @media screen and (max-width: 1024px) {
 	.filepond--item {
 		width: calc(25% - 0.5em) !important;
 	}
 }
-.filepond--credits{
+.filepond--credits {
 	display: none;
 }
 /* .filepond--wrapper{
 	height: 300px !important;	
 }
 */
-.filepond--wrapper .filepond--root{
-	height: 200px !important;	
-} 
+.filepond--wrapper {
+	height: 350px !important;
+}
+@media (min-width: 600px) {
+	.filepond--wrapper {
+		height: 500px !important;
+	}
+}
+@media (min-width: 800px) {
+	.filepond--wrapper {
+		height: 600px !important;
+	}
+}
+@media (min-width: 1024px) {
+	.filepond--wrapper {
+		height: 100% !important;
+	}
+}
+.filepond--list-scroller {
+	height: 100% !important;
+}

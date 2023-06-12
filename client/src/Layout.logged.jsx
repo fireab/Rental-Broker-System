@@ -10,14 +10,14 @@ import NavbarLogged from "./components/common/Navbar.logged";
 // const  Main = styled.main`
 // 	margin-top: ${(props)=>(!props.isLogged? "0px":"0px" )};
 // `
-function Layout({ children }) {
+function LayoutLogged({ children }) {
 	return (
 		<div className="bg-[#EDF2F4]">
-			<Navbar />
+			<NavbarLogged />
 			<main>{children}</main>
 			<Footer />
 		</div>
 	);
 }
 
-export default Layout;
+export default LayoutLogged;

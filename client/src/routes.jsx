@@ -19,15 +19,17 @@ import FavoriteRentalsPage from "./pages/User/Account/FavoriteRentals.page";
 import CreateListingPage from "./pages/User/RentalProperty/CreateListing.page";
 import EditPropertyPage from "./pages/User/RentalProperty/EditProperty.page";
 
-import ProfileLayout from './Profile.Layout';
+import ProfileLayout from "./Profile.Layout";
 import ProfilePageView from "./components/Account/ProfilePage.view";
 import EditProfileView from "./components/Account/EditProfile.view";
 import ChangePasswordView from "./components/Account/ChangePassword.view";
 
 import Sidebar from "./components/common/Sidebar";
-import Sidenav from './components/common/Sidenav';
+import Sidenav from "./components/common/Sidenav";
 import ImageSlider from "./components/RentalProperty/ImageSlider";
 import PropertyCard from "./components/RentalProperty/PropertyCard";
+import PropertytDetailPage from './pages/Rentals/PropertyDetail.page';
+
 
 const route = createBrowserRouter([
   {

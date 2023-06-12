@@ -1,14 +1,16 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { RouterProvider } from "react-router-dom";
+import { BrowserRouter, RouterProvider } from "react-router-dom";
 
-import { useAuth } from "./hooks/useAuth";
-import route from "./routes";
+// import route from "./routes";
 import theme from "./styles/chakraUI.theme/theme.fonts";
 
 import "./App.css";
+// import loggedRoute from "./route.logged";
+import route from "./route.all";
 
 function App() {
-	const { user, isLoading, logout } = useAuth();
+
+
 	return (
 		<>
 			<ChakraProvider theme={theme}>

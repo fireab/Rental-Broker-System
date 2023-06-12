@@ -1,47 +1,82 @@
-import { Button, chakra, Image, shouldForwardProp } from "@chakra-ui/react";
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, chakra, Image, shouldForwardProp } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { isValidMotionProp, motion } from "framer-motion";
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { redirect, Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import { ChevronLeft, Lock, Mail, Plus } from "tabler-icons-react";
 import * as yup from "yup";
 
 import Header from "../../components/Authentication/header";
-import { useAuth } from "../../hooks/useAuth";
+// import { useAuth } from "../../hooks/useAuth";
 import InputField from "./../../components/Authentication/InputField";
 import InputFieldCheckbox from "./../../components/Authentication/InputField.checkbox";
-import { loginValidationSchema as validationSchema} from "../../utils/validation";
+import { loginValidationSchema as validationSchema } from "../../utils/validation";
+import Message from './../Message/Message';
+import { toast } from 'react-toastify';
+import { useLoginUserMutation } from "../../redux/api/authApi";
+
 
 const MotionButton = motion(Button);
 const LoginPage = () => {
+	// const navigate = useNavigate();
 	const [loading, setLoding] = useState(false);
-	const { login, isLoading } = useAuth();
+	// const { login, isLoading } = useAuth();
+	// const [formError, setformError] = useState(undefined);
+
+
+	const [loginUser, { isLoading, isError, error, isSuccess }] =
+    useLoginUserMutation();
+	toast.success('You successfully logged in');
+	const navigate = useNavigate();
+	const location = useLocation();
+	const from = ((location.state)?.from.pathname) || '/rentals';
 	useEffect(() => {
-		console.log(isLoading);
-	}, [isLoading]);
+		if (isSuccess) {
+			console.log("Login Success");
+		  toast.success('You successfully logged in');
+		  navigate(from);
+		}
+		if (isError) {
+		  if (Array.isArray((error).data.error)) {
+			(error).data.error.forEach((el) =>
+			  toast.error(el.message, {
+				position: 'top-right',
+			  })
+			);
+		  } else {
+			toast.error((error).data.message, {
+			  position: 'top-right',
+			});
+		  }
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	  }, [isLoading]);
+
 	const initialValues = {
 		email: "",
 		password: "",
 		rememberMe: false,
 	};
 	const handelSubmit = async (values) => {
-		setLoding(true);
+		navigate(from);
+		// loginUser(values);
+		// setLoding(true);
 
-		await login(values.email, values.password)
-			.then((res) => {
-				console.log("Login Success");
-			})
-			.catch((err) => {
-				console.log("Login Error");
-			})
-			.finally(() => {
-				setLoding(false);
-			});
+		// await login(values.email, values.password)
+		// 	.then((res) => {
+		// 		console.log("Login Success");
+		// 		navigate("/rentals", { replace: true });
+		// 	})
+		// 	.catch((err) => {
+		// 		setformError(err)
+		// 		console.log("Login Error");
+		// 	})
+		// 	.finally(() => {
+		// 		setLoding(false);
+		// 	});
 	};
-	
-	const cookieValue = Cookies.get('access_token');
-	console.log("cookieValue ",cookieValue);
+
 	return (
 		<main className="min-h-screen flex flex-col bg-gradient-to-r from-[#870bad] to-[#d60c60]">
 			<div className="w-full h-16">
@@ -78,7 +113,13 @@ const LoginPage = () => {
 					<div className="max-w-full flex-1 md:py-4 flex justify-center items-center bg-[#EDF2F4]	">
 						<div className="h-full lg:w-3/4 w-full flex flex-col px-4 justify-center items-center space-y-6">
 							<Header title="Login to your account" />
-
+							{isError && (
+								<Alert status="error">
+									<AlertIcon />
+									{/* <AlertTitle>Your browser is outdated!</AlertTitle> */}
+									<AlertDescription>{error.data}</AlertDescription>
+								</Alert>
+							)}
 							<div className="w-full">
 								<Formik initialValues={initialValues} validateOnBlur={true} validateOnChange={false} validationSchema={validationSchema} onSubmit={handelSubmit}>
 									{(formik) => (
@@ -93,7 +134,7 @@ const LoginPage = () => {
 												</RouterLink>
 											</div>
 
-											<Button w={"full"} type="submit" isLoading={loading} _loading={{ color: "white" }} loadingText="Logging In " _hover={{ bgColor: "#2b6aa0" }} bgColor="#2b6cb0" size="lg" fontSize="md">
+											<Button w={"full"} type="submit" isLoading={isLoading} _loading={{ color: "white" }} loadingText="Logging In " _hover={{ bgColor: "#2b6aa0" }} bgColor="#2b6cb0" size="lg" fontSize="md">
 												<span className="text-white">Login</span>
 											</Button>
 										</Form>

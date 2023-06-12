@@ -12,12 +12,13 @@ import InputField from "../../components/Authentication/InputField";
 import InputFieldSelect from "../../components/Authentication/InputField.select";
 import OTPModal from "../../components/Authentication/OTP.modal";
 import RegistrationStepper from "../../components/Authentication/registration.stepper";
-import { useAuth } from "../../hooks/useAuth";
+// import { useAuth } from "../../hooks/useAuth";
 import { cities, languages, regions, steps } from "./../../utils/list";
 import { signupValidationSchema as validationSchema } from "../../utils/validation";
+import { useRegisterUserMutation } from "../../redux/api/authApi";
 
 const RegisterPage = () => {
-	const { signup, setupOTP, checkOTP } = useAuth();
+	// const { signup, setupOTP, checkOTP } = useAuth();
 	const { isOpen: isOTPOpen, onOpen: onOTPOpen, onClose: onOTPClose } = useDisclosure(true);
 	const {
 		isOpen: isOpenModalAccountType,
@@ -29,6 +30,9 @@ const RegisterPage = () => {
 	const [registrationLoading, setregistrationLoding] = useState(false);
 	const [OTPSending, setOTPSending] = useState(false);
 	// const [checkingUsernameAvaliablity, setcheckingUsernameAvaliablity] = useState(false);
+
+	const [registerUser, { isLoading, isSuccess, error, isError }] =
+    useRegisterUserMutation();
 
 	const { activeStep, setActiveStep } = useSteps({
 		index: 0,
@@ -57,39 +61,40 @@ const RegisterPage = () => {
 		},
 	];
 	const handleSubmit = async (values) => {
-		if (activeStep < 2) {
-			if (activeStep === 1) {
-				setOTPSending(true);
-				setStepValues((stepValues) => ({ ...stepValues, ...values }));
-				await setupOTP({ email: values.email, phoneNumber: values.phoneNumber, username: values.username })
-					.then((res) => {
-						console.log("setupOTP success");
-						onOTPOpen();
-					})
-					.catch((err) => {
-						console.log("setupOTP failed");
-					})
-					.finally(() => {
-						setOTPSending(false);
-					});
-			} else {
-				setStepValues((stepValues) => ({ ...stepValues, ...values }));
-				setActiveStep(activeStep + 1);
-			}
-		} else {
-			setregistrationLoding(true);
+		// if (activeStep < 2) {
+		// 	if (activeStep === 1) {
+				// setOTPSending(true);
+				// setStepValues((stepValues) => ({ ...stepValues, ...values }));
+				// await setupOTP({ email: values.email, phoneNumber: values.phoneNumber, username: values.username })
+				// 	.then((res) => {
+				// 		console.log("setupOTP success");
+				// 		onOTPOpen();
+				// 	})
+				// 	.catch((err) => {
+				// 		console.log("setupOTP failed");
+				// 	})
+				// 	.finally(() => {
+				// 		setOTPSending(false);
+				// 	});
+			// }
+			//  else {
+		// 		setStepValues((stepValues) => ({ ...stepValues, ...values }));
+		// 		setActiveStep(activeStep + 1);
+		// 	}
+		// } else {
+		// 	setregistrationLoding(true);
 
-			await signup({ ...values, accountType: plan })
-				.then((res) => {
-					console.log(res);
-				})
-				.catch((err) => {
-					console.log(err);
-				})
-				.finally(() => {
-					setregistrationLoding(false);
-				});
-		}
+			// await signup({ ...values, accountType: plan })
+			// 	.then((res) => {
+			// 		console.log(res);
+			// 	})
+			// 	.catch((err) => {
+			// 		console.log(err);
+			// 	})
+			// 	.finally(() => {
+			// 		setregistrationLoding(false);
+			// 	});
+		// }
 	};
 
 	return (

@@ -4,7 +4,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 
 
 
-const ImageSlider = ({ }) => {
+const ImageSlider = () => {
     const slides = [
         { src: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80' },
         { src: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80' },
@@ -40,6 +40,7 @@ const ImageSlider = ({ }) => {
             m={5}
             rounded="2xl"
             position="relative"
+            
         >
         <Flex position="absolute" top="50%" left="5" transform="translateY(-50%)" alignItems="center">
         <IconButton

@@ -6,7 +6,7 @@ import { BrandTelegram } from 'tabler-icons-react';
 
 const Footer = () => {
     return (
-       <footer className='bg-gray-900 text-white'>
+       <footer className='bg-gray-900 text-white z-10'>
 
         <div className='md:flex md:justify-between md:items-center sm:px-12 px-4 bg-[#ffffff19] py-7'>
 
