@@ -2,6 +2,8 @@ const prisma = require("../config/dbConfig.js");
 const jwt = require("jsonwebtoken");
 
 const addPost = async (req, res) => {
+  console.log("req.body");
+  console.log(req.body);
   try {
     // Extract data from request body
     const {
@@ -20,6 +22,10 @@ const addPost = async (req, res) => {
     } = req.body;
 
     // Create a new post using Prisma client
+    // const propertyImages = req.files.map((file) => ({
+    //   image: file.filename,
+    // }));
+
     const newPost = await prisma.posts.create({
       data: {
         propertyTitle,
@@ -34,6 +40,9 @@ const addPost = async (req, res) => {
         minLeaseLengthValue: minLeaseLength.value,
         minLeaseLengthType: minLeaseLength.type,
         authorId: req.userInfo.id,
+        // propertyImages: {
+        //   create: propertyImages,
+        // },
         propertyImages: {
           create: propertyImages,
         },
@@ -49,6 +58,37 @@ const addPost = async (req, res) => {
     return res.status(200).json(newPost);
   } catch (error) {
     res.status(500).json("Internal server error");
+  }
+};
+
+const getPosts = async (req, res) => {
+  try {
+    const allposts = await prisma.posts.findMany({
+      select: {
+        propertyTitle: true,
+        propertyDescription: true,
+        propertyType: true,
+        postType: true,
+        propertyRegion: true,
+        propertyCity: true,
+        propertyStreet: true,
+        maxLeaseLengthValue: true,
+        maxLeaseLengthType: true,
+        minLeaseLengthValue: true,
+        minLeaseLengthType: true,
+        propertyLeaseTerm: true,
+        authorId: true,
+        isAvailable: true,
+        propertyQuantity: true,
+        propertyImages: true,
+        propertyContact: true,
+        propertyPrice: true,
+      },
+    });
+    if (allposts.length === 0) return res.status(404).json("No post found");
+    return res.status(200).json(allposts);
+  } catch (error) {
+    res.json("Internal server error");
   }
 };
 
@@ -100,6 +140,7 @@ const reportPost = async (req, res) => {
 
 //save posts
 const savePost = async (req, res) => {
+  console.log("dile saveposts");
   try {
     const postId = req.params.postId;
     // Check if the post exists
@@ -205,4 +246,5 @@ module.exports = {
   savePost,
   deleteSavedPosts,
   getSavedPosts,
+  getPosts,
 };
