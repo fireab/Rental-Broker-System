@@ -16,13 +16,13 @@ const ProfileLayout = () => {
 						<MenuButton as={IconButton} aria-label="Options" icon={<SettingsIcon fontSize={"2xl"} color={"white"} />} variant="link" />
 						<MenuList>
 							<MenuItem as={RouterLink} to={"profile"} icon={<Home color="gray" />}>
-								<span className="whitespace-nowrap">Account Overview</span>
+								<span className="whitespace-nowrap text-sm">Account Overview</span>
 							</MenuItem>
 							<MenuItem as={RouterLink} to={"edit"} icon={<Pencil />}>
-								<span className="whitespace-nowrap">Edit Profile</span>
+								<span className="whitespace-nowrap text-sm">Edit Profile</span>
 							</MenuItem>
 							<MenuItem as={RouterLink} to={"changepassword"} icon={<Lock color="gray" />}>
-								<span className="whitespace-nowrap">Change Password</span>
+								<span className="whitespace-nowrap text-sm">Change Password</span>
 							</MenuItem>
 						</MenuList>
 					</Menu>
@@ -41,7 +41,7 @@ const ProfileLayout = () => {
 								<div className=" p-2 hover:bg-white/10">
 									<div className=" flex space-x-4 items-center p-2 ">
 										<Home2 className="text-md" />
-										<span className="text-md font-bold whitespace-nowrap">Account Overview</span>
+										<span className="text-md font-bold whitespace-nowrap text-sm ">Account Overview</span>
 									</div>
 								</div>
 							</RouterLink>
@@ -49,7 +49,7 @@ const ProfileLayout = () => {
 								<div className=" p-2 hover:bg-white/10">
 									<div className=" flex space-x-4 items-center p-2 ">
 										<Pencil className="text-md" />
-										<span className="text-md font-bold whitespace-nowrap">Edit Profile</span>
+										<span className="text-md font-bold whitespace-nowrap text-sm ">Edit Profile</span>
 									</div>
 								</div>
 							</RouterLink>
@@ -57,7 +57,7 @@ const ProfileLayout = () => {
 								<div className=" p-2 hover:bg-white/10">
 									<div className=" flex space-x-4 items-center p-2 ">
 										<Lock className="text-md" />
-										<span className="text-md font-bold whitespace-nowrap">Change Password</span>
+										<span className="text-md font-bold whitespace-nowrap text-sm ">Change Password</span>
 									</div>
 								</div>
 							</RouterLink>
@@ -65,7 +65,7 @@ const ProfileLayout = () => {
 								<div className=" p-2 hover:bg-white/10">
 									<div className=" flex space-x-4 items-center p-2 ">
 										<EditIcon className="text-md" />
-										<span className="text-md font-bold whitespace-nowrap">Edit Profile</span>
+										<span className="text-md font-bold whitespace-nowrap text-sm ">Edit Profile</span>
 									</div>
 								</div>
 							</RouterLink>
@@ -73,7 +73,7 @@ const ProfileLayout = () => {
 								<div className=" p-2">
 									<div className=" flex space-x-4 items-center p-2 ">
 										<EditIcon className="text-md" />
-										<span className="text-md font-bold whitespace-nowrap">Edit Profile</span>
+										<span className="text-md font-bold whitespace-nowrap text-sm ">Edit Profile</span>
 									</div>
 								</div>
 							</RouterLink>

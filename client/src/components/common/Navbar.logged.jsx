@@ -1,22 +1,48 @@
 import { BellIcon, ChatIcon, ChevronDownIcon, EditIcon, EmailIcon, ExternalLinkIcon, HamburgerIcon, RepeatIcon } from "@chakra-ui/icons";
-import { Avatar, Box, Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, IconButton, Image, Input, Link, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, Text, useBoolean, useBreakpointValue, useDisclosure } from "@chakra-ui/react";
+import { Avatar, Box, Button, Center, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, IconButton, Image, Input, Link, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, Text, useBoolean, useBreakpointValue, useDisclosure } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { NavLink, Link as RouterLink } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import { useSelector } from "react-redux";
+import { NavLink, redirect, Route, Router, Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
+// import { toast } from "../../hooks/useAuth";
+import { toast } from "react-toastify";
 import styled from "styled-components";
 import { ChevronRight, ClipboardList, Heart, Help, Logout, Plus, Search, Settings, User } from "tabler-icons-react";
 
+import { useLogoutUserMutation } from "../../redux/api/authApi";
 import MessagesModal from "../Message/messages.modal";
 import NotificationsModal from "../notification/notifications.modal";
 import MessageNav from "./../Message/message.nav";
 import NotificationNav from "./../notification/notification.nav";
 
-const Navbar = () => {
+const NavbarLogged = () => {
+	const navigate = useNavigate();
+	// const { logout, isLoading } = useAuth();
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const isMobile = useBreakpointValue({ base: true, md: false });
-	const { isOpen: isMesssageModalOpen, onOpen: onMessageModalOpen, onClose: onMessageModalClose } = useDisclosure();
-	const { isOpen: isNotificationModalOpen, onOpen: onNotificationModalOpen, onClose: onNotificationModalClose } = useDisclosure();
+
 	const { isOpen: isMessageMenuOpen, onOpen: onMessageMenuOpen, onClose: onMessageMenuClose } = useDisclosure(false);
 	const { isOpen: isNotificationMenuOpen, onOpen: onNotificationMenuOpen, onClose: onNotificationMenuClose } = useDisclosure(false);
+
+	const [chatWindow, setChatWindow] = useState(false);
+
+	const {
+		isOpen: isMesssageModalOpen,
+		onOpen: onMessageModalOpen,
+		onClose: onMessageModalClose,
+	} = useDisclosure({
+		defaultIsOpen: false,
+		onClose: () => {
+			setChatWindow(false);
+			onMessageMenuClose();
+		},
+		onOpen: (value) => {
+			onMessageMenuClose();
+			// setChatWindow(value)
+			onMessageMenuOpen();
+		},
+	});
+	const { isOpen: isNotificationModalOpen, onOpen: onNotificationModalOpen, onClose: onNotificationModalClose } = useDisclosure();
 
 	const handleAvatarClick = () => {
 		if (isMobile) {
@@ -27,6 +53,8 @@ const Navbar = () => {
 	const handleCloseDrawer = () => {
 		setIsDrawerOpen(false);
 	};
+	// useLogoutUserMutation
+	const [logoutUser, { isLoading, isError, error, isSuccess }] = useLogoutUserMutation();
 
 	const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 	useEffect(() => {
@@ -38,19 +66,50 @@ const Navbar = () => {
 
 		return () => window.removeEventListener("resize", handleResize);
 	}, [viewportWidth]);
+
+	const location = useLocation();
+	// const from = ((location.state)?.from.pathname) || '/login';
+	useEffect(() => {
+		if (isSuccess) {
+			window.location.href = "/login";
+			//   navigate('/login');
+		}
+
+		if (isError) {
+			if (Array.isArray(error.data.error)) {
+				error.data.error.forEach((el) =>
+					toast.error(el.message, {
+						position: "top-right",
+					}),
+				);
+			} else {
+				toast.error(error.data.message, {
+					position: "top-right",
+				});
+			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isLoading]);
+	const onLogoutHandler = async () => {
+		logoutUser();
+		// navigate("/login");
+		window.location.href = "/login";
+	};
 	return (
 		<>
-			<MessagesModal isOpen={isMesssageModalOpen} onClose={onMessageModalClose} />
+			<MessagesModal chatWindow={chatWindow} isOpen={isMesssageModalOpen} onClose={onMessageModalClose} />
 			<NotificationsModal isOpen={isNotificationModalOpen} onClose={onNotificationModalClose} />
-			<nav className="p-2 shadow-md lg:shadow-xl bottom-shadow border-b">
+			<nav className="p-2 shadow-md lg:shadow-xl bottom-shadow border-b bg-[#EDF2F4]">
 				<div className="w-full h-full">
 					<div className="h-full flex items-center justify-between px-2">
 						<div className="flex justify-between items-center md:w-2/5 w-1/2">
-							<div>
-								<a href="" className="font-bold p-3">
-									<span>LOGO</span>
-								</a>
-							</div>
+							<RouterLink to="/rentals">
+								<div>
+									<a href="" className="font-bold p-3">
+										<span>LOGO</span>
+									</a>
+								</div>
+							</RouterLink>
 							<div className="hidden lg:block">
 								<form action="/search">
 									<div className="relative">
@@ -76,7 +135,7 @@ const Navbar = () => {
 											</a>
 										</li>
 										<li className="font-bold ">
-											<RouterLink to="/user/CreateAd">
+											<RouterLink to="/rentals/CreateAd">
 												<Button colorScheme="blue" _hover={{ bgColor: "#2b6cb0", color: "white", scale: "1.2", transition: "all .2s ease-in" }} fontSize={12} variant={"outline"} fontWeight={"extrabold"} leftIcon={<Plus size={16} />}>
 													<span className="text-xs font-bold">CREATE A LISTING</span>
 												</Button>
@@ -86,7 +145,7 @@ const Navbar = () => {
 								</div>
 								<div className="h-full flex justify-center items-center ">
 									{isMobile ? (
-										<Link as={RouterLink} to="/user/messages">
+										<Link as={RouterLink} to="/notifications">
 											<IconButton colorScheme="blue" aria-label="Chat" variant="ghost" fontSize={20} rounded={"full"} icon={<BellIcon />} />
 										</Link>
 									) : (
@@ -94,10 +153,12 @@ const Navbar = () => {
 											<MenuButton as={IconButton} aria-label="Options" icon={<BellIcon fontSize={20} />} variant="ghost" colorScheme="blue" rounded={"full"} />
 											<MenuList width={"sm"}>
 												<NotificationNav head="New Rental Application Received" body="Lorem ipsum dolor, sit amet consectetur adipisicing elit. A magni, repellendus excepturi asperiores autem quidem fuga iste quas blanditiis minima exercitationem dignissimos fugit. Eius et consequatur voluptas expedita praesentium numquam?" />
+												<NotificationNav head="New Rental Application Received" body="Lorem ipsum dolor, sit amet consectetur adipisicing elit. A magni, repellendus excepturi asperiores autem quidem fuga iste quas blanditiis minima exercitationem dignissimos fugit. Eius et consequatur voluptas expedita praesentium numquam?" />
+												<NotificationNav head="New Rental Application Received" body="Lorem ipsum dolor, sit amet consectetur adipisicing elit. A magni, repellendus excepturi asperiores autem quidem fuga iste quas blanditiis minima exercitationem dignissimos fugit. Eius et consequatur voluptas expedita praesentium numquam?" />
 												<Link
 													to="/"
 													onClick={() => {
-														onNotificationMenuClose()
+														onNotificationMenuClose();
 														onNotificationModalOpen();
 													}}
 												>
@@ -111,7 +172,7 @@ const Navbar = () => {
 								</div>
 								<div className="h-full flex justify-center items-center ">
 									{isMobile ? (
-										<Link as={RouterLink} to="/user/notifications">
+										<Link as={RouterLink} to="/messages">
 											<IconButton
 												colorScheme="blue"
 												aria-label="Chat"
@@ -127,10 +188,7 @@ const Navbar = () => {
 											<MenuButton as={IconButton} aria-label="Options" icon={<ChatIcon fontSize={20} />} variant="ghost" colorScheme="blue" rounded={"full"} />
 											<MenuList width={"sm"}>
 												<MessageNav user="Dilamo Wondimu" message="This is the message" onMessageModalOpen={onMessageModalOpen} />
-												<Link to="/"onClick={() => {
-														onMessageMenuClose()
-														onMessageModalOpen();
-													}}>
+												<Link to="/" onClick={onMessageModalOpen}>
 													<div className="flex justify-center">
 														<span className="text-sm font-semibold">See more</span>
 													</div>
@@ -151,6 +209,14 @@ const Navbar = () => {
 												</MenuButton>
 											</div>
 											<MenuList>
+												<Center>
+													<Avatar name="Dan Abrahmov" size={"2xl"} src="https://bit.ly/dan-abramov" />
+												</Center>
+												<br />
+												<Center>
+													<p>Dilamo</p>
+												</Center>
+												<MenuDivider />
 												<MenuItem as={RouterLink} to={"/user/profile"}>
 													<div className="flex items-center">
 														<User color="#2b6cb0" size={25} />
@@ -183,7 +249,7 @@ const Navbar = () => {
 														<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Help and Support</span>
 													</div>
 												</MenuItem>
-												<MenuItem as={RouterLink} to={"/user/profile"}>
+												<MenuItem onClick={onLogoutHandler}>
 													<div className="flex items-center">
 														<Logout color="#2b6cb0" size={25} />
 														<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Logout</span>
@@ -210,7 +276,7 @@ const Navbar = () => {
 												<DrawerOverlay />
 												<DrawerContent>
 													<DrawerCloseButton />
-													<RouterLink to="/profile">
+													<RouterLink to="/user/profile">
 														<DrawerHeader onClick={handleCloseDrawer} className="flex items-center">
 															<Image boxSize="8rem" borderRadius="full" src="https://placekitten.com/100/100" alt="Fluffybuns the destroyer" mr="12px" />
 															<div>
@@ -221,7 +287,7 @@ const Navbar = () => {
 													</RouterLink>
 													<DrawerBody className=" flex flex-col justify-between mb-2">
 														<div>
-															<ul className="space-y-2">
+															<ul className="space-y-2" onClick={handleCloseDrawer}>
 																<li>
 																	<RouterLink to="/user/profile">
 																		<div className="flex text-[#2b6cb0] items-center justify-between border p-2 rounded">
@@ -281,4 +347,4 @@ const Navbar = () => {
 	);
 };
 
-export default Navbar;
+export default NavbarLogged;

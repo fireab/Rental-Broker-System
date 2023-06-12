@@ -81,7 +81,7 @@ const Navbar = () => {
 	}, []);
 
 	return (
-		<Nav isScrolled={isScrolled} className="p-4 shadow-md lg:shadow-xl bottom-shadow">
+		<Nav isScrolled={isScrolled} className="p-4 shadow-md lg:shadow-xl bottom-shadow bg-[#EDF2F4]">
 			<div className="w-full h-full">
 				<div className="h-full flex items-center justify-between">
 					<div className="flex justify-between items-center md:w-2/5 w-1/2">

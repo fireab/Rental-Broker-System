@@ -4,11 +4,11 @@ import React, { useState } from "react";
 import { Refresh, RefreshDot } from "tabler-icons-react";
 import * as yup from "yup";
 
-import { useAuth } from "../../hooks/useAuth";
+// import { useAuth } from "../../hooks/useAuth";
 import capitalize from "../../utils/Capitalize";
 
 const OTPModal = (props) => {
-	const { checkOTP } = useAuth();
+	// const { checkOTP } = useAuth();
 	const [OTPLoading, setOTPLoding] = useState(false);
 
 	const validationSchema = yup.object().shape({
@@ -23,17 +23,17 @@ const OTPModal = (props) => {
 		onSubmit: async (values) => {
 			console.log(values);
 		
-			setOTPLoding(true);
-			await checkOTP({email:props.email, otp:values.otp}).then((res) => {
-				console.log("OTP correct");
-				props.onClose();
-				props.setActiveStep(props.activeStep + 1);
-			}).catch((err) => {
-				formik.setErrors({ otp: "Invalid OTP" });
-				console.log("OTP not correct");
-			}).finally(() => {
-				setOTPLoding(false);
-			});
+			// setOTPLoding(true);
+			// await checkOTP({email:props.email, otp:values.otp}).then((res) => {
+			// 	console.log("OTP correct");
+			// 	props.onClose();
+			// 	props.setActiveStep(props.activeStep + 1);
+			// }).catch((err) => {
+			// 	formik.setErrors({ otp: "Invalid OTP" });
+			// 	console.log("OTP not correct");
+			// }).finally(() => {
+			// 	setOTPLoding(false);
+			// });
 			
 		},
 	});

@@ -15,7 +15,7 @@ const InputFieldSelect = ({ label, leftIcon, rightIcon, options,defaultValue, ..
 			</FormLabel>
 			<InputGroup size="lg" className="bg-white/40 ">
 				{leftIcon && <InputLeftElement>{leftIcon}</InputLeftElement>}
-				<Select fontSize={"sm"} color={"black"} {...field} {...props} className="border-[0.8px !important] border-[#2b6aa0]" _placeholder={{ color: "red", fontSize: "sm" }} spellCheck={false} autoComplete="off" 
+				<Select  fontSize={"sm"} color={"black"} {...field} {...props} className="border-[0.8px !important] border-[#2b6aa0]" _placeholder={{ color: "red", fontSize: "sm" }} spellCheck={false} autoComplete="off" 
 				>
 					{options.map((option, index) => {
 						return (

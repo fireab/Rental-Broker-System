@@ -14,7 +14,7 @@ const ImageDrop = () => {
     const [files, setFiles] = useState([
 	]);
     const handleInit = () => {
-		console.log("FilePond instance has initialized", pondRef.current);
+		// console.log("FilePond instance has initialized", pondRef.current);
 	};
 
 	const handleUpdateFiles = (fileItems) => {
@@ -30,6 +30,7 @@ const ImageDrop = () => {
 				server="/api"
 				oninit={handleInit}
 				onupdatefiles={handleUpdateFiles}
+				labelTapToRetry="" 
 				className="flex  items-center justify-center w-full h-full bg-gray-100 border-2 border-gray-300 border-dashed rounded-md"
 			/>
     );

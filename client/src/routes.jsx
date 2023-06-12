@@ -19,175 +19,52 @@ import FavoriteRentalsPage from "./pages/User/Account/FavoriteRentals.page";
 import CreateListingPage from "./pages/User/RentalProperty/CreateListing.page";
 import EditPropertyPage from "./pages/User/RentalProperty/EditProperty.page";
 
-import ProfileLayout from './Profile.Layout';
+import ProfileLayout from "./Profile.Layout";
 import ProfilePageView from "./components/Account/ProfilePage.view";
 import EditProfileView from "./components/Account/EditProfile.view";
 import ChangePasswordView from "./components/Account/ChangePassword.view";
 
 import Sidebar from "./components/common/Sidebar";
-import Sidenav from './components/common/Sidenav';
+import Sidenav from "./components/common/Sidenav";
 import ImageSlider from "./components/RentalProperty/ImageSlider";
 import PropertyCard from "./components/RentalProperty/PropertyCard";
+import axios from "axios";
 
 const route = createBrowserRouter([
-  {
-    path: "sidebar",
-    element: <Sidebar />,
-  },
-  {
-    path: "card",
-    element: <PropertyCard />,
-  },
-  {
-    path: "sidenav",
-    element: <Sidenav />,
-  },
-  {
-    path: "img",
-    element: <ImageSlider />,
-  },
-  {
-    path: "/",
-    element: <Outlet />,
-    children: [
-      {
-        path: "register",
-        Component: RegisterPage,
-      },
-      {
-        path: "login",
-        Component: LoginPage,
-      },
-    ],
-  },
-  {
-    path: "/",
-    element: (
-      <Layout>
-        <Outlet />
-      </Layout>
-    ),
-    children: [
-      {
-        index: true,
-        Component: Homepage,
-      },
-      {
-        path: "user",
-        element: (
-          <ProfileLayout>
-            <Outlet />
-          </ProfileLayout>
-
-        ),
-        children: [
-          {
-            path: "profile",
-            Component: ProfilePageView,
-          },
-          {
-            path: "Edit",
-            Component: EditProfileView,
-          },
-          {
-            path: "changePassword",
-            Component: ChangePasswordView,
-          }
-        ]
-      },
-      
-      {
-        path: "contact",
-        Component: ContactUsPage,
-      },
-
-      {
-        path: "about",
-        Component: AboutPage,
-      },
-    ],
-  },
-  {
-    path: "rentals",
-    element: (
-      <Layout>
-        <Outlet />
-      </Layout>
-    ),
-    children: [
-      {
-        index: true,
-        Component: RentalsPage, // list of properties for rent from all users
-      },
-      {
-        path: "search",
-        Component: SearchResultsPage, // list of searched properties from a users
-      },
-      {
-        path: ":id",
-        Component: PropertyDetailPage, // property detail page for a specific property from other user
-      },
-    ],
-  },
-  {
-    path: "user",
-    element: (
-      <Layout>
-        <Outlet />
-      </Layout>
-    ),
-    children: [
-      // {
-      //   // index: true,
-      //   path: "profile",
-      //   Component: ProfilePage,
-      // },
-      {
-        path: "CreateAd",
-        Component: CreateListingPage,
-      },
-      {
-        path: "EditAd/:id",
-        Component: EditPropertyPage,
-      },
-      {
-        path: "Ad/:id",
-        Component: PropertyDetailPage,
-      },
-      {
-        path: "messages",
-        Component: Messages,
-      },
-      {
-        path: "messages/:id",
-        Component: Message,
-      },
-      {
-        path: "notifications",
-        Component: Notifications,
-      },
-      {
-        path: "rentals",
-        Component: PropertyListPage, // list of all user properties from a other user
-      },
-      {
-        path: "settings",
-        Component: AccountSettingPage,
-      },
-      {
-        path: "favorites",
-        Component: FavoriteRentalsPage,
-      },
-      {
-        path: "EditProfile",
-        Component: EditProfilePage,
-      },
-    ],
-  },
-  {
-    path: "*",
-    Component: () => <div>404</div>,
-  },
+	{
+		path: "sidebar",
+		element: <Sidebar />,
+	},
+	{
+		path: "card",
+		element: <PropertyCard />,
+	},
+	{
+		path: "sidenav",
+		element: <Sidenav />,
+	},
+	{
+		path: "img",
+		element: <ImageSlider />,
+	},
+	{
+		path: "/",
+		element: <Outlet />,
+		children: [
+			{
+				path: "register",
+				Component: RegisterPage,
+			},
+			{
+				path: "login",
+				Component: LoginPage,
+			},
+		],
+	},
+	{
+		path: "*",
+		Component: () => <div>404</div>,
+	},
 ]);
 // const route = createBrowserRouter([
 // 	{
