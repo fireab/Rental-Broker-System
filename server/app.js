@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRouter.js");
 const postRoutes = require("./routes/postRouter.js");
 const userRouter = require("./routes/userRouter.js");
+const adminRouter = require("./routes/adminRoutes.js");
 
 const app = express();
 // Enable CORS for all routes
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/user", userRouter);
+app.use("/api/admin", adminRouter);
 
 // Start the server and listen on port 3030
 app.listen(3032, () => {
