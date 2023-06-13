@@ -26,8 +26,9 @@ export const userApi = createApi({
 					console.log("data userApi getMe");
 					console.log(data);
 					dispatch(setUser(data));
+					
 				} catch (error) {
-					if (error.error.status) {
+					if (error.error.status===401) {
 						dispatch(logoutUser());
 						return redirect("/login");
 					}

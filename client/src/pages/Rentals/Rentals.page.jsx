@@ -11,162 +11,10 @@ import { useLocation } from "react-router-dom";
 import PropertyCard from "../../components/RentalProperty/PropertyCard";
 import { useRentalPosts } from "../../hooks/rentalPost";
 import InputFieldSelect from "./../../components/RentalProperty/InputField.select";
-import { cities, citiesList, regions } from "./../../utils/list";
+import { cities, citiesList, filter_options, Property_Type, regions } from "./../../utils/list";
 
 const RentalsPage = () => {
 	const { isOpen: isOpenFilter, onOpen: onOpenFilter, onClose: onCloseFilter } = useDisclosure();
-
-	const filter_options = [
-		{
-			name: "Construction",
-			value: "construction",
-			icon: <BsBuildingsFill />,
-		},
-		{
-			name: "Clothing",
-			value: "clothing",
-			icon: <BsBuildingsFill />,
-		},
-		{
-			name: "Electronics",
-			value: "electronics",
-			icon: <BiMobile />,
-		},
-		{
-			name: "Furniture",
-			value: "furniture",
-			icon: <BiTable />,
-		},
-		{
-			name: "Kitchen Utensils",
-			value: "kitchen utensils",
-			icon: <BiDish />,
-		},
-		{
-			name: "Sports Equipment",
-			value: "sports equipment",
-			icon: <BiRun />,
-		},
-		{
-			name: "Vehicle",
-			value: "vehicle",
-			icon: <BiCar />,
-		},
-		{
-			name: "Party Supplies",
-			value: "party supplies",
-			icon: <BiParty />,
-		},
-		{
-			name: "Outdoor Equipment",
-			value: "outdoor equipment",
-			icon: <BsBuildingsFill />,
-		},
-		{
-			name: "Books",
-			value: "books",
-			icon: <BiBookBookmark />,
-		},
-		{
-			name: "Bicycle",
-			value: "bicycle",
-			icon: <BsBicycle />,
-		},
-		{
-			name: "Other",
-			value: "other",
-			icon: <BsChevronDown />,
-		},
-	];
-	const Property_Type = [
-		{
-			name: "House",
-			value: "House",
-		},
-		{
-			name: "Room",
-			value: "Room",
-		},
-		{
-			name: "Construction Material",
-			value: "Construction Material",
-		},
-		{
-			name: "Land",
-			value: "Land",
-		},
-		{
-			name: "Apartment",
-			value: "Apartment",
-		},
-		{
-			name: "Clothing",
-			value: "Clothing",
-		},
-		{
-			name: "Electronics",
-			value: "Electronics",
-		},
-		{
-			name: "Furniture",
-			value: "Furniture",
-		},
-		{
-			name: "Kitchen Utensils",
-			value: "Kitchen Utensils",
-		},
-		{
-			name: "Sports Equipment",
-			value: "Sports Equipment",
-		},
-		{
-			name: "Motorcycle",
-			value: "Motorcycle",
-		},
-		{
-			name: "Video Games",
-			value: "Video Games",
-		},
-		{
-			name: "Party Supplies",
-			value: "Party Supplies",
-		},
-		{
-			name: "Outdoor Equipment",
-			value: "Outdoor Equipment",
-		},
-		{
-			name: "Computer",
-			value: "Computer",
-		},
-
-		// materials that can be rented
-
-		{
-			name: "Books",
-			value: "Books",
-		},
-		{
-			name: "Bicycle",
-			value: "Bicycle",
-		},
-		{
-			name: "Services",
-			value: "Services",
-		},
-		{
-			name: "Sports Equipment",
-			value: "Sports Equipment",
-		},
-		{
-			name: "Vehicle",
-			value: "Vehicle",
-		},
-		{
-			name: "Other",
-			value: "Other",
-		},
-	];
 
 	const { rentalsPosts, saveRentalPost, isLoading, error } = useRentalPosts();
 
@@ -178,7 +26,6 @@ const RentalsPage = () => {
 		return <div>Error: {error.message}</div>;
 	}
 
-	console.log(rentalsPosts);
 	return (
 		<div className="">
 			<Modal isOpen={isOpenFilter} onClose={onCloseFilter}>
@@ -198,7 +45,7 @@ const RentalsPage = () => {
 						}}
 						onSubmit={(values) => {
 							onCloseFilter();
-							console.log(values);
+							// console.log(values);
 						}}
 					>
 						{(formik) => (
@@ -263,62 +110,33 @@ const RentalsPage = () => {
 				</div>
 			</div>
 			<div className="grid grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
-				<PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />
+				{rentalsPosts.map((post, index) => {
+					{/* console.log(post); */}
+
+					{/* return <PropertyCard key={index} image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />; */}
+					return <PropertyCard key={post.id}
+						propertyImages={post.propertyImages}
+						propertyTitle={post.propertyTitle}
+						propertyPrice={post.propertyPrice}
+						propertyType={post.propertyType}
+						propertyDescription={post.propertyDescription}
+						propertyContact={post.propertyContact}
+						propertyRegion={post.propertyRegion}
+						propertyCity={post.propertyCity}
+						propertyStreet={post.propertyStreet}
+						maxLeaseLengthValue={post.maxLeaseLengthValue}
+						maxLeaseLengthType={post.maxLeaseLengthType}
+						minLeaseLengthValue={post.minLeaseLengthValue}
+						minLeaseLengthType={post.minLeaseLengthType}
+						propertyLeaseTerm={post.propertyLeaseTerm}
+						authorId={post.authorId}
+						isAvailable={post.isAvailable}
+						propertyQuantity={post.propertyQuantity}
+						savedBy={post.savedBy}
+						postId={post.id}
+
+					 />; 
+				})}
 			</div>
 		</div>
 	);

@@ -1,5 +1,6 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from 'react-query/devtools'
 import { BrowserRouter, RouterProvider } from "react-router-dom";
 
 // import loggedRoute from "./route.logged";
@@ -18,6 +19,7 @@ function App() {
 				<ChakraProvider theme={theme}>
 					<RouterProvider router={route} />
 				</ChakraProvider>
+				<ReactQueryDevtools initialIsOpen={false} />
 			</QueryClientProvider>
 		</>
 	);

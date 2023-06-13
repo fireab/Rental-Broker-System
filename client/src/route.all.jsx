@@ -122,7 +122,7 @@ const route = createBrowserRouter([
 						Component: SearchResultsPage, // list of searched properties from a users
 					},
 					{
-						path: ":id",
+						path: ":postId",
 						Component: PropertyDetailPage, // property detail page for a specific property from other user
 					},
 

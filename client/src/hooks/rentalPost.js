@@ -4,8 +4,12 @@ import { createRentalPost, deleteRentalPost, fetchRentalPosts, saveRentalPost, u
 
 export const useRentalPosts = () => {
 	const { data: rentalsPosts, isLoading, error } = useQuery("posts", fetchRentalPosts,{
-		staleTime: 1000 * 60 * 5,
+		// staleTime: 1000 * 60 * 5,
 	});
+
+	
+
+	
 
     const queryClient = useQueryClient();
 	const create = useMutation(createRentalPost, {
@@ -19,8 +23,11 @@ export const useRentalPosts = () => {
 			queryClient.invalidateQueries("posts");
 		},
 	});
-
-	const save = useMutation(saveRentalPost, {
+	
+	const save = useMutation((postId)=>saveRentalPost(postId), {
+		onSuccess: (postId) => {
+			queryClient.invalidateQueries(["post", postId]);
+		},
 		
 	})
 
@@ -36,6 +43,10 @@ export const useRentalPosts = () => {
 		isLoading,
 		error,
 		createRentalPost: create.mutate,
+		isCreatingRentalPost: create.isLoading,
+		isRentalPostCreated: create.isSuccess,
+		isRentalPostCreationError: create.isError,
+		rentalPostCreationError: create.error,
 		updateRentalPost: update.mutate,
 		removeRentalPost: remove.mutate,
 		saveRentalPost: save.mutate,

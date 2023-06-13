@@ -271,7 +271,7 @@ const NavbarLogged = () => {
 										{/* <IconButton aria-label="User menu" icon={<HamburgerIcon />} onClick={() => setIsDrawerOpen(true)} /> */}
 										<div className="flex cursor-pointer justify-center items-center space-x-2" onClick={() => setIsDrawerOpen(true)}>
 											<h1 className="text-sm font-bold">Dilamo</h1>
-											<Avatar name="Dan Abrahmov" aria-label="User menu" src="https://bit.ly/dan-abramov" onClick={() => setIsDrawerOpen(true)} />
+											<Avatar name="Dan Abrahmov" aria-label="User menu" src="https://bit.ly/dan-abramov" />
 										</div>
 
 										{/* <MenuButton as={IconButton} aria-label="User menu" icon={<Avatar />} /> */}

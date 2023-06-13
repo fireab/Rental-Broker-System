@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { redirect } from "react-router-dom";
 
 import { logoutUser } from "../features/user.slice";
 import { userApi } from "./userApi";
@@ -25,7 +26,7 @@ export const authApi = createApi({
 					console.log("data authApi registeration");
 					console.log(data);
 
-					await dispatch(userApi.endpoints.user.initiate(null));
+					// await dispatch(userApi.endpoints.user.initiate(null));
 				} catch (error) {
 					console.log("error authApi registeration");
 				}
@@ -90,7 +91,10 @@ export const authApi = createApi({
 					await queryFulfilled;
 					await dispatch(logoutUser());
 				} catch (error) {
-					console.log("error authApi logout");
+					if (error.error.status===401) {
+						dispatch(logoutUser());
+						return redirect("/login");
+					}
 				}
 			}
 			

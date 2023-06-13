@@ -1,14 +1,17 @@
-import { useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon, StarIcon } from "@chakra-ui/icons";
 import { Box, Button, Card, CardBody, CardFooter, CardHeader, Center, Container, Flex, Grid, Heading, Icon, IconButton, Image, Spacer, Square, Stack, Text, useBreakpointValue } from "@chakra-ui/react";
+import { useState } from "react";
 import React from "react";
-import { BsBookmark, BsBookmarkFill, BsBookmarkHeart, BsFillStarFill } from "react-icons/bs";
-import styled from "styled-components";
-import img from "../../assets/imgs/house.jpg";
-import Slider from "react-slick";
 import { BiLeftArrowAlt, BiRightArrowAlt, BiSave } from "react-icons/bi";
+import { BsBookmark, BsBookmarkFill, BsBookmarkHeart, BsFillStarFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import Slider from "react-slick";
+import styled from "styled-components";
+
+import img from "../../assets/imgs/house.jpg";
 import { useRentalPosts } from "../../hooks/rentalPost";
+import { userApi } from "../../redux/api/userApi";
+
 // const img = styled(Image)`
 // 	border: none;
 // 	transition: all 0.3s ease-in-out;
@@ -19,7 +22,7 @@ import { useRentalPosts } from "../../hooks/rentalPost";
 // 	}
 // `;
 
-const PropertyCard = ({ preview }) => {
+const PropertyCard = ({ preview, ...post }) => {
 	const { rentalsPosts, saveRentalPost, isLoading, error } = useRentalPosts();
 	const navigate = useNavigate();
 	const settings = {
@@ -36,7 +39,7 @@ const PropertyCard = ({ preview }) => {
 
 	const [slider, setSlider] = useState(0);
 	const [isSliderButtonVisible, setSliderButtonVisible] = useState(false);
-	const [isSavedPost, setIsSavePost] = useState(false);
+	const [isSavedPost, setIsSavePost] = useState(post.savedBy.length>0);
 	const [isSaveHover, setIsSaveHover] = useState(false);
 
 	// These are the breakpoints which changes the position of the
@@ -80,9 +83,13 @@ const PropertyCard = ({ preview }) => {
 
 	const handleSavePost = (e) => {
 		e.stopPropagation();
-		saveRentalPost();
+		saveRentalPost(post.postId);
 		setIsSavePost(!isSavedPost);
 	};
+
+	// const user = userApi.endpoints.user.useQueryState(null, {
+	// 	selectFromResult: ({ data }) => data,
+	// });
 
 	return (
 		<>
@@ -91,7 +98,7 @@ const PropertyCard = ({ preview }) => {
 
 			<Card
 				onClick={() => {
-					navigate("/rentals/property-detail");
+					navigate(`/rentals/${post.postId}`);
 				}}
 				rounded={"2xl"}
 				backgroundColor={"whiteAlpha.500"}
@@ -140,7 +147,7 @@ const PropertyCard = ({ preview }) => {
 						</Box>
 						{!preview && (
 							<div onMouseEnter={handleSaveHover} onMouseLeave={handleSaveLeave} onClick={handleSavePost} className="p-2 absolute  right-2 cursor-pointer top-2 z-[2]">
-								<BsBookmarkFill className={`${isSavedPost ? "text-red-600" : "text-black/70"}  transition-all duration-150 ease-in-out font-bold  text-lg`} size={isSaveHover ? 22 : 20} />
+								<BsBookmarkFill className={`${ isSavedPost ? "text-red-600" : "text-black/70"}  transition-all duration-150 ease-in-out font-bold  text-lg`} size={isSaveHover ? 22 : 20} />
 							</div>
 						)}
 						{/* Slider */}
@@ -156,7 +163,12 @@ const PropertyCard = ({ preview }) => {
 						<div className="flex flex-col">
 							<div className="flex items-center font-medium text-sm justify-between">
 								{/* [Address] */}
-								<span>Addis Ababa, Bole</span>
+								{/* <span>Addis Ababa, Bole</span> */}
+								<span>
+									{
+										`${post.propertyRegion}, ${post.propertyCity}`
+									}
+								</span>
 								{/* [rating] */}
 								<div className="flex justify-center space-x-1 ">
 									<span className="">
@@ -166,11 +178,23 @@ const PropertyCard = ({ preview }) => {
 								</div>
 							</div>
 							{/* [product title] */}
-							<span className={`${preview ? "font-lg text-sm" : "font-medium text-xs"} text-blue-900`}>Rental House </span>
+							<span className={`${preview ? "font-lg text-sm" : "font-medium text-xs"} text-blue-900`}>
+								{
+									post.propertyTitle
+								}
+							</span>
 							{/* [product type] */}
-							<span className={`${preview ? "text-sm" : "text-xs"} text-gray-600`}>House </span>
+							<span className={`${preview ? "text-sm" : "text-xs"} text-gray-600`}>
+								{
+									post.propertyType
+								}
+							</span>
 							{/* [property price] */}
-							<span className={`${preview ? "text-sm" : "text-xs"} text-gray-900`}>200 birr / month</span>
+							<span className={`${preview ? "text-sm" : "text-xs"} text-gray-900`}>
+								{
+									`${post.propertyPrice[0].price} / ${post.propertyPrice[0].priceType}`
+								}
+							</span>
 						</div>
 					</div>
 				</CardBody>
