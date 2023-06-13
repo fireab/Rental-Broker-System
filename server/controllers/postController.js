@@ -2,6 +2,9 @@ const prisma = require("../config/dbConfig.js");
 const jwt = require("jsonwebtoken");
 
 const addPost = async (req, res) => {
+  console.log("req.body");
+  console.log(req.body);
+
   try {
     // Extract data from request body
     const {
@@ -20,6 +23,10 @@ const addPost = async (req, res) => {
     } = req.body;
 
     // Create a new post using Prisma client
+    // const propertyImages = req.files.map((file) => ({
+    //   image: file.filename,
+    // }));
+
     const newPost = await prisma.posts.create({
       data: {
         propertyTitle,
@@ -34,6 +41,9 @@ const addPost = async (req, res) => {
         minLeaseLengthValue: minLeaseLength.value,
         minLeaseLengthType: minLeaseLength.type,
         authorId: req.userInfo.id,
+        // propertyImages: {
+        //   create: propertyImages,
+        // },
         propertyImages: {
           create: propertyImages,
         },
@@ -48,6 +58,103 @@ const addPost = async (req, res) => {
 
     return res.status(200).json(newPost);
   } catch (error) {
+    res.status(500).json("Internal server error");
+  }
+};
+
+const getPosts = async (req, res) => {
+  try {
+    const allposts = await prisma.posts.findMany({
+      select: {
+        id: true,
+        propertyTitle: true,
+        propertyDescription: true,
+        propertyType: true,
+        postType: true,
+        propertyRegion: true,
+        propertyCity: true,
+        propertyStreet: true,
+        maxLeaseLengthValue: true,
+        maxLeaseLengthType: true,
+        minLeaseLengthValue: true,
+        minLeaseLengthType: true,
+        propertyLeaseTerm: true,
+        authorId: true,
+        isAvailable: true,
+        propertyQuantity: true,
+        propertyImages: true,
+        propertyContact: true,
+        propertyPrice: true,
+
+        savedBy: {
+          where: { usersId: req.userInfo.id },
+          select: {
+            usersId: true,
+          },
+        },
+      },
+    });
+    if (allposts.length === 0) return res.status(404).json("No post found");
+    return res.status(200).json(allposts);
+  } catch (error) {
+    res.json("Internal server error");
+  }
+};
+
+const getPost = async (req, res) => {
+  console.log("fire getpost");
+  try {
+    const { postId } = req.params;
+
+    const post = await prisma.posts.findUnique({
+      where: {
+        id: postId,
+      },
+      select: {
+        id: true,
+        propertyTitle: true,
+        propertyDescription: true,
+        propertyType: true,
+        postType: true,
+        propertyRegion: true,
+        propertyCity: true,
+        propertyStreet: true,
+        maxLeaseLengthValue: true,
+        maxLeaseLengthType: true,
+        minLeaseLengthValue: true,
+        minLeaseLengthType: true,
+        propertyLeaseTerm: true,
+        authorId: true,
+        isAvailable: true,
+        propertyQuantity: true,
+        propertyImages: true,
+        propertyContact: true,
+        propertyPrice: true,
+        savedBy: {
+          where: { usersId: req.userInfo.id },
+          select: {
+            usersId: true,
+          },
+        },
+        author: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+            image: true,
+            phoneNumber: true,
+          },
+        },
+      },
+    });
+
+    if (!post) return res.status(404).json("Post not found");
+
+    return res.status(200).json(post);
+  } catch (error) {
+    console.error(error);
     res.status(500).json("Internal server error");
   }
 };
@@ -100,6 +207,8 @@ const reportPost = async (req, res) => {
 
 //save posts
 const savePost = async (req, res) => {
+  console.log("dile saveposts");
+  console.log(req.params.postId);
   try {
     const postId = req.params.postId;
     // Check if the post exists
@@ -114,7 +223,14 @@ const savePost = async (req, res) => {
       where: { AND: [{ usersId: req.userInfo.id }, { postsId: postId }] },
     });
 
-    if (isSave) return res.status(400).json({ error: "post is already saved" });
+    if (isSave) {
+      //delete saved posts
+      await prisma.savedPosts.delete({
+        where: { id: isSave.id },
+      });
+
+      return res.status(202).json("unsave succesful");
+    }
     const save = await prisma.savedPosts.create({
       data: {
         postsId: postId,
@@ -189,6 +305,7 @@ const getSavedPosts = async (req, res) => {
         },
       },
     });
+
     if (!savedPosts)
       return res.status(404).json({ error: "Their no saved post is found!!" });
 
@@ -205,4 +322,6 @@ module.exports = {
   savePost,
   deleteSavedPosts,
   getSavedPosts,
+  getPosts,
+  getPost,
 };

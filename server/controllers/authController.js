@@ -141,10 +141,20 @@ const register = async (req, res) => {
 
     const { password, id, ...other } = user;
 
-    return res.status(200).json({
-      message: "Registration successful.",
-      user: other,
-    });
+    // return res.status(200).json({
+    //   message: "Registration successful.",
+    //   user: other,
+    // });
+
+    const token = jwt.sign({ id: user.id }, process.env.MY_KEY);
+
+    // Set the token as an HTTP-only cookie and send the user data in the response
+    res
+      .cookie("access_token", token, {
+        httpOnly: true,
+      })
+      .status(200)
+      .json({ message: "Registration successful.", user: other });
   } catch (error) {
     // Handle any internal server errors
     return res.status(500).json("Internal server error");

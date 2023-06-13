@@ -137,3 +137,16 @@ model PostImages {
   Posts   Posts?  @relation(fields: [postsId], references: [id])
   postsId String?
 }
+
+model Admin {
+  id          String   @id @default(uuid())
+  username    String   @unique
+  email       String   @unique
+  password    String
+  firstName   String
+  lastName    String
+  image       String?  @db.VarChar(255)
+  phoneNumber String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
