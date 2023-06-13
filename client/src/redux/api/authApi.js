@@ -1,6 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
+import { logoutUser } from "../features/user.slice";
 import { userApi } from "./userApi";
-const BASE_URL = "http://localhost:3032";
+
+const BASE_URL = "";
 
 export const authApi = createApi({
 	reducerPath: "authApi",
@@ -15,6 +18,17 @@ export const authApi = createApi({
 					method: "POST",
 					body: data,
 				};
+			},
+			async onQueryStarted(args, { dispatch, queryFulfilled }) {
+				try {
+					const { data } = await queryFulfilled;
+					console.log("data authApi registeration");
+					console.log(data);
+
+					await dispatch(userApi.endpoints.user.initiate(null));
+				} catch (error) {
+					console.log("error authApi registeration");
+				}
 			},
 		}),
 
@@ -31,21 +45,34 @@ export const authApi = createApi({
 			async onQueryStarted(args, { dispatch, queryFulfilled }) {
 				try {
 					const { data } = await queryFulfilled;
-					console.log("data authApi loginUser");
+					console.log("data authApi login");
 					console.log(data);
 
 					await dispatch(userApi.endpoints.user.initiate(null));
 				} catch (error) {
-					console.log("error authApi loginUser");
+					console.log("error authApi login");
 				}
 			},
 		}),
 
-		verifyEmail: builder.mutation({
-			query({ verificationCode }) {
+		setupOTP: builder.mutation({
+			query(data) {
 				return {
-					url: `verifyemail/${verificationCode}`,
-					method: "GET",
+					url: "setupotp",
+					method: "POST",
+					body: data,
+					credentials: "include",
+				};
+			},
+		}),
+
+		checkOTP: builder.mutation({
+			query(data) {
+				return {
+					url: "checkotp",
+					method: "POST",
+					body: data,
+					credentials: "include",
 				};
 			},
 		}),
@@ -58,8 +85,18 @@ export const authApi = createApi({
 					credentials: "include",
 				};
 			},
+			async onQueryStarted(args, { dispatch, queryFulfilled }) {
+				try {
+					await queryFulfilled;
+					await dispatch(logoutUser());
+				} catch (error) {
+					console.log("error authApi logout");
+				}
+			}
+			
 		}),
 	}),
 });
 
-export const { useLoginUserMutation, useRegisterUserMutation, useLogoutUserMutation, useVerifyEmailMutation } = authApi;
+export const { useLoginUserMutation, useRegisterUserMutation, useLogoutUserMutation, useSetupOTPMutation, useCheckOTPMutation } = authApi;
+

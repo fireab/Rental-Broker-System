@@ -8,6 +8,7 @@ import img from "../../assets/imgs/house.jpg";
 import Slider from "react-slick";
 import { BiLeftArrowAlt, BiRightArrowAlt, BiSave } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
+import { useRentalPosts } from "../../hooks/rentalPost";
 // const img = styled(Image)`
 // 	border: none;
 // 	transition: all 0.3s ease-in-out;
@@ -19,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 // `;
 
 const PropertyCard = ({ preview }) => {
+	const { rentalsPosts, saveRentalPost, isLoading, error } = useRentalPosts();
 	const navigate = useNavigate();
 	const settings = {
 		// dots: true,
@@ -78,6 +80,7 @@ const PropertyCard = ({ preview }) => {
 
 	const handleSavePost = (e) => {
 		e.stopPropagation();
+		saveRentalPost();
 		setIsSavePost(!isSavedPost);
 	};
 

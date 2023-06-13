@@ -4,12 +4,15 @@ import { BsBookmarkFill } from "react-icons/bs";
 import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 import { MdLocalShipping } from "react-icons/md";
 import {  Badge, Divider } from '@chakra-ui/react';
+import { useRentalPosts } from "../../hooks/rentalPost";
 
 
 const PropertyDetailPage = () => {
 	const [isSavedPost, setIsSavePost] = useState(false);
+	const { rentalsPosts, saveRentalPost, isLoading, error } = useRentalPosts();
 	const handleSavePost = () => {
 		setIsSavePost(!isSavedPost);
+		saveRentalPost("1231")
 	};
 	
 	return (
@@ -29,12 +32,12 @@ const PropertyDetailPage = () => {
 					</div>
 				</div>
 				<div className="flex flex-col md:flex-row justify-evenly space-x-4 w-full h-[50vh] ">
-					<div className="w-1/2 ">
+					<div className="md:w-1/2 w-full flex-1 ">
 						{/* <Image  rounded={"md"} alt={"product image"} src={"https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080"} fit={"cover"} align={"center"} w={"100%"} h={{ base: "100%", sm: "400px", lg: "500px" }} /> */}
-						<Box rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-					</div>
-					<div className="w-1/2 ">
-						<div className="grid grid-cols-3 grid-rown-3 h-full w-full gap-4 ">
+						<Box rounded={"lg"}  className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
+					</div>	
+					<div className="md:w-1/2 w-full flex">
+						<div className="md:grid md:grid-cols-3 md:grid-rown-3 w-full gap-4 hidden">
 							<Box rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
 							<Box rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
 							<Box rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />

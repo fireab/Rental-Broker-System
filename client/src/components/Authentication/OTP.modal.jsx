@@ -4,15 +4,24 @@ import React, { useState } from "react";
 import { Refresh, RefreshDot } from "tabler-icons-react";
 import * as yup from "yup";
 
+import { useCheckOTPMutation } from "../../redux/api/authApi";
 // import { useAuth } from "../../hooks/useAuth";
 import capitalize from "../../utils/Capitalize";
 
 const OTPModal = (props) => {
 	// const { checkOTP } = useAuth();
+	const [checkOTP, { isLoading: checkOTPLoading, isError: checkOTPError, error: checkOTPErrorData, isSuccess: checkOTPSuccess }] = useCheckOTPMutation();
+
 	const [OTPLoading, setOTPLoding] = useState(false);
 
 	const validationSchema = yup.object().shape({
-		otp: yup.string().required("OTP is required").min(4, "OTP must be at least 4 characters").max(4, "OTP must not exceed 4 characters").matches(/^[0-9]+$/, "Must be only digits").trim(),
+		otp: yup
+			.string()
+			.required("OTP is required")
+			.min(4, "OTP must be at least 4 characters")
+			.max(4, "OTP must not exceed 4 characters")
+			.matches(/^[0-9]+$/, "Must be only digits")
+			.trim(),
 	});
 
 	const formik = useFormik({
@@ -22,19 +31,20 @@ const OTPModal = (props) => {
 
 		onSubmit: async (values) => {
 			console.log(values);
-		
-			// setOTPLoding(true);
-			// await checkOTP({email:props.email, otp:values.otp}).then((res) => {
-			// 	console.log("OTP correct");
-			// 	props.onClose();
-			// 	props.setActiveStep(props.activeStep + 1);
-			// }).catch((err) => {
-			// 	formik.setErrors({ otp: "Invalid OTP" });
-			// 	console.log("OTP not correct");
-			// }).finally(() => {
-			// 	setOTPLoding(false);
-			// });
-			
+			await checkOTP({ email: props.email, otp: values.otp })
+				.unwrap()
+				.then((res) => {
+					console.log("OTP correct");
+					props.onClose();
+					props.setActiveStep(props.activeStep + 1);
+				})
+				.catch((err) => {
+					formik.setErrors({ otp: "Invalid OTP" });
+					console.log("OTP not correct");
+				})
+				.finally(() => {
+					setOTPLoding(false);
+				});
 		},
 	});
 
@@ -62,7 +72,7 @@ const OTPModal = (props) => {
 									<span className="text-sm whitespace-nowrap self-center">{capitalize("Enter the code sent to your phone")}</span>
 								</FormLabel>
 								<InputGroup className="flex justify-center items-center">
-									<HStack >
+									<HStack>
 										{formik.values.otp.length > 0 && <div></div>}
 										<PinInput
 											placeholder="😐"
@@ -87,7 +97,7 @@ const OTPModal = (props) => {
 											<PinInputField />
 											<PinInputField />
 										</PinInput>
-										
+
 										{formik.values.otp.length > 0 && (
 											<IconButton
 												aria-label="Clear OTP"

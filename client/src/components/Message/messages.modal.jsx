@@ -6,7 +6,7 @@ import { ChevronRight, Send } from "tabler-icons-react";
 const MessagesModal = ({ isOpen, onClose, chatWindow, setChatWindow }) => {
 	const firstField = React.useRef();
 	const [view, setView] = React.useState(chatWindow !== true);
-	console.log(chatWindow);
+	
 	return (
 		<Drawer size={"sm"} isOpen={isOpen} placement="right" initialFocusRef={firstField} onClose={onClose}>
 			{/* <DrawerOverlay /> */}
