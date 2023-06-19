@@ -9,26 +9,28 @@ import "filepond/dist/filepond.min.css";
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginImageResize);
 
-const ImageDrop = () => {
-    const pondRef = useRef(null);
-    const [files, setFiles] = useState([
-	]);
+const ImageDrop = ({setImages,images}) => {
+    // const pondRef = useRef(null);
+   
     const handleInit = () => {
 		// console.log("FilePond instance has initialized", pondRef.current);
 	};
 
 	const handleUpdateFiles = (fileItems) => {
-		setFiles(fileItems.map((fileItem) => fileItem.file));
+		console.log(fileItems);
+		setImages(fileItems.map((fileItem) => fileItem.file));
 	};
 
     return (
         <FilePond
-				ref={pondRef}
-				files={files}
-				maxFiles={8}
+				// ref={pondRef}
+				
+				files={images}
 				allowMultiple={true}
-				server="/api"
-				oninit={handleInit}
+				maxFiles={8}
+				// allowMultiple={true}
+				// server="/api/posts/addpost"
+				// oninit={handleInit}
 				onupdatefiles={handleUpdateFiles}
 				labelTapToRetry="" 
 				className="flex  items-center justify-center w-full h-full bg-gray-100 border-2 border-gray-300 border-dashed rounded-md"

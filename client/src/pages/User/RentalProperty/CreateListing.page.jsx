@@ -1,9 +1,11 @@
 import { AddIcon, CloseIcon, DeleteIcon } from "@chakra-ui/icons";
 import { Button, FormControl, FormLabel, Heading, IconButton, Input, InputLeftElement, InputRightElement, useDisclosure } from "@chakra-ui/react";
 import { InputGroup } from "@chakra-ui/react";
+import axios from "axios";
 import { Form, Formik } from "formik";
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Baguette, BrandFacebook, BrandInstagram, BrandTelegram, BrandTiktok, BrandTwitter, BrandWhatsapp, BrandYoutube, ClockCancel, Mail, PhoneCall } from "tabler-icons-react";
 import * as yup from "yup";
 
@@ -98,19 +100,32 @@ const CreateListingPage = () => {
 				value: "",
 			},
 		],
-		propertyImages: [
-			{
-				image: "",
-			},
-		],
 	};
 
 	const [previewAdValues, setpreviewAdValues] = React.useState(initialValues);
 
+	const [images, setImages] = useState([]);
+	const navigate = useNavigate();
+
 	const handelSubmit = async (values) => {
-		// alert(JSON.stringify(values, null, 2));
 		setLoading(true);
-		createRentalPost(values);
+		const formData = new FormData();
+		images.forEach((image) => {
+			formData.append("images", image);
+		});
+
+		await axios
+			.post("/api/upload", formData)
+			.then(async (res) => {
+				console.log(res.data);
+				await createRentalPost({ ...values, propertyImages: res.data.map((image) => ({ image })) });
+			})
+			.then(() => {
+				navigate("/rentals");
+			})
+			.catch((err) => {
+				console.log("error dil");
+			});
 		setLoading(false);
 	};
 	const handelPreview = (values) => {
@@ -296,7 +311,7 @@ const CreateListingPage = () => {
 										</div>
 									</div>
 									<div className="w-full lg:w-2/5 p-4 mt-10 ">
-										<ImageDrop />
+										<ImageDrop setImages={setImages} images={images} />
 									</div>
 								</div>
 							</Form>

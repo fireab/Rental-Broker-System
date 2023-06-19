@@ -1,17 +1,18 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import { createRentalPost, deleteRentalPost, fetchRentalPosts, saveRentalPost, updateRentalPost } from "../services/rental.api";
 
 export const useRentalPosts = () => {
-	const { data: rentalsPosts, isLoading, error } = useQuery("posts", fetchRentalPosts,{
-		// staleTime: 1000 * 60 * 5,
+	const {
+		data: rentalsPosts,
+		isLoading,
+		error,
+	} = useQuery("posts", fetchRentalPosts, {
+		staleTime: 1000 * 60 * 6,
+		// enabled: false,
 	});
 
-	
-
-	
-
-    const queryClient = useQueryClient();
+	const queryClient = useQueryClient();
 	const create = useMutation(createRentalPost, {
 		onSuccess: () => {
 			queryClient.invalidateQueries("posts");
@@ -23,19 +24,17 @@ export const useRentalPosts = () => {
 			queryClient.invalidateQueries("posts");
 		},
 	});
-	
-	const save = useMutation((postId)=>saveRentalPost(postId), {
+
+	const save = useMutation((postId) => saveRentalPost(postId), {
 		onSuccess: (postId) => {
 			queryClient.invalidateQueries(["post", postId]);
 		},
-		
-	})
+	});
 
 	const remove = useMutation(deleteRentalPost, {
 		onSuccess: () => {
 			queryClient.invalidateQueries("posts");
 		},
-
 	});
 
 	return {
@@ -52,4 +51,3 @@ export const useRentalPosts = () => {
 		saveRentalPost: save.mutate,
 	};
 };
-

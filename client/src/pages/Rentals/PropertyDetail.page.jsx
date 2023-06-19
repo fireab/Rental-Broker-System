@@ -48,18 +48,18 @@ const PropertyDetailPage = () => {
 			<div className="flex flex-col">
 				<div className="flex justify-between items-center p-2">
 					<div className="flex cursor-pointer justify-center items-center space-x-4">
-						<Avatar name="Dan Abrahmov" aria-label="User menu" src="https://bit.ly/dan-abramov" />
+						<Avatar name="Dan Abrahmov" size={"lg"} aria-label="User menu" src="https://bit.ly/dan-abramov" />
 						<div className="flex flex-col">
-							<span className="text-lg font-bold">{author.username}</span>
-							<div className="flex space-x-4">
-								<span className="text-sm font-light">4.2</span>
-								<span className="text-sm font-light">{`${author.address[0].region}, ${author.address[0].city}`}</span>
-								<span className="text-sm font-light">dilamo</span>
+							<span className="text-md md:text-lg font-bold">{author.username}</span>
+							<div className="flex flex-col md:flex-row text-xs md:text-sm font-light md:space-x-4">
+								<span>4.2</span>
+								<span className="whitespace-nowrap">{`${author.address[0].region}, ${author.address[0].city}`}</span>
+								<span>dilamo</span>
 							</div>
 						</div>
 					</div>
 					<div className="flex space-x-2">
-						<Button className="!bg-blue-700 text-white">
+						<Button className="!bg-blue-700  text-white">
 							<div className="flex space-x-2 items-center">
 								<BiUserPlus size={22} />
 								<span>Follow</span>
@@ -130,11 +130,11 @@ const PropertyDetailPage = () => {
 							</Text>
 
 							<List spacing={2}>
-								<ListItem>
+								<ListItem >
 									<Text as={"span"} fontWeight={"bold"}>
 										Avalibliity:
 									</Text>{" "}
-									{!rentalPost.isAvailable ? (
+									{rentalPost.isAvailable ? (
 										<Badge fontWeight={"bold"} fontSize={"x-small"} p={1} px={2} bg={"green.500"} textColor={"white"} rounded={"full"}>
 											Available
 										</Badge>

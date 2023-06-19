@@ -39,12 +39,15 @@ const PropertyCard = ({ preview, ...post }) => {
 
 	const [slider, setSlider] = useState(0);
 	const [isSliderButtonVisible, setSliderButtonVisible] = useState(false);
-	const [isSavedPost, setIsSavePost] = useState(post.savedBy.length>0);
+	const [isSavedPost, setIsSavePost] = useState(post.savedBy.length > 0);
 	const [isSaveHover, setIsSaveHover] = useState(false);
 
 	// These are the breakpoints which changes the position of the
 	// buttons as the screen size changes
 	const side = useBreakpointValue({ base: "10%", md: "10px" });
+	const images = post.propertyImages.map((image) => ({ image: image, postId: image.postsId, id: image.id }));
+	// console.log(post.propertyImages);
+	// console.log(images);
 	const cards = [
 		{
 			title: "Design Projects 1",
@@ -147,15 +150,16 @@ const PropertyCard = ({ preview, ...post }) => {
 						</Box>
 						{!preview && (
 							<div onMouseEnter={handleSaveHover} onMouseLeave={handleSaveLeave} onClick={handleSavePost} className="p-2 absolute  right-2 cursor-pointer top-2 z-[2]">
-								<BsBookmarkFill className={`${ isSavedPost ? "text-red-600" : "text-black/70"}  transition-all duration-150 ease-in-out font-bold  text-lg`} size={isSaveHover ? 22 : 20} />
+								<BsBookmarkFill className={`${isSavedPost ? "text-red-600" : "text-black/70"}  transition-all duration-150 ease-in-out font-bold  text-lg`} size={isSaveHover ? 22 : 20} />
 							</div>
 						)}
 						{/* Slider */}
 						<div className="w-full">
 							<Slider {...settings} ref={(slider) => setSlider(slider)}>
-								{cards.map((card, index) => (
-									<Box rounded={"2xl"} overflow={"clip"} className={`${preview ? "h-60" : "h-40"}`} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} key={index} backgroundImage={`url(${card.image})`} />
-								))}
+								{images.map((image, index) => {
+									console.log(image.image.image);
+									return <Box rounded={"2xl"} overflow={"clip"} className={`${preview ? "h-60" : "h-40"}`} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} key={index} backgroundImage={`url(http://192.168.8.113:3032/api/posts/images/${image.image.image})`} />
+								})}
 							</Slider>
 						</div>
 					</div>
@@ -164,11 +168,7 @@ const PropertyCard = ({ preview, ...post }) => {
 							<div className="flex items-center font-medium text-sm justify-between">
 								{/* [Address] */}
 								{/* <span>Addis Ababa, Bole</span> */}
-								<span>
-									{
-										`${post.propertyRegion}, ${post.propertyCity}`
-									}
-								</span>
+								<span>{`${post.propertyRegion}, ${post.propertyCity}`}</span>
 								{/* [rating] */}
 								<div className="flex justify-center space-x-1 ">
 									<span className="">
@@ -178,23 +178,11 @@ const PropertyCard = ({ preview, ...post }) => {
 								</div>
 							</div>
 							{/* [product title] */}
-							<span className={`${preview ? "font-lg text-sm" : "font-medium text-xs"} text-blue-900`}>
-								{
-									post.propertyTitle
-								}
-							</span>
+							<span className={`${preview ? "font-lg text-sm" : "font-medium text-xs"} text-blue-900`}>{post.propertyTitle}</span>
 							{/* [product type] */}
-							<span className={`${preview ? "text-sm" : "text-xs"} text-gray-600`}>
-								{
-									post.propertyType
-								}
-							</span>
+							<span className={`${preview ? "text-sm" : "text-xs"} text-gray-600`}>{post.propertyType}</span>
 							{/* [property price] */}
-							<span className={`${preview ? "text-sm" : "text-xs"} text-gray-900`}>
-								{
-									`${post.propertyPrice[0].price} / ${post.propertyPrice[0].priceType}`
-								}
-							</span>
+							<span className={`${preview ? "text-sm" : "text-xs"} text-gray-900`}>{`${post.propertyPrice[0].price} / ${post.propertyPrice[0].priceType}`}</span>
 						</div>
 					</div>
 				</CardBody>
