@@ -28,6 +28,7 @@ import FavoriteRentalsPage from "./pages/User/Account/FavoriteRentals.page";
 import CreateListingPage from "./pages/User/RentalProperty/CreateListing.page";
 import EditPropertyPage from "./pages/User/RentalProperty/EditProperty.page";
 import ProfileLayout from "./Profile.Layout";
+import SavedPropertyList from "./pages/User/RentalProperty/SavedPropertyList";
 
 const route = createBrowserRouter([
 	{
@@ -120,6 +121,10 @@ const route = createBrowserRouter([
 					{
 						path: "search",
 						Component: SearchResultsPage, // list of searched properties from a users
+					},
+					{
+						path: "saved",
+						Component: SavedPropertyList
 					},
 					{
 						path: ":postId",

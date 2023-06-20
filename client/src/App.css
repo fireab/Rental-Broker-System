@@ -42,11 +42,11 @@ body {
 	/* font-size: medium; */
 }
 
-.filepond--item {
+.create-post .filepond--item {
 	width: calc(50% - 0.5em) !important;
 }
 @media screen and (max-width: 1024px) {
-	.filepond--item {
+	.create-post .filepond--item {
 		width: calc(25% - 0.5em) !important;
 	}
 }
@@ -57,24 +57,29 @@ body {
 	height: 300px !important;	
 }
 */
-.filepond--wrapper {
+.create-post .filepond--wrapper {
 	height: 350px !important;
 }
 @media (min-width: 600px) {
-	.filepond--wrapper {
+	.create-post .filepond--wrapper {
 		height: 500px !important;
 	}
 }
 @media (min-width: 800px) {
-	.filepond--wrapper {
+	.create-post .filepond--wrapper {
 		height: 600px !important;
 	}
 }
 @media (min-width: 1024px) {
-	.filepond--wrapper {
+	.create-post .filepond--wrapper {
 		height: 100% !important;
 	}
 }
-.filepond--list-scroller {
+.create-post .filepond--list-scroller {
 	height: 100% !important;
 }
+
+.profile-image .filepond--drop-label{
+	background-color: transparent !important;
+}
+

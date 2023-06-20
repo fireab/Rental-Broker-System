@@ -1,14 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
-import { createRentalPost, deleteRentalPost, fetchRentalPosts, saveRentalPost, updateRentalPost } from "../services/rental.api";
+import { createRentalPost, deleteRentalPost, fetchRentalPosts, fetchRentalPostsBySearch, fetchRentalPostsByUser, fetchSavedRentalPosts, saveRentalPost, updateRentalPost } from "../services/rental.api";
 
-export const useRentalPosts = () => {
+export const useRentalPosts = (params) => {
 	const {
 		data: rentalsPosts,
+		refetch: refetchRentalPosts,
+		isFetching: rentalsPostsIsFetching,
 		isLoading,
 		error,
-	} = useQuery("posts", fetchRentalPosts, {
-		staleTime: 1000 * 60 * 6,
+	} = useQuery(["posts", params], () => fetchRentalPosts(params), {
+		// staleTime: 1000 * 60 * 6,
+		// refetchOnMount: false,
+		enabled: false,
 		// enabled: false,
 	});
 
@@ -37,8 +41,24 @@ export const useRentalPosts = () => {
 		},
 	});
 
+	const savedPosts = useQuery("savedPosts", fetchSavedRentalPosts, {
+		staleTime: 1000 * 60 * 6,
+	});
+
+	const userPosts = useQuery("userPosts", fetchRentalPostsByUser, {
+		staleTime: 1000 * 60 * 6,
+	});
+
+	// serched posts with filter
+	const searchedPosts = useQuery(["searchedPosts", params], fetchRentalPostsBySearch, {
+		// refetchOnMount: true,
+		enabled: false,
+	});
+
 	return {
 		rentalsPosts,
+		refetchRentalPosts,
+		rentalsPostsIsFetching,
 		isLoading,
 		error,
 		createRentalPost: create.mutate,
@@ -49,5 +69,17 @@ export const useRentalPosts = () => {
 		updateRentalPost: update.mutate,
 		removeRentalPost: remove.mutate,
 		saveRentalPost: save.mutate,
+		// search
+		searchedPosts: searchedPosts.data,
+		refetchSearchedPosts: searchedPosts.refetch,
+		isLoadingSearchedPosts: searchedPosts.isLoading,
+		isRefetchingSearchedPosts: searchedPosts.isFetching,
+		errorSearchedPosts: searchedPosts.error,
+		// saved
+		savedPosts,
+		//
+		userPosts: userPosts.data,
+		isLoadingUserPosts: userPosts.isLoading,
+		errorUserPosts: userPosts.error,
 	};
 };

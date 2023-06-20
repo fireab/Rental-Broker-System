@@ -140,7 +140,7 @@ const CreateListingPage = () => {
 				<Heading color={"#2b6aa0"} size={"lg"}>
 					Create Listing
 				</Heading>
-				<div className="p-4 bg-white lg:rounded-lg lg:shadow-2xl px-10">
+				<div className="p-4 bg-white lg:rounded-lg lg:shadow-2xl px-2 lg:px-10">
 					<Formik initialValues={initialValues} validationSchema={validationSchema} validateOnBlur={true} onSubmit={handelSubmit}>
 						{/* { values, errors, touched, handleChange, handleBlur, handleSubmit } */}
 						{(formik) => (
@@ -310,7 +310,7 @@ const CreateListingPage = () => {
 											</div>
 										</div>
 									</div>
-									<div className="w-full lg:w-2/5 p-4 mt-10 ">
+									<div className="create-post w-full lg:w-2/5 p-4 mt-10 ">
 										<ImageDrop setImages={setImages} images={images} />
 									</div>
 								</div>

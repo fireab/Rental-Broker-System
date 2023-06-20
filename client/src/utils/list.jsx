@@ -1,5 +1,5 @@
 import { BiBookBookmark, BiCar, BiDish, BiMobile, BiParty, BiRun, BiTable } from "react-icons/bi";
-import { BsBicycle, BsBuildingsFill, BsChevronDown } from "react-icons/bs";
+import { BsBicycle, BsBuildingsFill, BsChevronDown, BsGlobe } from "react-icons/bs";
 import { BrandFacebook, BrandInstagram, BrandTelegram, BrandTiktok, BrandTwitter, BrandWhatsapp, BrandYoutube, Mail, PhoneCall } from "tabler-icons-react";
 
 export const steps = [
@@ -496,6 +496,11 @@ export const Property_Type = [
 ];
 
 export const filter_options = [
+	{
+		name: "All",
+		value: "",
+		icon: <BsGlobe />,
+	},
 	{
 		name: "Construction",
 		value: "construction",

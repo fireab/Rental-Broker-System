@@ -1,6 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon, StarIcon } from "@chakra-ui/icons";
 import { Box, Button, Card, CardBody, CardFooter, CardHeader, Center, Container, Flex, Grid, Heading, Icon, IconButton, Image, Spacer, Square, Stack, Text, useBreakpointValue } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import { BiLeftArrowAlt, BiRightArrowAlt, BiSave } from "react-icons/bi";
 import { BsBookmark, BsBookmarkFill, BsBookmarkHeart, BsFillStarFill } from "react-icons/bs";
@@ -37,6 +37,8 @@ const PropertyCard = ({ preview, ...post }) => {
 		slidesToScroll: 1,
 	};
 
+
+
 	const [slider, setSlider] = useState(0);
 	const [isSliderButtonVisible, setSliderButtonVisible] = useState(false);
 	const [isSavedPost, setIsSavePost] = useState(post.savedBy.length > 0);
@@ -48,26 +50,26 @@ const PropertyCard = ({ preview, ...post }) => {
 	const images = post.propertyImages.map((image) => ({ image: image, postId: image.postsId, id: image.id }));
 	// console.log(post.propertyImages);
 	// console.log(images);
-	const cards = [
-		{
-			title: "Design Projects 1",
-			text: "The project board is an exclusive resource for contract work. It's perfect for freelancers, agencies, and moonlighters.",
-			image: "https://images.unsplash.com/photo-1516796181074-bf453fbfa3e6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDV8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60",
-		},
-		{
-			title: "Design Projects 2",
-			text: "The project board is an exclusive resource for contract work. It's perfect for freelancers, agencies, and moonlighters.",
-			image: "https://images.unsplash.com/photo-1438183972690-6d4658e3290e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2274&q=80",
-		},
-		{
-			title: "Design Projects 3",
-			text: "The project board is an exclusive resource for contract work. It's perfect for freelancers, agencies, and moonlighters.",
-			image: "https://images.unsplash.com/photo-1507237998874-b4d52d1dd655?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDR8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60",
-		},
-		{
-			image: img,
-		},
-	];
+	// const cards = [
+	// 	{
+	// 		title: "Design Projects 1",
+	// 		text: "The project board is an exclusive resource for contract work. It's perfect for freelancers, agencies, and moonlighters.",
+	// 		image: "https://images.unsplash.com/photo-1516796181074-bf453fbfa3e6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDV8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60",
+	// 	},
+	// 	{
+	// 		title: "Design Projects 2",
+	// 		text: "The project board is an exclusive resource for contract work. It's perfect for freelancers, agencies, and moonlighters.",
+	// 		image: "https://images.unsplash.com/photo-1438183972690-6d4658e3290e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2274&q=80",
+	// 	},
+	// 	{
+	// 		title: "Design Projects 3",
+	// 		text: "The project board is an exclusive resource for contract work. It's perfect for freelancers, agencies, and moonlighters.",
+	// 		image: "https://images.unsplash.com/photo-1507237998874-b4d52d1dd655?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDR8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60",
+	// 	},
+	// 	{
+	// 		image: img,
+	// 	},
+	// ];
 	const handleSliderHover = () => {
 		setSliderButtonVisible(true);
 	};
@@ -111,43 +113,45 @@ const PropertyCard = ({ preview, ...post }) => {
 				<CardBody p={0}>
 					<div className="!relative" onMouseEnter={handleSliderHover} onMouseLeave={handleSliderLeave}>
 						{/* Left Icon */}
-						<Box visibility={isSliderButtonVisible ? "visible" : "hidden"} className="hidden md:block" transition={"all .2s ease-in-out"}>
-							<IconButton
-								size={"sm"}
-								aria-label="left-arrow"
-								className="!bg-white/70 hover:!bg-white/90 "
-								borderRadius="full"
-								position="absolute"
-								left={side}
-								top={"50%"}
-								transform={"translate(0%, -50%)"}
-								zIndex={2}
-								onClick={(e) => {
-									e.stopPropagation();
-									slider?.slickPrev();
-								}}
-							>
-								<ChevronLeftIcon />
-							</IconButton>
-							{/* Right Icon */}
-							<IconButton
-								size={"sm"}
-								aria-label="right-arrow"
-								className="!bg-white/70 hover:!bg-white/90"
-								borderRadius="full"
-								position="absolute"
-								right={side}
-								top={"50%"}
-								transform={"translate(0%, -50%)"}
-								zIndex={2}
-								onClick={(e) => {
-									e.stopPropagation();
-									slider?.slickNext();
-								}}
-							>
-								<ChevronRightIcon />
-							</IconButton>
-						</Box>
+						{images.length > 0 && (
+							<Box visibility={isSliderButtonVisible ? "visible" : "hidden"} className="hidden md:block" transition={"all .2s ease-in-out"}>
+								<IconButton
+									size={"sm"}
+									aria-label="left-arrow"
+									className="!bg-white/70 hover:!bg-white/90 "
+									borderRadius="full"
+									position="absolute"
+									left={side}
+									top={"50%"}
+									transform={"translate(0%, -50%)"}
+									zIndex={2}
+									onClick={(e) => {
+										e.stopPropagation();
+										slider?.slickPrev();
+									}}
+								>
+									<ChevronLeftIcon />
+								</IconButton>
+								{/* Right Icon */}
+								<IconButton
+									size={"sm"}
+									aria-label="right-arrow"
+									className="!bg-white/70 hover:!bg-white/90"
+									borderRadius="full"
+									position="absolute"
+									right={side}
+									top={"50%"}
+									transform={"translate(0%, -50%)"}
+									zIndex={2}
+									onClick={(e) => {
+										e.stopPropagation();
+										slider?.slickNext();
+									}}
+								>
+									<ChevronRightIcon />
+								</IconButton>
+							</Box>
+						)}
 						{!preview && (
 							<div onMouseEnter={handleSaveHover} onMouseLeave={handleSaveLeave} onClick={handleSavePost} className="p-2 absolute  right-2 cursor-pointer top-2 z-[2]">
 								<BsBookmarkFill className={`${isSavedPost ? "text-red-600" : "text-black/70"}  transition-all duration-150 ease-in-out font-bold  text-lg`} size={isSaveHover ? 22 : 20} />
@@ -156,10 +160,13 @@ const PropertyCard = ({ preview, ...post }) => {
 						{/* Slider */}
 						<div className="w-full">
 							<Slider {...settings} ref={(slider) => setSlider(slider)}>
-								{images.map((image, index) => {
-									console.log(image.image.image);
-									return <Box rounded={"2xl"} overflow={"clip"} className={`${preview ? "h-60" : "h-40"}`} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} key={index} backgroundImage={`url(http://192.168.8.113:3032/api/posts/images/${image.image.image})`} />
-								})}
+								{images.length == 0 ? (
+									<Box rounded={"2xl"} overflow={"clip"} className={`${preview ? "h-60" : "h-40"}`} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage={`url(http://192.168.8.113:3032/api/posts/images/noimage.jpg)`} />
+								) : (
+									images.map((image, index) => {
+										return <Box rounded={"2xl"} overflow={"clip"} className={`${preview ? "h-60" : "h-40"}`} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} key={index} backgroundImage={`url(http://192.168.8.113:3032/api/posts/images/${image.image.image})`} />;
+									})
+								)}
 							</Slider>
 						</div>
 					</div>

@@ -19,7 +19,7 @@ function App() {
 				<ChakraProvider theme={theme}>
 					<RouterProvider router={route} />
 				</ChakraProvider>
-				<ReactQueryDevtools initialIsOpen={false} />
+				{/* <ReactQueryDevtools initialIsOpen={false} /> */}
 			</QueryClientProvider>
 		</>
 	);

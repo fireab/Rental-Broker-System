@@ -7,10 +7,19 @@ import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 import { MdLocalShipping } from "react-icons/md";
 import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
+import styled from "styled-components";
 
 import { useRentalPosts } from "../../hooks/rentalPost";
 import { fetchRentalPost } from "../../services/rental.api";
 import capitalize from "../../utils/Capitalize";
+import NumberWithCommas from "../../utils/numberWithCommas";
+
+const GridContainer = styled.div`
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	grid-auto-rows: repeat(auto-fill, minmax(200px, 1fr));
+	grid-gap: 20px;
+`;
 
 const PropertyDetailPage = () => {
 	const { postId } = useParams();
@@ -41,20 +50,18 @@ const PropertyDetailPage = () => {
 		setIsSavePost(!isSavedPost);
 	};
 
-	console.log(rentalPost);
-
 	return (
 		<Container maxW={"7xl"} className="p-2 m-4 z-10 w-full md:!w-2/3 overflow-auto ">
 			<div className="flex flex-col">
 				<div className="flex justify-between items-center p-2">
 					<div className="flex cursor-pointer justify-center items-center space-x-4">
-						<Avatar name="Dan Abrahmov" size={"lg"} aria-label="User menu" src="https://bit.ly/dan-abramov" />
+						<Avatar name="user" size={"lg"} aria-label="User menu" src="https://bit.ly/dan-abramov" />
 						<div className="flex flex-col">
 							<span className="text-md md:text-lg font-bold">{author.username}</span>
 							<div className="flex flex-col md:flex-row text-xs md:text-sm font-light md:space-x-4">
 								<span>4.2</span>
 								<span className="whitespace-nowrap">{`${author.address[0].region}, ${author.address[0].city}`}</span>
-								<span>dilamo</span>
+								<span>{author.firstName}</span>
 							</div>
 						</div>
 					</div>
@@ -70,34 +77,44 @@ const PropertyDetailPage = () => {
 						</div>
 					</div>
 				</div>
-				<div className="flex flex-col md:flex-row justify-evenly space-x-4 w-full h-[50vh] ">
-					<div className="md:w-1/2 w-full flex-1 ">
-						{/* <Image  rounded={"md"} alt={"product image"} src={"https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080"} fit={"cover"} align={"center"} w={"100%"} h={{ base: "100%", sm: "400px", lg: "500px" }} /> */}
-						<Box rounded={"lg"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-					</div>
-					<div className="md:w-1/2 w-full flex">
-						<div className="md:grid md:grid-cols-3 md:grid-rown-3 w-full gap-4 hidden">
-							<Box rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-							<Box rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-							<Box rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-							<Box rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-							<Box rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-							<Box rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-							<Box rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
+				{rentalPost.propertyImages.length > 0 && (
+					<div className="flex flex-col md:flex-row justify-evenly space-x-4 w-full h-[50vh] ">
+						<div className="md:w-1/2 w-full flex-1 ">
+							{console.log(rentalPost.propertyImages[0])}
+							<Box rounded={"lg"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage={`url(http://192.168.8.113:3032/api/posts/images/${rentalPost.propertyImages[0].image})`} />
 						</div>
+						{rentalPost.propertyImages.length > 1 && (
+							<div className="md:w-1/2 w-full flex ">
+								{/* <div className="md:grid md:grid-cols-3 md:grid-rown-3 w-full gap-4 hidden"></div> */}
+								<div
+								style={{
+									width: "100%",
+									display: "grid",
+									gridTemplateColumns: `repeat(${Math.ceil(rentalPost.propertyImages.slice(1).length / 2)}, minmax(auto, 1fr))`,
+									gridAutoRows: "repeat(auto-fill, minmax(200px, 1fr))",
+									gridGap: "20px",
+
+								}}
+								>
+									{/* <GridContainer> */}
+									{rentalPost.propertyImages.slice(1).map((image, index) => {
+										return <Box key={index} rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage={`url(http://192.168.8.113:3032/api/posts/images/${image.image})`} />;
+									})}
+									{/* </GridContainer> */}
+								</div>
+							</div>
+						)}
 					</div>
-				</div>
+				)}
 				<Stack w={"full"} spacing={{ base: 6, md: 10 }}>
 					<Box as={"header"}>
 						<Heading lineHeight={1.1} fontWeight={600} fontSize={{ base: "2xl", sm: "4xl", lg: "5xl" }}>
 							{rentalPost.propertyTitle}
 						</Heading>
-				
-								<Text color={"gray.900"} fontWeight={300} fontSize={"2xl"}>
-									{`${rentalPost.propertyPrice[rentalPost.propertyPrice.length-1].price} birr / ${rentalPost.propertyPrice[rentalPost.propertyPrice.length-1].priceType.toLowerCase()}`}
-								</Text>
-							
-					
+
+						<Text color={"gray.900"} fontWeight={300} fontSize={"2xl"}>
+							{`${NumberWithCommas(rentalPost.propertyPrice[rentalPost.propertyPrice.length - 1].price)} birr / ${rentalPost.propertyPrice[rentalPost.propertyPrice.length - 1].priceType.toLowerCase()}`}
+						</Text>
 					</Box>
 
 					<Stack spacing={{ base: 4, sm: 6 }} direction={"column"} divider={<StackDivider borderColor={"gray.200"} />}>
@@ -130,7 +147,7 @@ const PropertyDetailPage = () => {
 							</Text>
 
 							<List spacing={2}>
-								<ListItem >
+								<ListItem>
 									<Text as={"span"} fontWeight={"bold"}>
 										Avalibliity:
 									</Text>{" "}
@@ -187,7 +204,7 @@ const PropertyDetailPage = () => {
 										</Text>
 										<div className="flex flex-col">
 											{rentalPost.propertyPrice.map((price, index) => {
-												return <span key={index}>{`${price.price} birr / ${price.priceType.toLowerCase()}`}</span>;
+												return <span key={index}>{`${NumberWithCommas(price.price)} birr / ${price.priceType.toLowerCase()}`}</span>;
 											})}
 										</div>
 									</div>

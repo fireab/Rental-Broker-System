@@ -21,7 +21,6 @@ const IsAuthorized = (props) => {
 	if (loading) {
 		return <FullscreenLoader />;
 	}
-	console.log(user);
 	return <>{user ? <Outlet /> : <Navigate to="/login" replace />}</>;
 };
 

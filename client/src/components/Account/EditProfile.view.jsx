@@ -1,13 +1,39 @@
-import { Button, FormControl, FormLabel, Input, InputGroup } from "@chakra-ui/react";
+import { Button, FormControl, FormLabel, Input, InputGroup, useDisclosure } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import InputField from "../RentalProperty/InputField";
 import InputFieldSelect from "../RentalProperty/InputField.select";
 import { cities, regions } from "../../utils/list";
 import { editProfileValidationSchema as validationSchema } from "../../utils/validation";
+import { useUser } from "../../hooks/user";
+import { useSetupOTPMutation } from "../../redux/api/authApi";
+import OTPModal from "../Authentication/OTP.modal";
+import { useNavigate } from "react-router-dom";
 
 const EditProfileView = () => {
+	const { getUserProfile, isGetUserProfileLoading, refetchUserProfile, isGetUserProfileFetching, editUserProfile, isEditUserProfileFetching } = useUser();
+
+	const [setupOTP, { isLoading: setupOTPLoading, isError: setupOTPError, error: setupOTPErrorData, isSuccess: setupOTPSuccess }] = useSetupOTPMutation();
+	const { isOpen: isOTPOpen, onOpen: onOTPOpen, onClose: onOTPClose } = useDisclosure(true);
+	// usestate setPhoneisVerified
+	const [phoneisVerified, setPhoneisVerified] = useState(false);
+	const navigate = useNavigate();
+	useEffect(() => {
+		refetchUserProfile();
+	}, [refetchUserProfile]);
+
+	// useEffect(() => {
+	// 	if (setupOTPSuccess) {
+	// 		onOTPClose();
+	// 		editUserProfile({ ...getUserProfile, phoneNumber: getUserProfile.phoneNumber });
+	// 	}
+	// },[phoneisVerified])
+
+	if (isGetUserProfileLoading || isGetUserProfileFetching || !getUserProfile) {
+		return <div>Loading...</div>;
+	}
+
 	const validateYupSchema = Yup.object({
 		firstName: Yup.string().required("Required"),
 		lastName: Yup.string().required("Required"),
@@ -18,23 +44,45 @@ const EditProfileView = () => {
 		city: Yup.string().required("Required"),
 	});
 	const intialValues = {
-		firstName: "",
-		lastName: "",
-		email: "",
-		phoneNumber: "",
-		username: "",
-		region: "Addis Ababa",
-		city: "",
+		firstName: getUserProfile.firstName,
+		lastName: getUserProfile.lastName,
+		email: getUserProfile.email,
+		phoneNumber: getUserProfile.phoneNumber,
+		username: getUserProfile.username,
+		region: getUserProfile.address[0].region,
+		city: getUserProfile.address[0].city,
 	};
-	const handelSubmit = (values) => {
-		console.log(values);
-		alert(JSON.stringify(values, null, 2));
+
+	const handelSubmit = async (values) => {
+		// if (intialValues.phoneNumber !== values.phoneNumber) {
+		// 	setupOTP({ email: getUserProfile.email, phoneNumber: values.phoneNumber, username: getUserProfile.username });
+		// 	onOTPOpen();
+		// } else {
+
+		// }
+		// change object to array
+		const updateFields = {};
+		Array.from(Object.keys(values)).forEach((key) => {
+			if (values[key] !== intialValues[key]) {
+				updateFields[key] = values[key];
+			}
+		});
+		await editUserProfile(updateFields);
+		navigate("/user/profile");
 	};
 	return (
 		<div className="">
 			<Formik initialValues={intialValues} validationSchema={validationSchema} onSubmit={handelSubmit}>
 				{(formik) => (
 					<Form>
+						<OTPModal
+							setPhoneisVerified={setPhoneisVerified}
+							handelSubmit={async (values) => {
+								formik.submitForm();
+							}}
+							onClose={onOTPClose}
+							isOpen={isOTPOpen}
+						/>
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 							<InputField name="username" label="Username" />
 							<InputField name="firstName" label="First Name" />
@@ -50,10 +98,10 @@ const EditProfileView = () => {
 									formik.setFieldValue("city", e.target.value == "" ? "" : cities[e.target.value][0].value);
 								}}
 							/>
-							<InputField name="phoneNumber" label="Phone Number" inputLeftAddon ="+251" />
+							<InputField name="phoneNumber" label="Phone Number" inputLeftAddon="+251" />
 							<InputFieldSelect name="city" label="City" options={cities[formik.values.region]} type="select" />
 						</div>
-						<Button className="w-full md:w-1/2" type="submit" colorScheme="blue" mt={4} isLoading={formik.isSubmitting}>
+						<Button loadingText="Updating ..." className="w-full md:w-1/2" type="submit" colorScheme="blue" mt={4} isLoading={formik.isSubmitting}>
 							update
 						</Button>
 					</Form>
