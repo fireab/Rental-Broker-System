@@ -79,7 +79,7 @@ model SavedPosts {
 model Posts {
   id                  String             @id @default(uuid())
   propertyTitle       String             @db.VarChar(255)
-  propertyDescription String
+  propertyDescription String             @db.Text
   propertyType        String
   postType            String             @default("product")
   propertyRegion      String

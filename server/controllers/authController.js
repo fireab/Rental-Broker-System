@@ -43,7 +43,8 @@ const sendOtp = async (req, res) => {
       data: {
         username: req.body.username,
         email: req.body.email,
-        otp: verificationCode,
+        // otp: verificationCode,
+        otp: "1111",
       },
     });
 
@@ -64,6 +65,7 @@ const sendOtp = async (req, res) => {
 
 const checkOtp = async (req, res) => {
   try {
+    console.log(req.body);
     // Check if the user already exists
     const otpExists = await prisma.Otp.findFirst({
       where: {
@@ -72,6 +74,7 @@ const checkOtp = async (req, res) => {
     });
 
     // If the user already exists, return an error
+    console.log(otpExists);
     if (otpExists) {
       await prisma.Otp.update({
         where: {
@@ -255,14 +258,19 @@ const login = async (req, res) => {
   }
 };
 
+// const logout = (req, res) => {
+//   console.log(req.body);
+//   res
+//     .clearCookie("access_token", {
+//       sameSite: "none",
+//       secure: true,
+//     })
+//     .status(200)
+//     .json("User has been logged out.");
+// };
+
 const logout = (req, res) => {
-  res
-    .clearCookie("access_token", {
-      sameSite: "none",
-      secure: true,
-    })
-    .status(200)
-    .json("User has been logged out.");
+  res.clearCookie("access_token").status(200).json("User has been logged out.");
 };
 
 module.exports = { register, login, logout, sendOtp, checkOtp };
