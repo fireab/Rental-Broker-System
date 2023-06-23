@@ -10,17 +10,17 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 import { ChevronRight, ClipboardList, Heart, Help, Logout, Plus, Search, Settings, User } from "tabler-icons-react";
 
+import { useUser } from "../../hooks/user";
 import { useLogoutUserMutation } from "../../redux/api/authApi";
 import MessagesModal from "../Message/messages.modal";
 import NotificationsModal from "../notification/notifications.modal";
 import MessageNav from "./../Message/message.nav";
 import NotificationNav from "./../notification/notification.nav";
-import { useUser } from "../../hooks/user";
 
 const NavbarLogged = () => {
 	// redux get user
 	
-	const { getUserProfile, refetchUserProfile, isGetUserProfileFetching } = useUser();
+	const { getUserProfile, refetchUserProfile, isGetUserProfileFetching } = useUser("userprofile");
 
 	useEffect(() => {
 		refetchUserProfile();
@@ -109,6 +109,7 @@ const NavbarLogged = () => {
 				window.location.href = "/login";
 			});
 	};
+
 	return (
 		<>
 			<MessagesModal chatWindow={chatWindow} isOpen={isMesssageModalOpen} onClose={onMessageModalClose} />
@@ -230,7 +231,7 @@ const NavbarLogged = () => {
 											<div className="flex justify-center items-center space-x-2">
 												<MenuButton aria-label="User menu">
 													<div className="flex justify-center items-center space-x-3">
-														<h1 className="text-sm font-bold">{isGetUserProfileFetching?"": getUserProfile.username}</h1>
+														<h1 className="text-sm font-bold">{isGetUserProfileFetching?"": getUserProfile.username.toUpperCase()}</h1>
 														<Avatar name="Dan Abrahmov" aria-label="User menu" src="/api/user/profileimage" onClick={() => setIsDrawerOpen(true)} />
 													</div>
 												</MenuButton>
@@ -244,7 +245,7 @@ const NavbarLogged = () => {
 													<p>{isGetUserProfileFetching?"":getUserProfile.username}</p>
 												</Center>
 												<MenuDivider />
-												<MenuItem as={RouterLink} to={"/user/profile"}>
+												<MenuItem as={RouterLink} to={"/user"}>
 													<div className="flex items-center">
 														<User color="#2b6cb0" size={25} />
 														<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Profile</span>
@@ -257,7 +258,7 @@ const NavbarLogged = () => {
 														<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Saved Listings</span>
 													</div>
 												</MenuItem>
-												<MenuItem as={RouterLink} to={"/user/profile"}>
+												<MenuItem as={RouterLink} to={"/rentals/my"}>
 													<div className="flex items-center">
 														<Heart color="#2b6cb0" size={25} />
 														<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">My Listings</span>
@@ -317,7 +318,7 @@ const NavbarLogged = () => {
 														<div>
 															<ul className="space-y-2" onClick={handleCloseDrawer}>
 																<li>
-																	<RouterLink to="/user/profile">
+																	<RouterLink to="/user">
 																		<div className="flex text-[#2b6cb0] items-center justify-between border p-2 rounded">
 																			<span>Profile</span>
 																			<ChevronRight />
@@ -349,7 +350,7 @@ const NavbarLogged = () => {
 																	</RouterLink>
 																</li>
 																<li>
-																	<RouterLink to="profile">
+																	<RouterLink to="/rentals/my">
 																		<div className="flex text-[#2b6cb0] items-center justify-between border p-2 rounded">
 																			<span>My Listings</span>
 																			<ChevronRight />

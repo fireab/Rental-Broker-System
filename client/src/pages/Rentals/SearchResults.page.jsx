@@ -124,7 +124,7 @@ const SearchResultsPage = () => {
 			value: "Other",
 		},
 	];
-
+	window.scrollTo(0, 0);
 	return (
 		<div>
 			<div className="m-4 z-10">
@@ -139,16 +139,7 @@ const SearchResultsPage = () => {
 						price: [100, 2000000],
 					}}
 					onSubmit={async (values) => {
-						console.log(values)
-						const {
-							searchWord,
-							propertyType,
-							region,
-							city,
-							maxPrice,
-							minPrice,
-							priceType,
-						}= values;
+						const { searchWord, propertyType, region, city, maxPrice, minPrice, priceType } = values;
 
 						const filter = {
 							searchWord,
@@ -158,12 +149,12 @@ const SearchResultsPage = () => {
 							maxPrice,
 							minPrice,
 							priceType,
-						}
-						await setParam(filter)
+						};
+						await setParam(filter);
 						// alert(JSON.stringify(param, null, 2));
 
-
 						refetchSearchedPosts();
+						console.log(values);
 					}}
 				>
 					{(formik) => (
@@ -217,7 +208,7 @@ const SearchResultsPage = () => {
 										<div>
 											<Text mt={4} className="text-sm font-bold">
 												<span className="font-medium">Price range:</span>
-												{NumberWithCommas(formik.values.minPrice )} birr - {NumberWithCommas(formik.values.maxPrice)} birr
+												{NumberWithCommas(formik.values.minPrice)} birr - {NumberWithCommas(formik.values.maxPrice)} birr
 											</Text>
 										</div>
 									</FormControl>

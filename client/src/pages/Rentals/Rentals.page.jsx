@@ -59,7 +59,7 @@ const RentalsPage = () => {
 								city: values.city,
 							});
 							refetchRentalPosts();
-							// console.log(values);
+							window.scrollTo(0, 0);
 						}}
 					>
 						{(formik) => (
@@ -114,6 +114,7 @@ const RentalsPage = () => {
 											propertyType: item.value,
 										});
 										refetchRentalPosts();
+										window.scrollTo(0, 0);
 									}}
 									key={index}
 									className="!w-48 overflow-ellipsis"
@@ -136,20 +137,24 @@ const RentalsPage = () => {
 					</div>
 				</div>
 			</div>
-			{isLoading || rentalsPostsIsFetching || !rentalsPosts ? (
-				<div>Loading...</div>
-			) : isLoading || rentalsPostsIsFetching || !rentalsPosts ? (
-				<div>Loading...</div>
-			) : rentalsPosts.length > 0 ? (
-				<div className="grid grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-					{rentalsPosts &&
-						rentalsPosts.map((post, index) => {
-							return <PropertyCard key={post.id} propertyImages={post.propertyImages} propertyTitle={post.propertyTitle} propertyPrice={post.propertyPrice} propertyType={post.propertyType} propertyDescription={post.propertyDescription} propertyContact={post.propertyContact} propertyRegion={post.propertyRegion} propertyCity={post.propertyCity} propertyStreet={post.propertyStreet} maxLeaseLengthValue={post.maxLeaseLengthValue} maxLeaseLengthType={post.maxLeaseLengthType} minLeaseLengthValue={post.minLeaseLengthValue} minLeaseLengthType={post.minLeaseLengthType} propertyLeaseTerm={post.propertyLeaseTerm} authorId={post.authorId} isAvailable={post.isAvailable} propertyQuantity={post.propertyQuantity} savedBy={post.savedBy} postId={post.id} />;
-						})}
-				</div>
-			) : (
-				<h1 className="!font-bold text-sm text-center">Sorry, There is no post of {param.propertyType}</h1>
-			)}
+			<div className="min-h-screen">
+				{isLoading || rentalsPostsIsFetching || !rentalsPosts ? (
+					<div className="h-full w-full flex justify-center items-center">Loading...</div>
+				) : isLoading || rentalsPostsIsFetching || !rentalsPosts ? (
+					<div>Loading...</div>
+				) : rentalsPosts.length > 0 ? (
+					<div className="grid grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+						{rentalsPosts &&
+							rentalsPosts.map((post, index) => {
+								return <PropertyCard key={post.id} propertyImages={post.propertyImages} propertyTitle={post.propertyTitle} propertyPrice={post.propertyPrice} propertyType={post.propertyType} propertyDescription={post.propertyDescription} propertyContact={post.propertyContact} propertyRegion={post.propertyRegion} propertyCity={post.propertyCity} propertyStreet={post.propertyStreet} maxLeaseLengthValue={post.maxLeaseLengthValue} maxLeaseLengthType={post.maxLeaseLengthType} minLeaseLengthValue={post.minLeaseLengthValue} minLeaseLengthType={post.minLeaseLengthType} propertyLeaseTerm={post.propertyLeaseTerm} authorId={post.authorId} isAvailable={post.isAvailable} propertyQuantity={post.propertyQuantity} savedBy={post.savedBy} postId={post.id} />;
+							})}
+					</div>
+				) : (
+					<div className="h-full w-full ">
+						<h1 className="!font-bold text-sm text-center">Sorry, There is no post of {param.propertyType}</h1>
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };

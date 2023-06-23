@@ -1,16 +1,13 @@
-import { Avatar, Box, Button, chakra, Container, Flex, Heading, Image, List, ListItem, SimpleGrid, Stack, StackDivider, Text, useColorModeValue, VisuallyHidden, VStack } from "@chakra-ui/react";
-import { Badge, Divider } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Avatar, Badge, Box, Button, Container, Heading, List, ListItem, Stack, StackDivider, Text, VStack } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 import { BiUserPlus } from "react-icons/bi";
 import { BsBookmarkFill } from "react-icons/bs";
-import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
-import { MdLocalShipping } from "react-icons/md";
-import { useQuery, useQueryClient } from "react-query";
-import { useParams } from "react-router-dom";
+import { useQueryClient } from "react-query";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import { useRentalPosts } from "../../hooks/rentalPost";
-import { fetchRentalPost } from "../../services/rental.api";
+import { useUser } from "../../hooks/user";
 import capitalize from "../../utils/Capitalize";
 import NumberWithCommas from "../../utils/numberWithCommas";
 
@@ -24,38 +21,56 @@ const GridContainer = styled.div`
 const PropertyDetailPage = () => {
 	const { postId } = useParams();
 	const queryClient = useQueryClient();
+	const navigate = useNavigate();
 
 	const {
-		data: rentalPost,
-		isLoading: isPostLoading,
-		error: postError,
-	} = useQuery(["post", postId], () => fetchRentalPost(postId), {
-		onSuccess: (data) => {
-			queryClient.invalidateQueries(["posts", data.id]);
+		fetchRentalPost,
+		refetchRentalPost,
+		isFetchingRentalPost,
+		isLoadingRentalPost,
+		errorRentalPost,
+		saveRentalPost,
+
+		saveRentalPostData,
+		isSavingRentalPost,
+	} = useRentalPosts(postId);
+	const { follow, followData, refetchFollow, isFollowLoading, isFollowFetching } = useUser();
+
+	useEffect(
+		(postId) => {
+			refetchRentalPost(postId);
 		},
-	});
-	const { saveRentalPost } = useRentalPosts();
+		[refetchRentalPost],
+	);
 
 	const [isSavedPost, setIsSavePost] = useState(false);
-	if (isPostLoading) {
+	if ((isFetchingRentalPost, isLoadingRentalPost || !fetchRentalPost)) {
 		return <div>Loading...</div>;
 	}
+	const post = fetchRentalPost?.post;
+	const author = fetchRentalPost?.post.author;
 
-	const author = rentalPost?.author;
-	// console.log(post);
-
-	const handleSavePost = (e) => {
-		e.stopPropagation();
-		saveRentalPost(rentalPost.id);
-		setIsSavePost(!isSavedPost);
+	const handleSavePost = () => {
+		saveRentalPost(post.id);
 	};
+
+	const handleFollow = async () => {
+		await follow(author.id);
+	};
+
+	window.scrollTo(0, 0);
 
 	return (
 		<Container maxW={"7xl"} className="p-2 m-4 z-10 w-full md:!w-2/3 overflow-auto ">
 			<div className="flex flex-col">
 				<div className="flex justify-between items-center p-2">
-					<div className="flex cursor-pointer justify-center items-center space-x-4">
-						<Avatar name="user" size={"lg"} aria-label="User menu" src="https://bit.ly/dan-abramov" />
+					<div
+						onClick={() => {
+							navigate(`/user/${author.username}`);
+						}}
+						className="flex cursor-pointer justify-center items-center space-x-4"
+					>
+						<Avatar name="user" size={"lg"} aria-label="User menu" src={`/api/user/profileimage/${author.username}`} />
 						<div className="flex flex-col">
 							<span className="text-md md:text-lg font-bold">{author.username}</span>
 							<div className="flex flex-col md:flex-row text-xs md:text-sm font-light md:space-x-4">
@@ -66,39 +81,42 @@ const PropertyDetailPage = () => {
 						</div>
 					</div>
 					<div className="flex space-x-2">
-						<Button className="!bg-blue-700  text-white">
-							<div className="flex space-x-2 items-center">
-								<BiUserPlus size={22} />
-								<span>Follow</span>
-							</div>
+						<Button isLoading={isFollowLoading || isFollowFetching} onClick={handleFollow} colorScheme="messenger">
+							{followData ? followData.follow ? <span className="text-white">Unfollow</span> : <span className="text-white">Follow</span> : fetchRentalPost.isFollowed ? <span className="text-white">Unfollow</span> : <span className="text-white">Follow</span>}
 						</Button>
-						<div onClick={handleSavePost} className="p-2 cursor-pointer">
-							<BsBookmarkFill className={`${rentalPost.savedBy.length > 0 ? "text-red-600" : "text-black/70"}  transition-all duration-150 ease-in-out font-bold  text-lg`} size={25} />
+
+			
+						<div onClick={handleSavePost} className="p-2  right-2 cursor-pointer top-2 z-[2]">
+							<BsBookmarkFill
+								style={{
+									color: saveRentalPostData ? (saveRentalPostData.isSaved ? "red" : "black") : post.savedBy.length > 0 ? "red" : "black",
+								}}
+								className={` transition-all duration-150 ease-in-out font-bold  text-lg`}
+							/>
 						</div>
 					</div>
 				</div>
-				{rentalPost.propertyImages.length > 0 && (
+				{post.propertyImages.length > 0 && (
 					<div className="flex flex-col md:flex-row justify-evenly space-x-4 w-full h-[50vh] ">
 						<div className="md:w-1/2 w-full flex-1 ">
-							{console.log(rentalPost.propertyImages[0])}
-							<Box rounded={"lg"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage={`url(http://192.168.8.113:3032/api/posts/images/${rentalPost.propertyImages[0].image})`} />
+							{console.log(post.propertyImages[0])}
+							<Box rounded={"lg"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage={`url(/api/posts/images/${post.propertyImages[0].image})`} />
 						</div>
-						{rentalPost.propertyImages.length > 1 && (
+						{post.propertyImages.length > 1 && (
 							<div className="md:w-1/2 w-full flex ">
 								{/* <div className="md:grid md:grid-cols-3 md:grid-rown-3 w-full gap-4 hidden"></div> */}
 								<div
-								style={{
-									width: "100%",
-									display: "grid",
-									gridTemplateColumns: `repeat(${Math.ceil(rentalPost.propertyImages.slice(1).length / 2)}, minmax(auto, 1fr))`,
-									gridAutoRows: "repeat(auto-fill, minmax(200px, 1fr))",
-									gridGap: "20px",
-
-								}}
+									style={{
+										width: "100%",
+										display: "grid",
+										gridTemplateColumns: `repeat(${Math.ceil(post.propertyImages.slice(1).length / 2)}, minmax(auto, 1fr))`,
+										gridAutoRows: "repeat(auto-fill, minmax(200px, 1fr))",
+										gridGap: "20px",
+									}}
 								>
 									{/* <GridContainer> */}
-									{rentalPost.propertyImages.slice(1).map((image, index) => {
-										return <Box key={index} rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage={`url(http://192.168.8.113:3032/api/posts/images/${image.image})`} />;
+									{post.propertyImages.slice(1).map((image, index) => {
+										return <Box key={index} rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage={`url(/api/posts/images/${image.image})`} />;
 									})}
 									{/* </GridContainer> */}
 								</div>
@@ -109,18 +127,18 @@ const PropertyDetailPage = () => {
 				<Stack w={"full"} spacing={{ base: 6, md: 10 }}>
 					<Box as={"header"}>
 						<Heading lineHeight={1.1} fontWeight={600} fontSize={{ base: "2xl", sm: "4xl", lg: "5xl" }}>
-							{rentalPost.propertyTitle}
+							{post.propertyTitle}
 						</Heading>
 
 						<Text color={"gray.900"} fontWeight={300} fontSize={"2xl"}>
-							{`${NumberWithCommas(rentalPost.propertyPrice[rentalPost.propertyPrice.length - 1].price)} birr / ${rentalPost.propertyPrice[rentalPost.propertyPrice.length - 1].priceType.toLowerCase()}`}
+							{`${NumberWithCommas(post.propertyPrice[post.propertyPrice.length - 1].price)} birr / ${post.propertyPrice[post.propertyPrice.length - 1].priceType.toLowerCase()}`}
 						</Text>
 					</Box>
 
 					<Stack spacing={{ base: 4, sm: 6 }} direction={"column"} divider={<StackDivider borderColor={"gray.200"} />}>
 						<VStack spacing={{ base: 4, sm: 6 }}>
 							<Text color={"gray.500"} fontSize={"2xl"} fontWeight={"300"}>
-								{rentalPost.propertyDescription}
+								{post.propertyDescription}
 							</Text>
 							{/* <Text fontSize={"lg"}>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad aliquid amet at delectus doloribus dolorum expedita hic, ipsum maxime modi nam officiis porro, quae, quisquam quos reprehenderit velit? Natus, totam.</Text> */}
 						</VStack>
@@ -151,7 +169,7 @@ const PropertyDetailPage = () => {
 									<Text as={"span"} fontWeight={"bold"}>
 										Avalibliity:
 									</Text>{" "}
-									{rentalPost.isAvailable ? (
+									{post.isAvailable ? (
 										<Badge fontWeight={"bold"} fontSize={"x-small"} p={1} px={2} bg={"green.500"} textColor={"white"} rounded={"full"}>
 											Available
 										</Badge>
@@ -165,37 +183,37 @@ const PropertyDetailPage = () => {
 									<Text as={"span"} fontWeight={"bold"}>
 										Property Name:
 									</Text>{" "}
-									<span>{rentalPost.propertyTitle}</span>
+									<span>{post.propertyTitle}</span>
 								</ListItem>
 								<ListItem>
 									<Text as={"span"} fontWeight={"bold"}>
 										Type:
 									</Text>{" "}
-									<span>{rentalPost.propertyType}</span>
+									<span>{post.propertyType}</span>
 								</ListItem>
 								<ListItem>
 									<Text as={"span"} fontWeight={"bold"}>
 										Quantity:
 									</Text>{" "}
-									<span>{rentalPost.propertyQuantity}</span>
+									<span>{post.propertyQuantity}</span>
 								</ListItem>
 								<ListItem>
 									<Text as={"span"} fontWeight={"bold"}>
 										Address:
 									</Text>{" "}
-									<span>{`${rentalPost.propertyStreet} ${rentalPost.propertyRegion}, ${rentalPost.propertyCity}`}</span>
+									<span>{`${post.propertyStreet} ${post.propertyRegion}, ${post.propertyCity}`}</span>
 								</ListItem>
 								<ListItem>
 									<Text as={"span"} fontWeight={"bold"}>
 										Maximum Lease Length:
 									</Text>{" "}
-									<span>{`${rentalPost.maxLeaseLengthValue} ${rentalPost.maxLeaseLengthType}`}</span>
+									<span>{`${post.maxLeaseLengthValue} ${post.maxLeaseLengthType}`}</span>
 								</ListItem>
 								<ListItem>
 									<Text as={"span"} fontWeight={"bold"}>
 										Minimum Lease Length:
 									</Text>{" "}
-									<span>{`${rentalPost.minLeaseLengthValue} ${rentalPost.minLeaseLengthType}`}</span>
+									<span>{`${post.minLeaseLengthValue} ${post.minLeaseLengthType}`}</span>
 								</ListItem>
 								<ListItem>
 									<div className="flex space-x-2 items-start">
@@ -203,13 +221,13 @@ const PropertyDetailPage = () => {
 											Price:
 										</Text>
 										<div className="flex flex-col">
-											{rentalPost.propertyPrice.map((price, index) => {
+											{post.propertyPrice.map((price, index) => {
 												return <span key={index}>{`${NumberWithCommas(price.price)} birr / ${price.priceType.toLowerCase()}`}</span>;
 											})}
 										</div>
 									</div>
 								</ListItem>
-								{rentalPost.propertyContact.map((contact, index) => {
+								{post.propertyContact.map((contact, index) => {
 									return (
 										<ListItem key={index}>
 											<Text as={"span"} fontWeight={"bold"}>

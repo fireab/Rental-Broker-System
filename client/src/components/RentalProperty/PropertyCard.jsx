@@ -1,12 +1,13 @@
-import { ChevronLeftIcon, ChevronRightIcon, StarIcon } from "@chakra-ui/icons";
-import { Box, Button, Card, CardBody, CardFooter, CardHeader, Center, Container, Flex, Grid, Heading, Icon, IconButton, Image, Spacer, Square, Stack, Text, useBreakpointValue } from "@chakra-ui/react";
+import { ChevronLeftIcon, ChevronRightIcon, EditIcon, StarIcon } from "@chakra-ui/icons";
+import { Box, Button, Card, CardBody, CardFooter, CardHeader, Center, Container, Flex, Grid, Heading, Icon, IconButton, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spacer, Square, Stack, Text, useBreakpointValue, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import React from "react";
 import { BiLeftArrowAlt, BiRightArrowAlt, BiSave } from "react-icons/bi";
-import { BsBookmark, BsBookmarkFill, BsBookmarkHeart, BsFillStarFill } from "react-icons/bs";
+import { BsBookmark, BsBookmarkFill, BsBookmarkHeart, BsFillStarFill, BsTrash, BsTrashFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import styled from "styled-components";
+import { EditCircle } from "tabler-icons-react";
 
 import img from "../../assets/imgs/house.jpg";
 import { useRentalPosts } from "../../hooks/rentalPost";
@@ -23,7 +24,18 @@ import { userApi } from "../../redux/api/userApi";
 // `;
 
 const PropertyCard = ({ preview, ...post }) => {
-	const { rentalsPosts, saveRentalPost, isLoading, error } = useRentalPosts();
+	const {
+		deleteUserPost,
+		isDeletingUserPost,
+
+		saveRentalPost,
+		saveRentalPostData,
+		isSavingRentalPost,
+	} = useRentalPosts();
+
+	console.log("saveRentalPostData", saveRentalPostData);
+	console.log("saveRentalPostData", post.savedBy.length > 0);
+
 	const navigate = useNavigate();
 	const settings = {
 		// dots: true,
@@ -37,8 +49,6 @@ const PropertyCard = ({ preview, ...post }) => {
 		slidesToScroll: 1,
 	};
 
-
-
 	const [slider, setSlider] = useState(0);
 	const [isSliderButtonVisible, setSliderButtonVisible] = useState(false);
 	const [isSavedPost, setIsSavePost] = useState(post.savedBy.length > 0);
@@ -47,29 +57,10 @@ const PropertyCard = ({ preview, ...post }) => {
 	// These are the breakpoints which changes the position of the
 	// buttons as the screen size changes
 	const side = useBreakpointValue({ base: "10%", md: "10px" });
+	const { isOpen, onOpen, onClose } = useDisclosure();
+
 	const images = post.propertyImages.map((image) => ({ image: image, postId: image.postsId, id: image.id }));
-	// console.log(post.propertyImages);
-	// console.log(images);
-	// const cards = [
-	// 	{
-	// 		title: "Design Projects 1",
-	// 		text: "The project board is an exclusive resource for contract work. It's perfect for freelancers, agencies, and moonlighters.",
-	// 		image: "https://images.unsplash.com/photo-1516796181074-bf453fbfa3e6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDV8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60",
-	// 	},
-	// 	{
-	// 		title: "Design Projects 2",
-	// 		text: "The project board is an exclusive resource for contract work. It's perfect for freelancers, agencies, and moonlighters.",
-	// 		image: "https://images.unsplash.com/photo-1438183972690-6d4658e3290e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2274&q=80",
-	// 	},
-	// 	{
-	// 		title: "Design Projects 3",
-	// 		text: "The project board is an exclusive resource for contract work. It's perfect for freelancers, agencies, and moonlighters.",
-	// 		image: "https://images.unsplash.com/photo-1507237998874-b4d52d1dd655?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDR8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60",
-	// 	},
-	// 	{
-	// 		image: img,
-	// 	},
-	// ];
+
 	const handleSliderHover = () => {
 		setSliderButtonVisible(true);
 	};
@@ -78,18 +69,24 @@ const PropertyCard = ({ preview, ...post }) => {
 		setSliderButtonVisible(false);
 	};
 
-	const handleSaveHover = () => {
+	const handleHover = () => {
 		setIsSaveHover(!isSaveHover);
 	};
 
-	const handleSaveLeave = () => {
+	const handleLeave = () => {
 		setIsSaveHover(!isSaveHover);
 	};
 
-	const handleSavePost = (e) => {
+	const handleSavePost = async (e) => {
 		e.stopPropagation();
-		saveRentalPost(post.postId);
-		setIsSavePost(!isSavedPost);
+		await saveRentalPost(post.postId);
+	};
+	const handleDeletePost = (e) => {
+		e.stopPropagation();
+		// console.log("delete");
+		onOpen();
+		// saveRentalPost(post.postId);
+		// setIsSavePost(!isSavedPost);
 	};
 
 	// const user = userApi.endpoints.user.useQueryState(null, {
@@ -100,6 +97,28 @@ const PropertyCard = ({ preview, ...post }) => {
 		<>
 			<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
 			<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
+
+			<Modal onClose={onClose} isOpen={isOpen} isCentered>
+				<ModalOverlay />
+				<ModalContent CloseIcon={false}>
+					<ModalHeader>Modal Title</ModalHeader>
+					<ModalCloseButton />
+					<ModalBody>Are you sure you want to delete this post?</ModalBody>
+					<ModalFooter>
+						<Button
+							colorScheme="red"
+							onClick={async () => {
+								await deleteUserPost(post.postId);
+								if (isDeletingUserPost) {
+									onClose();
+								}
+							}}
+						>
+							Delete
+						</Button>
+					</ModalFooter>
+				</ModalContent>
+			</Modal>
 
 			<Card
 				onClick={() => {
@@ -152,19 +171,34 @@ const PropertyCard = ({ preview, ...post }) => {
 								</IconButton>
 							</Box>
 						)}
-						{!preview && (
-							<div onMouseEnter={handleSaveHover} onMouseLeave={handleSaveLeave} onClick={handleSavePost} className="p-2 absolute  right-2 cursor-pointer top-2 z-[2]">
-								<BsBookmarkFill className={`${isSavedPost ? "text-red-600" : "text-black/70"}  transition-all duration-150 ease-in-out font-bold  text-lg`} size={isSaveHover ? 22 : 20} />
-							</div>
-						)}
+						{!preview &&
+							(post.mine ? (
+								<div onMouseEnter={handleHover} onMouseLeave={handleLeave} onClick={handleDeletePost} className="p-2 absolute  right-2 cursor-pointer top-2 z-[2]">
+									<BsTrashFill className={`text-red-800 rounded-sm transition-all duration-150 ease-in-out font-bold  text-lg`} size={isSaveHover ? 22 : 20} />
+								</div>
+							) : post.saved ? (
+								<div onMouseEnter={handleHover} onMouseLeave={handleLeave} onClick={handleSavePost} className="p-2 absolute  right-2 cursor-pointer top-2 z-[2]">
+									<EditIcon className={`transition-all duration-150 ease-in-out font-bold  text-lg`} size={isSaveHover ? 22 : 20} />
+								</div>
+							) : (
+								<div onMouseEnter={handleHover} onMouseLeave={handleLeave} onClick={handleSavePost} className="p-2 absolute  right-2 cursor-pointer top-2 z-[2]">
+									<BsBookmarkFill
+										style={{
+											color: saveRentalPostData ? (saveRentalPostData.isSaved ? "red" : "black") : post.savedBy.length > 0 ? "red" : "black",
+										}}
+										className={` transition-all duration-150 ease-in-out font-bold  text-lg`}
+										size={isSaveHover ? 22 : 20}
+									/>
+								</div>
+							))}
 						{/* Slider */}
 						<div className="w-full">
 							<Slider {...settings} ref={(slider) => setSlider(slider)}>
 								{images.length == 0 ? (
-									<Box rounded={"2xl"} overflow={"clip"} className={`${preview ? "h-60" : "h-40"}`} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage={`url(http://192.168.8.113:3032/api/posts/images/noimage.jpg)`} />
+									<Box rounded={"2xl"} overflow={"clip"} className={`${preview ? "h-60" : "h-40"}`} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage={`url(/api/posts/images/noimage.jpg)`} />
 								) : (
 									images.map((image, index) => {
-										return <Box rounded={"2xl"} overflow={"clip"} className={`${preview ? "h-60" : "h-40"}`} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} key={index} backgroundImage={`url(http://192.168.8.113:3032/api/posts/images/${image.image.image})`} />;
+										return <Box rounded={"2xl"} overflow={"clip"} className={`${preview ? "h-60" : "h-40"}`} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} key={index} backgroundImage={`url(/api/posts/images/${image.image.image})`} />;
 									})
 								)}
 							</Slider>
@@ -172,10 +206,10 @@ const PropertyCard = ({ preview, ...post }) => {
 					</div>
 					<div className="p-2">
 						<div className="flex flex-col">
-							<div className="flex items-center font-medium text-sm justify-between">
+							<div className="flex items-start font-medium text-sm justify-start ">
 								{/* [Address] */}
 								{/* <span>Addis Ababa, Bole</span> */}
-								<span>{`${post.propertyRegion}, ${post.propertyCity}`}</span>
+								<span className="line-clamp-1 text-left">{`${post.propertyRegion}, ${post.propertyCity}`}</span>
 								{/* [rating] */}
 								<div className="flex justify-center space-x-1 ">
 									<span className="">
@@ -184,12 +218,21 @@ const PropertyCard = ({ preview, ...post }) => {
 									<span className={`${preview ? "font-lg text-sm" : "font-medium text-xs"}`}>{preview ? 5.0 : 4.6}</span>
 								</div>
 							</div>
-							{/* [product title] */}
-							<span className={`${preview ? "font-lg text-sm" : "font-medium text-xs"} text-blue-900`}>{post.propertyTitle}</span>
-							{/* [product type] */}
-							<span className={`${preview ? "text-sm" : "text-xs"} text-gray-600`}>{post.propertyType}</span>
-							{/* [property price] */}
-							<span className={`${preview ? "text-sm" : "text-xs"} text-gray-900`}>{`${post.propertyPrice[0].price} / ${post.propertyPrice[0].priceType}`}</span>
+							<div className="flex justify-between">
+								<div className="flex flex-col items-start">
+									{/* [product title] */}
+									<span className={`${preview ? "font-lg text-sm" : "font-medium text-xs"} text-blue-900`}>{post.propertyTitle}</span>
+									{/* [product type] */}
+									<span className={`${preview ? "text-sm" : "text-xs"} text-gray-600`}>{post.propertyType}</span>
+									{/* [property price] */}
+									<span className={`${preview ? "text-sm" : "text-xs"} text-gray-900`}>{`${post.propertyPrice[0].price} / ${post.propertyPrice[0].priceType}`}</span>
+								</div>
+								{post.saved && (
+									<div onMouseEnter={handleHover} onMouseLeave={handleLeave} onClick={handleSavePost} className="p-2  cursor-pointer z-[2]">
+										<BsBookmarkFill className={`${isSavedPost ? "text-red-600" : "text-black/70"}  transition-all duration-150 ease-in-out font-bold  text-lg`} size={isSaveHover ? 22 : 20} />
+									</div>
+								)}
+							</div>
 						</div>
 					</div>
 				</CardBody>

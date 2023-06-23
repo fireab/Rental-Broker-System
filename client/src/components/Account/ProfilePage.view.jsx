@@ -1,5 +1,6 @@
 import { Table, TableCaption, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
 import React, { useEffect } from "react";
+
 import { useUser } from "../../hooks/user";
 
 const ProfilePageView = () => {

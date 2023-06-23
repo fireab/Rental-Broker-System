@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
-import { createRentalPost, deleteRentalPost, fetchRentalPosts, fetchRentalPostsBySearch, fetchRentalPostsByUser, fetchSavedRentalPosts, saveRentalPost, updateRentalPost } from "../services/rental.api";
+import { createUserRentalPost, deleteUserRentalPost, fetchRentalPosts, fetchRentalPostsBySearch, fetchRentalPostsByUser, fetchSavedRentalPosts, fetchUserRentalPost, saveRentalPost, updateUserRentalPost } from "../services/rental.api";
 
 export const useRentalPosts = (params) => {
 	const {
@@ -16,37 +16,51 @@ export const useRentalPosts = (params) => {
 		// enabled: false,
 	});
 
+	const fetchRentalPost = useQuery(["post", params], fetchUserRentalPost, {
+		enabled: false,
+	});
+
 	const queryClient = useQueryClient();
-	const create = useMutation(createRentalPost, {
+	const create = useMutation(createUserRentalPost, {
+		onSuccess: () => {
+			queryClient.invalidateQueries(["posts", params]);
+		},
+	});
+
+	const update = useMutation(updateUserRentalPost, {
 		onSuccess: () => {
 			queryClient.invalidateQueries("posts");
 		},
 	});
-
-	const update = useMutation(updateRentalPost, {
-		onSuccess: () => {
-			queryClient.invalidateQueries("posts");
-		},
-	});
-
-	const save = useMutation((postId) => saveRentalPost(postId), {
-		onSuccess: (postId) => {
-			queryClient.invalidateQueries(["post", postId]);
-		},
-	});
-
-	const remove = useMutation(deleteRentalPost, {
-		onSuccess: () => {
-			queryClient.invalidateQueries("posts");
-		},
-	});
-
 	const savedPosts = useQuery("savedPosts", fetchSavedRentalPosts, {
-		staleTime: 1000 * 60 * 6,
+		// staleTime: 1000 * 60 * 6,
+		enabled: false,
 	});
 
-	const userPosts = useQuery("userPosts", fetchRentalPostsByUser, {
+	const savePost = useMutation((postId) => saveRentalPost(postId), {
+		onSuccess: async (data) => {
+			console.log(data,"data");
+			return data;
+		},
+	});
+
+	const remove = useMutation(deleteUserRentalPost, {
+		onSuccess: () => {
+			queryClient.invalidateQueries("posts");
+		},
+	});
+
+	const userPosts = useQuery(["userPosts", params], fetchRentalPostsByUser, {
 		staleTime: 1000 * 60 * 6,
+		enabled: false,
+	});
+
+	const deleteUserPost = useMutation(deleteUserRentalPost, {
+		onSuccess: () => {
+			queryClient.invalidateQueries("userPosts");
+			userPosts.refetch();
+			return "Post deleted Succesfully"
+		},
 	});
 
 	// serched posts with filter
@@ -61,14 +75,33 @@ export const useRentalPosts = (params) => {
 		rentalsPostsIsFetching,
 		isLoading,
 		error,
-		createRentalPost: create.mutate,
+
+		// post get
+
+		fetchRentalPost: fetchRentalPost.data,
+		refetchRentalPost: fetchRentalPost.refetch,
+		isFetchingRentalPost: fetchRentalPost.isFetching,
+		isLoadingRentalPost: fetchRentalPost.isLoading,
+		errorRentalPost: fetchRentalPost.error,
+
+		createRentalPost: create.mutateAsync,
 		isCreatingRentalPost: create.isLoading,
 		isRentalPostCreated: create.isSuccess,
 		isRentalPostCreationError: create.isError,
 		rentalPostCreationError: create.error,
 		updateRentalPost: update.mutate,
 		removeRentalPost: remove.mutate,
-		saveRentalPost: save.mutate,
+		// 
+		saveRentalPost: savePost.mutateAsync,
+		saveRentalPostData: savePost.data,
+		isSavingRentalPost: savePost.isLoading,
+
+		// saved post
+		savedPosts: savedPosts.data,
+		isLoadingSavedPosts: savedPosts.isLoading,
+		isFetchingSavedPosts: savedPosts.isFetching,
+		refetchSavedPosts: savedPosts.refetch,
+
 		// search
 		searchedPosts: searchedPosts.data,
 		refetchSearchedPosts: searchedPosts.refetch,
@@ -76,10 +109,17 @@ export const useRentalPosts = (params) => {
 		isRefetchingSearchedPosts: searchedPosts.isFetching,
 		errorSearchedPosts: searchedPosts.error,
 		// saved
-		savedPosts,
+
 		//
 		userPosts: userPosts.data,
+		refetchUserPosts: userPosts.refetch,
 		isLoadingUserPosts: userPosts.isLoading,
+		isFetchingUserPosts: userPosts.isFetching,
 		errorUserPosts: userPosts.error,
+
+		//delete post
+
+		deleteUserPost: deleteUserPost.mutateAsync,
+		isDeletingUserPost: deleteUserPost.isLoading,
 	};
 };

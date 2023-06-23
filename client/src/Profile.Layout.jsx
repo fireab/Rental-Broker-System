@@ -16,7 +16,7 @@ const ProfileLayout = () => {
 					<Menu>
 						<MenuButton as={IconButton} aria-label="Options" icon={<SettingsIcon fontSize={"2xl"} color={"white"} />} variant="link" />
 						<MenuList>
-							<MenuItem as={RouterLink} to={"profile"} icon={<Home color="gray" />}>
+							<MenuItem as={RouterLink} to={"/user"} icon={<Home color="gray" />}>
 								<span className="whitespace-nowrap text-sm">Account Overview</span>
 							</MenuItem>
 							<MenuItem as={RouterLink} to={"edit"} icon={<Pencil />}>
@@ -42,7 +42,7 @@ const ProfileLayout = () => {
 								Dilamo Wondimu
 							</Heading>
 							<div className="rounded-lg flex flex-col items-stretch divide-y bg-gradient-to-b text-white from-[#870bad] to-[#d60c60]">
-								<RouterLink to="profile">
+								<RouterLink to="/user">
 									<div className=" p-2 hover:bg-white/10">
 										<div className=" flex space-x-4 items-center p-2 ">
 											<Home2 className="text-md" />

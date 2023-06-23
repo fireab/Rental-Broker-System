@@ -1,17 +1,19 @@
 import { Button, FormControl, FormLabel, Input, InputGroup, useDisclosure } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-import InputField from "../RentalProperty/InputField";
-import InputFieldSelect from "../RentalProperty/InputField.select";
-import { cities, regions } from "../../utils/list";
-import { editProfileValidationSchema as validationSchema } from "../../utils/validation";
+
 import { useUser } from "../../hooks/user";
 import { useSetupOTPMutation } from "../../redux/api/authApi";
+import { cities, regions } from "../../utils/list";
+import { editProfileValidationSchema as validationSchema } from "../../utils/validation";
 import OTPModal from "../Authentication/OTP.modal";
-import { useNavigate } from "react-router-dom";
+import InputField from "../RentalProperty/InputField";
+import InputFieldSelect from "../RentalProperty/InputField.select";
 
 const EditProfileView = () => {
+	
 	const { getUserProfile, isGetUserProfileLoading, refetchUserProfile, isGetUserProfileFetching, editUserProfile, isEditUserProfileFetching } = useUser();
 
 	const [setupOTP, { isLoading: setupOTPLoading, isError: setupOTPError, error: setupOTPErrorData, isSuccess: setupOTPSuccess }] = useSetupOTPMutation();
@@ -68,7 +70,7 @@ const EditProfileView = () => {
 			}
 		});
 		await editUserProfile(updateFields);
-		navigate("/user/profile");
+		navigate("/user");
 	};
 	return (
 		<div className="">

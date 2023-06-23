@@ -15,7 +15,7 @@ import "filepond/dist/filepond.min.css";
 registerPlugin(FilePondPluginFileValidateType, FilePondPluginImagePreview, FilePondPluginFilePoster, FilePondPluginImageCrop, FilePondPluginImageResize);
 // a example to upload profile image with crop and resize feature and preview image before upload to server
 
-function ProfileImage() {
+function UserImage({username}) {
 	let pondRef = useRef(null);
 	const [files, setFiles] = useState([
 		{
@@ -29,7 +29,7 @@ function ProfileImage() {
 				},
 				metadata: {
                     // cat image
-					poster: "/api/user/profileimage",
+					poster: `/api/user/profileimage/${username}`,
 				},
 			},
 		},
@@ -41,46 +41,27 @@ function ProfileImage() {
 		<div className="App">
 			<FilePond
 				oninit={handleInit}
-				onChange={(fileItems) => {
-					console.log(files);
-				}}
-                imageResizeUpscale={true}
-				dropOnPage: false
 				acceptedFileTypes={["image/png", "image/jpeg", "image/jpg"]}
 				files={files}
 				allowMultiple={false}
 				allowImagePreview
-				labelIdle='Drag & Drop your picture or <span class="filepond--label-action" style={fontSize:"10px"}>Browse</span>'
 				stylePanelLayout={"compact circle"}
 				imagePreviewHeight={170}
 				imageCropAspectRatio={"1:1"}
-                allowPaste={true}
-				imageResizeTargetWidth={200}
-				imageResizeTargetHeight={200}
-				imageTransformOutputQuality={100}
-				allowBrowse={true}
+                allowPaste={false}
+                allowDrop={false}
+			
+				allowBrowse={false}
 				allowRevert={false}
-				allowRetry={false}
-				allowImageCrop={true}
-                allowImageResize={true}
+			
 				name="image"
-				onremovefile={async (error, filex) => {
-					await axios.delete("/api/user/profileimage");
-				}}
-				// server="/api/user/profileimage"
-				// console out the returned server response
-				onprocessfile={(error, filex) => {
-					console.log(filex.serverId);
-					console.log(files);
-				}}
+			
 				server="/api/user/profileimage"
 				styleLoadIndicatorPosition={"center bottom"}
-				styleProgressIndicatorPosition={"center bottom"}
-				styleButtonRemoveItemPosition={"left bottom"}
-				styleButtonProcessItemPosition={"right bottom"}
+			
 			/>
 		</div>
 	);
 }
 
-export default ProfileImage;
+export default UserImage;

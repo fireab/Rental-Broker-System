@@ -1,20 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { changePassword, editUserProfile, fetchUserProfile, fetchUserProfileById } from "../services/user";
+
+import { changePassword, editUserProfile, fetchUserFollowers, fetchUserFollowing, fetchUserProfile, fetchUserProfileByUsername, followUser } from "../services/user";
 
 export const useUser = (params) => {
     const queryClient = useQueryClient();
-    const getUserProfile = useQuery("user", fetchUserProfile, {
+    const getUserProfile = useQuery(["user",params], fetchUserProfile, {
         enabled: false,
     }); 
 
     const editUserProfileAccount = useMutation(editUserProfile, {
         onSuccess: (data) => {
             queryClient.invalidateQueries("user");
-            queryClient.setQueryData("user", data);
+            queryClient.setQueryData(["user"], data);
         }
     });
 
-    const getUserProfileById = useQuery("user", fetchUserProfileById, {
+    const getUserProfileByUsername = useQuery(["user",params], fetchUserProfileByUsername, {
         enabled: false,
         onSuccess: (data) => {
             queryClient.invalidateQueries("user");
@@ -26,6 +27,25 @@ export const useUser = (params) => {
         enabled: false,
     });
 
+
+    const followUserAction = useMutation(followUser, {
+        // enabled: false,
+        onSuccess: (data) => {
+            console.log(data, "followed or not");
+            return data;
+        }
+    });
+
+
+
+    const userFollowers = useQuery(["followers",params], fetchUserFollowers, {
+        enabled: false,
+    });
+
+    const userFollowing = useQuery(["following",params], fetchUserFollowing, {
+        enabled: false,
+    });
+
     return {
         getUserProfile: getUserProfile.data,
         refetchUserProfile: getUserProfile.refetch,
@@ -34,9 +54,35 @@ export const useUser = (params) => {
 
         editUserProfile: editUserProfileAccount.mutate,
         isEditUserProfileFetching: editUserProfileAccount.isFetching,
-        getUserProfileById,
-        isGetUserProfileByIdFetching: getUserProfileById.isFetching,
+        // 
+        getUserProfileByUsername: getUserProfileByUsername.data,
+        refetchUserProfileByUsername: getUserProfileByUsername.refetch,
+        isGetUserProfileByUsernameLoading: getUserProfileByUsername.isLoading,
+        isGetUserProfileByIdFetching: getUserProfileByUsername.isFetching,
+        // 
         changeUserPassword: changeUserPassword.mutateAsync,
         isChangeUserPasswordFetching: changeUserPassword.isFetching,
+
+        //
+        follow: followUserAction.mutateAsync,
+        followData: followUserAction.data,
+        refetchFollow: followUserAction.refetch,
+        isFollowLoading: followUserAction.isLoading,
+        isFollowFetching: followUserAction.isFetching,
+
+
+        // follwers
+
+        followers: userFollowers.data,
+        isFollowersLoading: userFollowers.isLoading,
+        isFollowersFetching: userFollowers.isFetching,
+
+        // following
+
+        following: userFollowing.data,
+        refetchFollowing: userFollowing.refetch,
+        isFollowingLoading: userFollowing.isLoading,
+        isFollowingFetching: userFollowing.isFetching,
+
     }
 };

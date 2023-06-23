@@ -16,29 +16,25 @@ export const fetchRentalPosts = async (params) => {
 	// const response = await axios.get("/api/posts/getposts", {
 	// 	params,
 	// });
-	const response = await axios.get("/api/posts/getposts",{
+	const response = await axios.get("/api/posts/getposts", {
 		params: params,
 	});
 
 	return response.data;
 };
 
-export const fetchRentalPost = async (postId) => {
-	const response = await axios.get(`/api/posts/${postId}`);
+export const fetchUserRentalPost = async (postId) => {
+	const response = await axios.get(`/api/posts/${postId.queryKey[1]}`);
 	return response.data;
 };
 
-// export const createRentalPost = async (postData) => {
-// 	const response = await api.post("/posts/addpost", postData);
-// 	console.log("postData ", postData);
-// 	return response.data;
-// };
-export const createRentalPost = async (postData) => {
+export const createUserRentalPost = async (postData) => {
+	console.log("createUserRentalPost postData ", postData);
 	const response = await axios.post("/api/posts/addpost", postData);
 	return response.data;
 };
 
-export const updateRentalPost = async (postId, postData) => {
+export const updateUserRentalPost = async (postId, postData) => {
 	const response = await axios.put(`/api/posts/${postId}`, postData);
 	return response.data;
 };
@@ -47,13 +43,30 @@ export const saveRentalPost = async (postId) => {
 	const response = await axios.post(`/api/posts/${postId}/savepost`, {});
 	return response.data;
 };
-export const deleteRentalPost = async (postId) => {
-	await axios.delete(`/api/posts/${postId}`);
+
+export const fetchSavedRentalPosts = async () => {
+	console.log("fetchSavedRentalPosts");
+	const response = await axios.get("/api/posts/savedposts");
+	return response.data;
 };
 
-export const fetchSavedRentalPosts = async () => {};
+export const deleteUserRentalPost = async (postId) => {
+	console.log(postId);
+	return await axios.delete(`/api/posts/userpost`, {
+		data: { postId: postId },
+	});
+};
+export const fetchRentalPostsByUser = async (userId) => {
+	console.log("fetchRentalPostsByUser userId ", userId.queryKey[1]);
 
-export const fetchRentalPostsByUser = async (userId) => {};
+	if (userId.queryKey[1] === "user") {
+		console.log("freab");
+		const response = await axios.get(`/api/posts/userposts`);
+		return response.data;
+	}
+	const response = await axios.get(`/api/posts/userposts/${userId.queryKey[1]}`);
+	return response.data;
+};
 
 export const fetchRentalPostsBySearch = async (params) => {
 	// console.log("fetchRentalPostsBySearch params ", params);
