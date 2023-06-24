@@ -20,16 +20,19 @@
 ////////
 
 const multer = require("multer");
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "../upload");
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + file.originalname);
-  },
-});
-
+let storage;
+try {
+  storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, "upload");
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + file.originalname);
+    },
+  });
+} catch (error) {
+  console.log(error);
+}
 const upload = multer({ storage });
 
 module.exports = upload;
