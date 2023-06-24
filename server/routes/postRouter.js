@@ -12,6 +12,7 @@ const {
   searchAndFilterPosts,
   getMyPosts,
   getOthersPosts,
+  editPost,
 } = require("../controllers/postController.js");
 
 const authenticateUser = require("../middleware/autorization.js");
@@ -30,6 +31,7 @@ router.delete("/userpost", authenticateUser, deletePost);
 router.get("/userposts/:username", authenticateUser, getOthersPosts);
 router.get("/images/:imagename", sendImg);
 router.get("/:postId", authenticateUser, getPost);
+router.put("/:postId", authenticateUser, editPost);
 router.post("/:postId/report", authenticateUser, reportPost);
 router.post("/:postId/savepost", authenticateUser, savePost);
 router.delete("/:postId/deletesavedpost", authenticateUser, deleteSavedPosts);

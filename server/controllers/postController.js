@@ -170,10 +170,193 @@ const getPost = async (req, res) => {
     });
 
     if (!post) return res.status(404).json("Post not found");
+    // const updatedPost = { ...post, isFollowed: false };
+    // console.log(updatedPost, "updatted");
 
-    return res.status(200).json(post);
+    const isfollowedByMe = await prisma.userFollower.findFirst({
+      where: {
+        followerId: req.userInfo.id,
+        followingId: post.authorId,
+      },
+    });
+    if (!isfollowedByMe)
+      return res.status(200).json({ post, isFollowed: false });
+    if (isfollowedByMe) return res.status(200).json({ post, isFollowed: true });
+
+    // return res.status(200).json({post,isFollowed});
   } catch (error) {
+    console.log(error);
     res.status(500).json("Internal server error");
+  }
+};
+
+// const editPost = async (req, res) => {
+//   try {
+//     // Extract data from request body
+//     const {
+//       postId,
+//       propertyTitle,
+//       propertyType,
+//       propertyDescription,
+//       propertyRegion,
+//       propertyCity,
+//       propertyAddress,
+//       propertyQuantity,
+//       maxLeaseLength,
+//       minLeaseLength,
+//       propertyImages,
+//       propertyPrice,
+//       propertyContact,
+//     } = req.body;
+
+//     // Check if the post exists
+//     const existingPost = await prisma.posts.findUnique({
+//       where: { id: postId },
+//     });
+
+//     if (!existingPost) {
+//       return res.status(404).json({ error: "Post not found!" });
+//     }
+
+//     // Update the post using Prisma client
+//     const updatedPost = await prisma.posts.update({
+//       where: { id: postId },
+//       data: {
+//         propertyTitle,
+//         propertyType,
+//         propertyDescription,
+//         propertyRegion,
+//         propertyCity,
+//         propertyStreet: propertyAddress,
+//         propertyQuantity,
+//         maxLeaseLengthValue: maxLeaseLength.value,
+//         maxLeaseLengthType: maxLeaseLength.type,
+//         minLeaseLengthValue: minLeaseLength.value,
+//         minLeaseLengthType: minLeaseLength.type,
+//         propertyImages: {
+//           deleteMany: { postId },
+//           create: propertyImages.map((image) => ({ image })),
+//         },
+//         propertyPrice: {
+//           deleteMany: { postId },
+//           create: propertyPrice,
+//         },
+//         propertyContact: {
+//           deleteMany: { postId },
+//           create: propertyContact,
+//         },
+//       },
+//     });
+
+//     return res.status(200).json(updatedPost);
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ error: "Internal server error" });
+//   }
+// };
+
+const editPost = async (req, res) => {
+  try {
+    // Extract data from request body
+    const { postId } = req.params;
+    const {
+      propertyTitle,
+      propertyType,
+      propertyDescription,
+      propertyRegion,
+      propertyCity,
+      propertyAddress,
+      propertyQuantity,
+      maxLeaseLength,
+      minLeaseLength,
+      propertyImages,
+      propertyPrice,
+      propertyContact,
+    } = req.body;
+
+    // Check if the post exists
+    const existingPost = await prisma.posts.findUnique({
+      where: { id: postId },
+    });
+
+    if (!existingPost) {
+      return res.status(404).json({ error: "Post not found!" });
+    }
+
+    // Prepare the update data
+    const updateData = {};
+
+    if (propertyTitle !== null) {
+      updateData.propertyTitle = propertyTitle;
+    }
+
+    if (propertyType !== null) {
+      updateData.propertyType = propertyType;
+    }
+
+    if (propertyDescription !== null) {
+      updateData.propertyDescription = propertyDescription;
+    }
+
+    if (propertyRegion !== null) {
+      updateData.propertyRegion = propertyRegion;
+    }
+
+    if (propertyCity !== null) {
+      updateData.propertyCity = propertyCity;
+    }
+
+    if (propertyAddress !== null) {
+      updateData.propertyStreet = propertyAddress;
+    }
+
+    if (propertyQuantity !== null) {
+      updateData.propertyQuantity = propertyQuantity;
+    }
+
+    if (maxLeaseLength && maxLeaseLength.value !== undefined) {
+      updateData.maxLeaseLengthValue = maxLeaseLength.value;
+      updateData.maxLeaseLengthType = maxLeaseLength.type;
+    }
+
+    if (minLeaseLength && minLeaseLength.value !== undefined) {
+      updateData.minLeaseLengthValue = minLeaseLength.value;
+      updateData.minLeaseLengthType = minLeaseLength.type;
+    }
+
+    if (propertyImages !== null && propertyImages !== undefined) {
+      updateData.propertyImages = {
+        deleteMany: { postsId: postId },
+        create: propertyImages.map((image) => ({ image })),
+      };
+    }
+
+    if (propertyPrice !== null && propertyPrice !== undefined) {
+      updateData.propertyPrice = {
+        create: propertyPrice.map((price) => ({
+          price: price.value.toString(),
+          priceType: price.type,
+        })),
+      };
+    }
+
+    if (propertyContact !== null) {
+      updateData.propertyContact = {
+        deleteMany: { postsId: postId },
+        create: propertyContact,
+      };
+    }
+
+    // Update the post using Prisma client
+    const updatedPost = await prisma.posts.update({
+      where: { id: postId },
+      data: updateData,
+    });
+
+    return res.status(200).json(updatedPost);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -245,7 +428,9 @@ const savePost = async (req, res) => {
         where: { id: isSave.id },
       });
 
-      return res.status(202).json("unsave succesful");
+      return res
+        .status(200)
+        .json({ message: "unsave succesful", isSaved: false });
     }
     const save = await prisma.savedPosts.create({
       data: {
@@ -254,7 +439,7 @@ const savePost = async (req, res) => {
       },
     });
 
-    res.status(200).json(save);
+    return res.status(200).json({ save, isSaved: true });
   } catch (error) {
     res.status(500).json("Internal server error");
   }
@@ -543,6 +728,7 @@ const sendImg = async (req, res) => {
 
 async function searchAndFilterPosts(req, res) {
   try {
+    console.log("search");
     const { searchWord, propertyType, region, city, minPrice, maxPrice } =
       req.query.queryKey[1];
     const filters = {};
@@ -563,7 +749,9 @@ async function searchAndFilterPosts(req, res) {
       //   if (minPrice) filters.propertyPrice.price = { gte: parseInt(minPrice) };
       //   if (maxPrice) filters.propertyPrice.price = { lte: parseInt(maxPrice) };
       if (minPrice)
-        filters.propertyPrice.some = { price: { gte: parseInt(minPrice, 10) } };
+        filters.propertyPrice.some = {
+          price: { gte: parseIsnt(minPrice, 10) },
+        };
       if (maxPrice)
         filters.propertyPrice.some = { price: { lte: parseInt(maxPrice, 10) } };
     }
@@ -621,4 +809,5 @@ module.exports = {
   searchAndFilterPosts,
   getMyPosts,
   getOthersPosts,
+  editPost,
 };

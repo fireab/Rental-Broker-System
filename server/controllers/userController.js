@@ -189,6 +189,7 @@ const getprofile = async (req, res) => {
   try {
     // Retrieve user profile from the database
     let { username } = req.params;
+    console.log(username, "dillllee");
     // if (username == "mine") userId = req.userInfo.id;
     // console.log("profile picture");
     // console.log(username);
@@ -212,9 +213,21 @@ const getprofile = async (req, res) => {
     });
     // Return the user profile
     if (!user) return res.status(404).json("user is not found!!");
-    return res.status(200).json(user);
+
+    const isfollowedByMe = await prisma.userFollower.findFirst({
+      where: {
+        followerId: req.userInfo.id,
+        followingId: user.id,
+      },
+    });
+    let isFollowed;
+    if (!isfollowedByMe) {
+      return res.status(200).json({ user, isFollowed: false });
+    }
+    return res.status(200).json({ user, isFollowed: true });
   } catch (error) {
     // Return error message for internal server error
+    console.log(error);
     res.status(500).json("Internal server error");
   }
 };
@@ -315,8 +328,9 @@ const deleteAccount = async (req, res) => {
 
 const toggleFollowUser = async (req, res) => {
   try {
+    console.log(req.body);
     const { followingId } = req.body;
-    console.log(followingId);
+    console.log(followingId, "followe unfollow");
     // Verify the token
 
     const user = await prisma.users.findUnique({
@@ -343,7 +357,11 @@ const toggleFollowUser = async (req, res) => {
         },
       });
 
-      return res.status(200).json({ message: "User unfollowed successfully" });
+      return res.status(200).json({
+        message: "User unfollowed successfully",
+        follow: false,
+        followingId,
+      });
     }
 
     // Follow the user
@@ -354,30 +372,223 @@ const toggleFollowUser = async (req, res) => {
       },
     });
 
-    return res.status(200).json({ message: "User followed successfully" });
+    return res.status(200).json({
+      message: "User followed successfully",
+      follow: true,
+      followingId,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal server error" });
   }
 };
 
-const getFollowersAndFollowing = async (req, res) => {
+// const getFollowersAndFollowing = async (req, res) => {
+//   try {
+//     // const { userId } = req.params;
+
+//     // Verify the token
+
+//     const followersCount = await prisma.userFollower.count({
+//       where: {
+//         followingId: req.userInfo.id,
+//       },
+//     });
+
+//     const followingCount = await prisma.userFollower.count({
+//       where: {
+//         followerId: req.userInfo.id,
+//       },
+//     });
+
+//     const followers = await prisma.userFollower.findMany({
+//       where: {
+//         followingId: req.userInfo.id,
+//       },
+//       select: {
+//         follower: {
+//           select: {
+//             id: true,
+//             username: true,
+//             image: true,
+//           },
+//         },
+//       },
+//     });
+
+//     const following = await prisma.userFollower.findMany({
+//       where: {
+//         followerId: req.userInfo.id,
+//       },
+//       select: {
+//         following: {
+//           select: {
+//             id: true,
+//             username: true,
+//             image: true,
+//           },
+//         },
+//       },
+//     });
+
+//     return res.status(200).json({
+//       followersCount,
+//       followingCount,
+//       followers,
+//       following,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ error: "Internal server error" });
+//   }
+// };
+
+// const getOtherFollowers = async (req, res) => {
+//   try {
+//     const { username } = req.params;
+
+//     const user = await prisma.users.findFirst({
+//       where: { username },
+//     });
+
+//     if (!user) return res.status(404).json("user not found!!");
+
+//     const followersCount = await prisma.userFollower.count({
+//       where: {
+//         followingId: user.id,
+//       },
+//     });
+
+//     const followers = await prisma.userFollower.findMany({
+//       where: {
+//         followingId: user.id,
+//       },
+//       select: {
+//         follower: {
+//           select: {
+//             id: true,
+//             firstName: true,
+//             lastName: true,
+//             username: true,
+//             email: true,
+//             image: true,
+//             followers: {
+//               select: {
+//                 followerId: true,
+//                 followingId: true,
+//               },
+//             },
+//             address: {
+//               select: {
+//                 region: true,
+//                 city: true,
+//               },
+//             },
+//           },
+//         },
+//       },
+//     });
+
+//     const followersWithIsFollowed = followers.map((f) => {
+//       const followId = f.follower.followers.map((fid) => {
+//         // if (fid.followerId===req.userInfo.id)
+//         const isFollowed = fid.followerId === req.userInfo.id;
+
+//       });
+//       return {
+//         ...followId,
+//         f,
+//       };
+//     });
+
+//     return res.status(200).json({
+//       followersCount,
+//       followers: followersWithIsFollowed,
+//     });
+
+//     // return res.status(200).json({
+//     //   followersCount,
+//     //   followers,
+//     // });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ error: "Internal server error" });
+//   }
+// };
+
+const getOtherFollowers = async (req, res) => {
   try {
-    // const { userId } = req.params;
+    const { username } = req.params;
+    const loggedInUserId = req.userInfo.id;
 
-    // Verify the token
+    const user = await prisma.users.findFirst({
+      where: { username },
+    });
 
-    const followersCount = await prisma.userFollower.count({
+    if (!user) return res.status(404).json("User not found!");
+
+    const followers = await prisma.userFollower.findMany({
       where: {
-        followingId: req.userInfo.id,
+        followingId: user.id,
+      },
+      select: {
+        follower: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            username: true,
+            email: true,
+            image: true,
+            followers: {
+              where: {
+                followerId: loggedInUserId,
+              },
+              select: {
+                followerId: true,
+              },
+            },
+            address: {
+              select: {
+                region: true,
+                city: true,
+              },
+            },
+          },
+        },
       },
     });
 
-    const followingCount = await prisma.userFollower.count({
-      where: {
-        followerId: req.userInfo.id,
-      },
+    const followersWithIsFollowed = followers.map((f) => {
+      const isFollowed = f.follower.followers.length > 0;
+      return {
+        ...f.follower,
+        isFollowed,
+      };
     });
+
+    const followersCount = followersWithIsFollowed.length;
+
+    console.log(followersWithIsFollowed);
+    return res.status(200).json({
+      followersCount,
+      followers: followersWithIsFollowed,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const getFollowers = async (req, res) => {
+  try {
+    const loggedInUserId = req.userInfo.id;
+
+    // const followersCount = await prisma.userFollower.count({
+    //   where: {
+    //     followingId: req.userInfo.id,
+    //   },
+    // });
 
     const followers = await prisma.userFollower.findMany({
       where: {
@@ -387,12 +598,218 @@ const getFollowersAndFollowing = async (req, res) => {
         follower: {
           select: {
             id: true,
+            firstName: true,
+            lastName: true,
             username: true,
+            email: true,
             image: true,
+            followers: {
+              where: {
+                followerId: loggedInUserId,
+              },
+              select: {
+                followerId: true,
+              },
+            },
+            address: {
+              select: {
+                region: true,
+                city: true,
+              },
+            },
           },
         },
       },
     });
+    //
+    const followersWithIsFollowed = followers.map((f) => {
+      const isFollowed = f.follower.followers.length > 0;
+      return {
+        ...f.follower,
+        isFollowed,
+      };
+    });
+
+    const followersCount = followersWithIsFollowed.length;
+
+    console.log(followersWithIsFollowed);
+    return res.status(200).json({
+      followersCount,
+      followers: followersWithIsFollowed,
+    });
+
+    // const followersWithIsFollowed = followers.map((follower) => {
+    //   const isFollowed = follower.follower.id === req.userInfo.id;
+    //   // console.log(follower.follower.id, req.userInfo.id);
+    //   // console.log(isFollowed);
+    //   return {
+    //     ...follower,
+    //     isFollowed,
+    //   };
+    // });
+
+    // return res.status(200).json({
+    //   followersCount,
+    //   followers: followersWithIsFollowed,
+    // });
+    //
+
+    // return res.status(200).json({
+    //   followersCount,
+    //   followers,
+    // });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// const getOtherFollowing = async (req, res) => {
+//   try {
+//     const { username } = req.params;
+//     const loggedInUserId = req.userInfo.id;
+
+//     const user = await prisma.users.findFirst({
+//       where: { username },
+//     });
+
+//     if (!user) return res.status(404).json("user not found!!");
+
+//     const followingCount = await prisma.userFollower.count({
+//       where: {
+//         followerId: user.id,
+//       },
+//     });
+
+//     const following = await prisma.userFollower.findMany({
+//       where: {
+//         followerId: user.id,
+//       },
+//       select: {
+//         following: {
+//           select: {
+//             id: true,
+//             firstName: true,
+//             lastName: true,
+//             username: true,
+//             image: true,
+//             followers: {
+//               where: {
+//                 followerId: loggedInUserId,
+//               },
+//               select: {
+//                 followerId: true,
+//               },
+//             },
+//             address: {
+//               select: {
+//                 region: true,
+//                 city: true,
+//               },
+//             },
+//           },
+//         },
+//       },
+//     });
+
+//     const followersWithIsFollowed = following.map((f) => {
+//       const isFollowed = f.follower.followers.length > 0;
+//       return {
+//         ...f.follower,
+//         isFollowed,
+//       };
+//     });
+
+//     const followingCounts = followersWithIsFollowed.length;
+
+//     console.log(followersWithIsFollowed);
+//     return res.status(200).json({
+//       followingCounts,
+//       following: followersWithIsFollowed,
+//     });
+
+//     return res.status(200).json({
+//       followingCount,
+//       following,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ error: "Internal server error" });
+//   }
+// };
+
+const getOtherFollowing = async (req, res) => {
+  try {
+    const { username } = req.params;
+    const loggedInUserId = req.userInfo.id;
+
+    const user = await prisma.users.findFirst({
+      where: { username },
+    });
+
+    if (!user) return res.status(404).json("User not found!");
+
+    const following = await prisma.userFollower.findMany({
+      where: {
+        followerId: user.id,
+      },
+      select: {
+        following: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            username: true,
+            email: true,
+            image: true,
+            followers: {
+              where: {
+                followerId: loggedInUserId,
+              },
+              select: {
+                followerId: true,
+              },
+            },
+            address: {
+              select: {
+                region: true,
+                city: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const followingWithIsFollowed = following.map((f) => {
+      const isFollowed = f.following.followers.length > 0;
+      return {
+        ...f.following,
+        isFollowed,
+      };
+    });
+
+    const followingCount = followingWithIsFollowed.length;
+
+    return res.status(200).json({
+      followingCount,
+      following: followingWithIsFollowed,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const getFollowing = async (req, res) => {
+  try {
+    const loggedInUserId = req.userInfo.id;
+
+    // const followingCount = await prisma.userFollower.count({
+    //   where: {
+    //     followerId: req.userInfo.id,
+    //   },
+    // });
 
     const following = await prisma.userFollower.findMany({
       where: {
@@ -402,19 +819,48 @@ const getFollowersAndFollowing = async (req, res) => {
         following: {
           select: {
             id: true,
+            firstName: true,
+            lastName: true,
             username: true,
+            followers: {
+              where: {
+                followerId: loggedInUserId,
+              },
+              select: {
+                followerId: true,
+              },
+            },
             image: true,
+            address: {
+              select: {
+                region: true,
+                city: true,
+              },
+            },
           },
         },
       },
     });
 
-    return res.status(200).json({
-      followersCount,
-      followingCount,
-      followers,
-      following,
+    const followingWithIsFollowed = following.map((f) => {
+      const isFollowed = f.following.followers.length > 0;
+      return {
+        ...f.following,
+        isFollowed,
+      };
     });
+
+    const followingCount = followingWithIsFollowed.length;
+
+    return res.status(200).json({
+      followingCount,
+      following: followingWithIsFollowed,
+    });
+
+    // return res.status(200).json({
+    //   followingCount,
+    //   following,
+    // });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal server error" });
@@ -563,10 +1009,23 @@ const searchUser = async (req, res) => {
           // Add more search criteria based on your model fields
         ],
       },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        image: true,
+        phoneNumber: true,
+        address: {
+          select: { region: true, city: true },
+        },
+      },
     });
 
+    if (!users) return res.status(200).json([]);
+    return res.status(200).json(users);
     // Return the search results
-    res.status(200).json(users);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal server error" });
@@ -580,7 +1039,7 @@ module.exports = {
   searchUser,
   // followUser,
   // unfollowUser,
-  getFollowersAndFollowing,
+  // getOtherFollowersAndFollowing,
   profilePic,
   sendProfileImg,
   deleteProfilePic,
@@ -588,4 +1047,8 @@ module.exports = {
   changePassword,
   toggleFollowUser,
   sendOtherProfileimage,
+  getOtherFollowers,
+  getOtherFollowing,
+  getFollowing,
+  getFollowers,
 };

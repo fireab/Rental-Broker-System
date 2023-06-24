@@ -4,9 +4,7 @@ const {
   getUserProfile,
   updateProfile,
   deleteAccount,
-  followUser,
-  unfollowUser,
-  getFollowersAndFollowing,
+
   profilePic,
   sendProfileImg,
   deleteProfilePic,
@@ -15,6 +13,10 @@ const {
   toggleFollowUser,
   sendOtherProfileimage,
   searchUser,
+  getOtherFollowers,
+  getOtherFollowing,
+  getFollowers,
+  getFollowing,
 } = require("../controllers/userController.js");
 const authenticateUser = require("../middleware/autorization.js");
 const router = express.Router();
@@ -36,11 +38,9 @@ router.delete("/deleteaccount", authenticateUser, deleteAccount);
 // router.post("/follow", authenticateUser, followUser);
 // router.post("/unfollow", authenticateUser, unfollowUser);
 router.post("/follow", authenticateUser, toggleFollowUser);
-router.get(
-  "/getfollowersandfollowing",
-  authenticateUser,
-  getFollowersAndFollowing
-);
+
+router.get("/followers", authenticateUser, getFollowers);
+router.get("/following", authenticateUser, getFollowing);
 
 router.post(
   "/profileimage",
@@ -52,8 +52,12 @@ router.post(
 router.get("/profileimage", authenticateUser, sendProfileImg);
 router.get("/searchuser", authenticateUser, searchUser);
 
+router.get("/:username", authenticateUser, getprofile);
+
+router.get("/:username/followers", authenticateUser, getOtherFollowers);
+router.get("/:username/following", authenticateUser, getOtherFollowing);
+
 router.get("/profileimage/:username", authenticateUser, sendOtherProfileimage);
 router.delete("/profileimage", authenticateUser, deleteProfilePic);
-router.get("/:username", authenticateUser, getprofile);
 
 module.exports = router;

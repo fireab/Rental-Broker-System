@@ -72,7 +72,7 @@ const getAllUsers = async (req, res) => {
       },
     },
   });
-  if (!users) return res.status(404).json("no users found");
+  if (!users) return res.status(200).json([]);
   return res.status(200).json(users);
 };
 
