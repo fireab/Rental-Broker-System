@@ -20,7 +20,6 @@ export const changePassword = async (passwordData) => {
 };
 
 export const followUser = async (userId) => {
-	console.log(userId,"freabbbb");
 	const response = await axios.post("/api/user/follow", {
 		followingId: userId,
 	});
@@ -28,22 +27,22 @@ export const followUser = async (userId) => {
 };
 
 export const fetchUserFollowers = async (username) => {
-	if(username.queryKey[1] == "user") {
+	console.log(username, "username");
+	if (username.queryKey[1] == "user") {
 		const response = await axios.get("/api/user/followers");
 		return response.data;
 	}
-	
 
 	const response = await axios.get(`/api/user/${username.queryKey[1]}/followers`);
 	return response.data;
-}
+};
 
 export const fetchUserFollowing = async (username) => {
-	if(username.queryKey[1] == "user") {
+	if (username.queryKey[1] == "user") {
 		const response = await axios.get("/api/user/following");
 		return response.data;
 	}
 
 	const response = await axios.get(`/api/user/${username.queryKey[1]}/following`);
 	return response.data;
-}
+};

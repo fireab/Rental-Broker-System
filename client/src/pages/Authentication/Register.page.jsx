@@ -14,15 +14,11 @@ import OTPModal from "../../components/Authentication/OTP.modal";
 import RegistrationStepper from "../../components/Authentication/registration.stepper";
 import { useRegisterUserMutation, useSetupOTPMutation } from "../../redux/api/authApi";
 import { signupValidationSchema as validationSchema } from "../../utils/validation";
-// import { cities, languages, regions, steps } from "../../hooks/useAuth";
 import { cities, languages, regions, steps } from "./../../utils/list";
 
 const RegisterPage = () => {
-	// const { signup, setupOTP, checkOTP } = useAuth();
-
 	const [registerUser, { isLoading: registrationLoading, isError: registrationError, error: registrationErrorData, isSuccess: registrationSuccess }] = useRegisterUserMutation();
 	const [setupOTP, { isLoading: setupOTPLoading, isError: setupOTPError, error: setupOTPErrorData, isSuccess: setupOTPSuccess }] = useSetupOTPMutation();
-
 	const { isOpen: isOTPOpen, onOpen: onOTPOpen, onClose: onOTPClose } = useDisclosure(true);
 	const {
 		isOpen: isOpenModalAccountType,
@@ -31,18 +27,13 @@ const RegisterPage = () => {
 	} = useDisclosure({
 		defaultIsOpen: true,
 	});
-	// const [registrationLoading, setregistrationLoding] = useState(false);
 	const [OTPSending, setOTPSending] = useState(false);
-	// const [checkingUsernameAvaliablity, setcheckingUsernameAvaliablity] = useState(false);
-
 	const { activeStep, setActiveStep } = useSteps({
 		index: 0,
 		count: steps.length,
 	});
 	let [plan, setPlan] = useState("");
-
 	const [stepValues, setStepValues] = useState({});
-
 	const initialValues = [
 		{
 			firstName: "",
@@ -65,7 +56,6 @@ const RegisterPage = () => {
 	const handleSubmit = async (values) => {
 		if (activeStep < 2) {
 			if (activeStep === 1) {
-				// setOTPSending(true);
 				setStepValues((stepValues) => ({ ...stepValues, ...values }));
 				setupOTP({ email: values.email, phoneNumber: values.phoneNumber, username: values.username });
 				onOTPOpen();
@@ -77,13 +67,10 @@ const RegisterPage = () => {
 			await registerUser(values);
 			navigate('/rentals');
 		}
-		// setOTPSending(false);
 	};
-
 	return (
 		<main className="bg-gradient-to-r from-[#870bad] to-[#d60c60] min-h-screen  flex flex-col">
 			<AccountTypeModal plan={plan} setPlan={setPlan} isOpenModalAccountType={isOpenModalAccountType} onCloseModalAccountType={onCloseModalAccountType} />
-
 			<OTPModal email={stepValues.email} setActiveStep={setActiveStep} activeStep={activeStep} onClose={onOTPClose} isOpen={isOTPOpen} />
 			<div className="w-full h-16 flex-none">
 				<div className="flex  items-center">
@@ -111,7 +98,7 @@ const RegisterPage = () => {
 			{!isOpenModalAccountType && (
 				<div className="h-full w-full flex items-center justify-center flex-1 flex-col py-4  ">
 					<RegistrationStepper
-						validateOnChange={false} // Disable validation on change
+						validateOnChange={false}
 						validateOnBlur={false}
 						setActiveStep={setActiveStep}
 						activeStep={activeStep}
@@ -124,7 +111,7 @@ const RegisterPage = () => {
 								<Formik initialValues={initialValues[activeStep]} validationSchema={validationSchema[activeStep]} onSubmit={handleSubmit}>
 									{
 										(
-											{ isValidating, ...formik }, // formik is the formik object
+											{ isValidating, ...formik },
 										) => {
 											return (
 												<Form>
@@ -142,11 +129,6 @@ const RegisterPage = () => {
 																{activeStep === 1 && (
 																	<motion.div key={2} initial={{ opacity: 0.5, x: 100 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -100 }} transition={{ duration: 0.2 }}>
 																		<InputField
-																			// liveValidate={true}
-																			// isValidating={
-																			// 	//check if username is being validated so i can show  loading icon
-																			// 	checkingUsernameAvaliablity && formik.values.username !== "" && formik.errors.username === undefined
-																			// }
 																			name="username"
 																			label="Username"
 																			leftIcon={<User size={22} strokeWidth={1.5} color={"#2b6cb0"} />}
@@ -167,14 +149,11 @@ const RegisterPage = () => {
 																			type="select"
 																			placeholder="Select Region"
 																			onChange={(e) => {
-																				// formik.setFieldValue("city", "");
-																				// formik.setFieldValue("region", e.target.value);
 																				formik.setFieldValue("region", e.target.value);
 																				formik.setFieldValue("city", e.target.value == "" ? "" : cities[e.target.value][0].value);
 																			}}
 																		/>
 																		{formik.values.region && (
-																			// city based on region and clear the city value if region is changed
 																			<InputFieldSelect options={cities[formik.values.region]} name="city" label="City" type="select" placeholder="Select City" />
 																		)}
 																	</motion.div>
@@ -196,7 +175,6 @@ const RegisterPage = () => {
 																				</Button>
 																			)}
 																		</div>
-
 																		<Button type="submit" _loading={{ color: "white" }} disabled={(!formik.isValid && isValidating) || formik.isSubmitting} loadingText="Please wait" isLoading={OTPSending} justifySelf={"end"} alignSelf={"end"} _hover={{ bgColor: "#2b6aa0" }} bgColor="#2b6cb0" size="lg" fontSize="md">
 																			<span className="text-white">Next</span>
 																		</Button>
@@ -207,7 +185,7 @@ const RegisterPage = () => {
 													</div>
 												</Form>
 											);
-										} // formik is the formik object
+										}
 									}
 								</Formik>
 							</div>
@@ -218,5 +196,4 @@ const RegisterPage = () => {
 		</main>
 	);
 };
-
 export default RegisterPage;

@@ -6,7 +6,7 @@ import { PulseLoader } from "react-spinners";
 
 import capitalize from "../../utils/Capitalize";
 
-const InputField = ({ label, leftIcon, rightIcon, isValidating, liveValidate, inputLeftAddon, ...props }) => {
+const InputField = ({ label, leftIcon, rightIcon, isValidating, liveValidate, inputLeftAddon, rightButton, ...props }) => {
 	const [field, meta] = useField(props);
 	return (
 		<FormControl isInvalid={(meta.error && meta.touched) || (meta.error && liveValidate == true)}>
@@ -34,7 +34,10 @@ const InputField = ({ label, leftIcon, rightIcon, isValidating, liveValidate, in
 				/>
 
 				{/* <InputRightElement>{liveValidate && field.value !== undefined && (isValidating ? <PulseLoader color={"#2b6cb0"} loading={true} speedMultiplier={0.6} size={6} /> : meta.error ? <SmallCloseIcon fontSize={"2xl"} color="red" /> : <CheckIcon fontSize={"lg"} color="green.600" />)}</InputRightElement> */}
-				<InputRightElement>{liveValidate && (meta.error ? <SmallCloseIcon fontSize={"2xl"} color="red" /> : <CheckIcon fontSize={"lg"} color="green.600" />)}</InputRightElement>
+				<div className="flex items-center space-x-2">
+					<InputRightElement>{liveValidate && (meta.error ? <SmallCloseIcon fontSize={"2xl"} color="red" /> : <CheckIcon fontSize={"lg"} color="green.600" />)}</InputRightElement>
+					{rightButton}
+				</div>
 				{rightIcon && <InputRightElement>{rightIcon}</InputRightElement>}
 			</InputGroup>
 			<FormErrorMessage>{meta.error}</FormErrorMessage>

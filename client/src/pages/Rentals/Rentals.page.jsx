@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { BiBookBookmark, BiCar, BiDish, BiMobile, BiParty, BiRun, BiTable } from "react-icons/bi";
 import { BsBicycle, BsBuildingsFill, BsChevronDown, BsFilterRight } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { ScrollRestoration, useLocation } from "react-router-dom";
 
 import SkeletonPage from "../../components/common/skeleton.page";
 import PropertyCard from "../../components/RentalProperty/PropertyCard";
@@ -20,7 +20,11 @@ const RentalsPage = () => {
 		region: "",
 		city: "",
 	});
+	const [navClick, setNavClick] = React.useState();
 
+	React.useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [navClick]);
 	const { isOpen: isOpenFilter, onOpen: onOpenFilter, onClose: onCloseFilter } = useDisclosure();
 
 	const { rentalsPosts, refetchRentalPosts, rentalsPostsIsFetching, saveRentalPost, isLoading, error } = useRentalPosts(param);
@@ -149,11 +153,10 @@ const RentalsPage = () => {
 							})}
 					</div>
 				) : (
-				
 					<div className="flex flex-col items-center justify-center h-[50vh]">
-					<div className="text-2xl font-bold">Sorry, There is no post of {param.propertyType}</div>
-					<div className="text-lg font-bold">Try different Catagory or Filter</div>
-				</div>
+						<div className="text-2xl font-bold">Sorry, There is no post of {param.propertyType}</div>
+						<div className="text-lg font-bold">Try different Catagory or Filter</div>
+					</div>
 				)}
 			</div>
 		</div>

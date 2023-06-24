@@ -1,12 +1,18 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { ScrollRestoration } from "react-router-dom";
 
+import SkeletonPage from "../../components/common/skeleton.page";
 import PropertyCard from "../../components/RentalProperty/PropertyCard";
 import { useRentalPosts } from "../../hooks/rentalPost";
-import SkeletonPage from "../../components/common/skeleton.page";
 
 const PropertyListPage = (props) => {
 
+	const [navClick, setNavClick] = React.useState();
+
+	React.useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [navClick]);
 	
 	const username = props.username? props.username : "user";
 	const { userPosts, refetchUserPosts, isLoadingUserPosts, isFetchingUserPosts } = useRentalPosts(username);

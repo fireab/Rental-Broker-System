@@ -1,15 +1,19 @@
-import { Avatar, Badge, Box, Button, Container, Heading, List, ListItem, Stack, StackDivider, Text, VStack } from "@chakra-ui/react";
+import { Avatar, Badge, Box, Button, Container, FormControl, FormLabel, Heading, IconButton, InputGroup, List, ListItem, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, StackDivider, Text, Textarea, useDisclosure, VStack } from "@chakra-ui/react";
+import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { BiUserPlus } from "react-icons/bi";
 import { BsBookmarkFill } from "react-icons/bs";
 import { useQueryClient } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { ScrollRestoration, useNavigate, useParams } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 import styled from "styled-components";
 
 import SkeletonPage from "../../components/common/skeleton.page";
+import InputFieldSelect from "../../components/RentalProperty/InputField.select";
 import { useRentalPosts } from "../../hooks/rentalPost";
 import { useUser } from "../../hooks/user";
 import capitalize from "../../utils/Capitalize";
+import { Report_Type } from "../../utils/list";
 import NumberWithCommas from "../../utils/numberWithCommas";
 
 const GridContainer = styled.div`
@@ -20,6 +24,9 @@ const GridContainer = styled.div`
 `;
 
 const PropertyDetailPage = () => {
+	const { isOpen: isOpenReport, onOpen: onOpenReport, onClose: onCloseReport } = useDisclosure();
+	// const notify = (message) => toast(message);
+	// notify("Welcome to the property detail page");
 	const { postId } = useParams();
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
@@ -35,7 +42,13 @@ const PropertyDetailPage = () => {
 		saveRentalPostData,
 		isSavingRentalPost,
 	} = useRentalPosts(postId);
+
 	const { follow, followData, refetchFollow, isFollowLoading, isFollowFetching } = useUser();
+	const [navClick, setNavClick] = React.useState();
+
+	React.useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [navClick]);
 
 	useEffect(
 		(postId) => {
@@ -56,13 +69,55 @@ const PropertyDetailPage = () => {
 	};
 
 	const handleFollow = async () => {
-		await follow(author.id);
+		await follow(author.id).then((data) => {});
 	};
-
-	window.scrollTo(0, 0);
 
 	return (
 		<Container maxW={"7xl"} className="p-2 m-4 z-10 w-full md:!w-2/3 overflow-auto ">
+			<Modal isOpen={isOpenReport} onClose={onCloseReport}>
+				<ModalOverlay />
+				<ModalContent>
+					<ModalHeader>Report</ModalHeader>
+					<ModalCloseButton />
+
+					<ModalBody className="p-4">
+						<Formik
+							initialValues={{
+								Report_Type: "",
+								Report_Description: "",
+							}}
+							onSubmit={async (values, actions) => {
+								alert(JSON.stringify(values, null, 2));
+							}}
+						>
+							{(formik) => (
+								<Form>
+									<div className="flex flex-col space-y-2">
+									<InputFieldSelect required={true} placeholder="Please Select" name="Report_Type" label="Report Type" options={Report_Type} />
+									<FormControl>
+										<FormLabel htmlFor="Report_Description">Description</FormLabel>
+										<InputGroup>
+											<Textarea name="Report_Description" placeholder="Here is a sample placeholder" size="sm" />
+										</InputGroup>
+									</FormControl>
+
+									<Button colorScheme="blue" mr={3} type="submit">
+										Submit
+									</Button>
+									</div>
+								</Form>
+							)}
+						</Formik>
+					</ModalBody>
+
+					{/* <ModalFooter>
+						<Button colorScheme="blue" mr={3} onClick={onCloseReport}>
+							Close
+						</Button>
+						<Button variant="ghost">Secondary Action</Button>
+					</ModalFooter> */}
+				</ModalContent>
+			</Modal>
 			<div className="flex flex-col">
 				<div className="flex justify-between items-center p-2">
 					<div
@@ -77,19 +132,24 @@ const PropertyDetailPage = () => {
 					>
 						<Avatar name="user" size={"lg"} aria-label="User menu" src={`/api/user/profileimage/${author.username}`} />
 						<div className="flex flex-col">
-							<span className="text-md md:text-lg font-bold">{author.username}</span>
+							<span className="text-md md:text-lg font-bold">{capitalize(author.username)}</span>
 							<div className="flex flex-col md:flex-row text-xs md:text-sm font-light md:space-x-4">
 								<span>4.2</span>
-								<span className="whitespace-nowrap">{`${author.address[0].region}, ${author.address[0].city}`}</span>
+								<span className="whitespace-nowrap">{`${capitalize(author.address[0].region)}, ${capitalize(author.address[0].city)}`}</span>
 								<span>{author.firstName}</span>
 							</div>
 						</div>
 					</div>
 					<div className="flex space-x-2">
 						{author.id !== fetchRentalPost.requestUserId && (
-							<Button isLoading={isFollowLoading || isFollowFetching} onClick={handleFollow} colorScheme="messenger">
-								{followData ? followData.follow ? <span className="text-white">Unfollow</span> : <span className="text-white">Follow</span> : fetchRentalPost.isFollowed ? <span className="text-white">Unfollow</span> : <span className="text-white">Follow</span>}
-							</Button>
+							<div className="flex items-center space-x-2">
+								<Button onClick={onOpenReport} colorScheme="orange" size="xs">
+									Report
+								</Button>
+								<Button isLoading={isFollowLoading || isFollowFetching} onClick={handleFollow} colorScheme="messenger">
+									{followData ? followData.follow ? <span className="text-white">Unfollow</span> : <span className="text-white">Follow</span> : fetchRentalPost.isFollowed ? <span className="text-white">Unfollow</span> : <span className="text-white">Follow</span>}
+								</Button>
+							</div>
 						)}
 
 						<div onClick={handleSavePost} className="p-2  right-2 cursor-pointer top-2 z-[2]">

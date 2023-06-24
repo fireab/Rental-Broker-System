@@ -58,8 +58,9 @@ export const fetchRentalPostsByUser = async (userId) => {
 };
 
 export const fetchRentalPostsBySearch = async (params) => {
+	
 	const response = await axios.get("/api/posts/search", {
-		params: params,
+		params: params.queryKey[1],
 	});
 	return response.data;
 };

@@ -101,6 +101,11 @@ const CreateListingPage = () => {
 			},
 		],
 	};
+	const [navClick, setNavClick] = React.useState();
+
+	React.useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [navClick]);
 
 	const [previewAdValues, setpreviewAdValues] = React.useState(initialValues);
 
@@ -138,7 +143,7 @@ const CreateListingPage = () => {
 					Create Listing
 				</Heading>
 				<div className="p-4 bg-white lg:rounded-lg lg:shadow-2xl px-2 lg:px-10">
-					<Formik initialValues={initialValues} validateOnChange={false} validationSchema={validationSchema} validateOnBlur={false}  onSubmit={handelSubmit}>
+					<Formik initialValues={initialValues} validateOnChange={false} validationSchema={validationSchema} validateOnBlur={false} onSubmit={handelSubmit}>
 						{/* { values, errors, touched, handleChange, handleBlur, handleSubmit } */}
 						{(formik) => (
 							<Form>

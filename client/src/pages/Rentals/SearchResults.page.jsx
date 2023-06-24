@@ -1,7 +1,7 @@
 import { Button, FormControl, FormLabel, RangeSlider, RangeSliderFilledTrack, RangeSliderThumb, RangeSliderTrack, Text } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
-import { useLocation, useNavigation } from "react-router-dom";
+import { ScrollRestoration, useLocation, useNavigation } from "react-router-dom";
 import { Search } from "tabler-icons-react";
 
 import PropertyCard from "../../components/RentalProperty/PropertyCard";
@@ -15,6 +15,11 @@ import InputFieldSelect from "./../../components/RentalProperty/InputField.selec
 
 const SearchResultsPage = () => {
 	const location = useLocation();
+	const [navClick, setNavClick] = React.useState();
+
+	React.useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [navClick]);
 
 	const [param, setParam] = useState({
 		searchWord: location.state.search,
@@ -30,11 +35,6 @@ const SearchResultsPage = () => {
 	React.useEffect(() => {
 		refetchSearchedPosts();
 	}, [refetchSearchedPosts]);
-	// const { searchWord, Property_Type, region, city, minPrice, maxPrice } = location.state;
-
-	// if (isLoadingSearchedPosts || refetchSearchedPosts || !searchedPosts) {
-	// 	return <div>Loading...</div>;
-	// }
 
 	const Property_Type = [
 		{
@@ -125,7 +125,6 @@ const SearchResultsPage = () => {
 			value: "Other",
 		},
 	];
-	window.scrollTo(0, 0);
 	return (
 		<div>
 			<div className="m-4 z-10">
@@ -155,22 +154,27 @@ const SearchResultsPage = () => {
 						// alert(JSON.stringify(param, null, 2));
 
 						refetchSearchedPosts();
-						console.log(values);
 					}}
 				>
 					{(formik) => (
 						<Form>
 							<div className="flex flex-col ">
 								<div className="w-full md:w-96 flex space-x-2 items-end">
-									<InputField name="searchWord" label="Search" placeholder="Search" />
-									<Button type="submit" className="!bg-blue-600">
-										<div className="flex space-x-2 items-center text-white p-2">
-											<Search />
-											<span>Search</span>
-										</div>
-									</Button>
+									<InputField
+										name="searchWord"
+										label="Search"
+										placeholder="Search"
+										rightButton={
+											<Button type="submit" className="!bg-blue-600">
+												<div className="flex space-x-2 items-center text-white p-2">
+													<Search />
+													<span>Search</span>
+												</div>
+											</Button>
+										}
+									/>
 								</div>
-								<div className="flex flex-col md:flex-row flex-1 items-center space-x-4 p-x-4 p-2">
+								<div className="flex flex-col md:flex-row flex-1 items-center p-x-4 p-2">
 									<InputFieldSelect size="sm" name="propertyType" label="Property Type" options={Property_Type} placeholder="Select Property Type" />
 									<InputFieldSelect
 										size="sm"
@@ -184,7 +188,7 @@ const SearchResultsPage = () => {
 										}}
 									/>
 									<InputFieldSelect size="sm" name="city" label="City" options={cities[formik.values.propertyRegion] ? cities[formik.values.propertyRegion] : Object.values(cities).reduce((acc, curr) => acc.concat(curr), [])} placeholder="Select City" />
-									<FormControl>
+									<FormControl className="px-10 py-4">
 										<FormLabel fontSize={"sm"}>
 											<span className="whitespace-nowrap">{capitalize("Choose the Price Range")}</span>
 										</FormLabel>
@@ -213,7 +217,7 @@ const SearchResultsPage = () => {
 											</Text>
 										</div>
 									</FormControl>
-									<InputFieldSelect size="sm" name="propertyPrice" label="property Price" options={Price_Type} placeholder="Pricing type" />
+									<InputFieldSelect size="sm" name="propertyPrice" label="property Price" options={Price_Type} />
 								</div>
 							</div>
 						</Form>

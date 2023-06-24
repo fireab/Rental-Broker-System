@@ -2,7 +2,7 @@ import { AddIcon, EditIcon, ExternalLinkIcon, HamburgerIcon, RepeatIcon, Setting
 import { Box, Button, Heading, IconButton, Image, Menu, MenuButton, MenuItem, MenuList, TableCaption, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { NavLink, Outlet, Link as RouterLink } from "react-router-dom";
+import { NavLink, Outlet, Link as RouterLink, ScrollRestoration } from "react-router-dom";
 import { Edit, Home, Home2, Lock, Pencil, Settings2, SettingsAutomation, Table } from "tabler-icons-react";
 
 import ProfileImage from "./components/Account/profileImage";

@@ -495,6 +495,35 @@ export const Property_Type = [
 	},
 ];
 
+// report types for rental finder system posetd by users
+export const Report_Type = [
+	{
+		name: "Inappropriate Content",
+		value: "Inappropriate Content",
+	},
+	{
+		name: "Spam",
+		value: "Spam",
+	},
+	{
+		name: "Scam",
+		value: "Scam",
+	},
+	{
+		name: "Wrong Information",
+		value: "Wrong Information",
+	},
+	{
+		name: "Duplicate",
+		value: "Duplicate",
+	},
+
+	{
+		name: "Other",
+		value: "Other",
+	},
+];
+
 export const filter_options = [
 	{
 		name: "All",

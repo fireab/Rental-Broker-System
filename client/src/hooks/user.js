@@ -32,7 +32,6 @@ export const useUser = (params) => {
         onSuccess: (data) => {
             queryClient.invalidateQueries(["follow",params]);
             // queryClient.setQueryData(["follow",params], data);
-            userFollowers.refetch();
             return data;
         }
     });

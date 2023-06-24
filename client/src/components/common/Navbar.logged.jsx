@@ -127,35 +127,35 @@ const NavbarLogged = () => {
 									</div>
 								</div>
 							</RouterLink>
-							{location.pathname !== "/rentals/search" && (
-								<div className="">
-									<Formik
-										initialValues={{
-											search: "",
-										}}
-										onSubmit={(values) => {
-											if (values.search !== "") {
-												navigate("/rentals/search", { state: { search: values.search } });
-											}
-										}}
-									>
-										{(formik) => (
-											<Form>
-												<div className="relative">
-													<div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-														<Search size={18} strokeWidth={3} color={"#2b6cb0"} />
-													</div>
-													<input type="text" onChange={formik.handleChange} value={formik.values.search} name="search" placeholder="Search" className="lg:w-54 w-56 pl-10 pr-16 py-2 bg-gray-100/80 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white/80 focus:border-transparent" />
-
-													<button type="submit" className="absolute right-2.5 top-[0.5rem] tracking-wider font-bold text-[#2b6cb0] text-sm">
-														Search
-													</button>
+							{/* {location.pathname !== "/rentals/search" && ( */}
+							<div className="">
+								<Formik
+									initialValues={{
+										search: "",
+									}}
+									onSubmit={(values) => {
+										if (values.search !== "") {
+											navigate("/rentals/search", { state: { search: values.search } });
+										}
+									}}
+								>
+									{(formik) => (
+										<Form>
+											<div className="relative">
+												<div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+													<Search size={18} strokeWidth={3} color={"#2b6cb0"} />
 												</div>
-											</Form>
-										)}
-									</Formik>
-								</div>
-							)}
+												<input type="text" onChange={formik.handleChange} value={formik.values.search} name="search" placeholder="Search" className="lg:w-54 w-56 pl-10 pr-16 py-2 bg-gray-100/80 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white/80 focus:border-transparent" />
+
+												<button type="submit" className="absolute right-2.5 top-[0.5rem] tracking-wider font-bold text-[#2b6cb0] text-sm">
+													Search
+												</button>
+											</div>
+										</Form>
+									)}
+								</Formik>
+							</div>
+							{/* )} */}
 						</div>
 						<div className="flex justify-center space-x-1">
 							<div className="flex items-center justify-evenly space-x-2 z-20">
@@ -167,7 +167,7 @@ const NavbarLogged = () => {
 											</a>
 										</li>
 										<li className="font-bold">
-											<RouterLink to="/rentals/CreateAd">
+											<RouterLink to="/rentals/createad">
 												<Button fontSize={12} variant={"outline"} fontWeight={"extrabold"} leftIcon={<Plus size={16} />}>
 													<span className="text-xs font-bold">CREATE A LISTING</span>
 												</Button>

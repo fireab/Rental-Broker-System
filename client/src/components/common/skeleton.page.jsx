@@ -1,4 +1,4 @@
-import { Avatar, Badge, Box, Button, Card, Container, Heading, Image, List, ListItem, Skeleton, SkeletonCircle, Stack, StackDivider, Text, VStack } from "@chakra-ui/react";
+import { Avatar, Badge, Box, Button, Card, Container, Heading, Image, Link, List, ListItem, Skeleton, SkeletonCircle, Stack, StackDivider, Text, VStack } from "@chakra-ui/react";
 import React from "react";
 import { BsBookmarkFill } from "react-icons/bs";
 
@@ -78,7 +78,7 @@ const SkeletonPage = (props) => {
 		);
 	} else if (props.page == "request") {
 		return (
-			<Skeleton className="w-full lg:w-2/3 md:w-4/5" direction={{ base: "column", sm: "row" }} overflow="hidden" variant="outline">
+			<Skeleton className="w-full !rounded-2xl lg:w-2/3 md:w-4/5" overflow="hidden" variant="outline">
 				<Image objectFit="cover" maxW={{ base: "100%", sm: "200px" }} src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60" alt="Caffe Latte" />
 
 				<Stack>
@@ -105,6 +105,58 @@ const SkeletonPage = (props) => {
 				</div>
 			</div>
 		);
+	}else if(props.page == "follow page"){
+		<div direction={{ base: "column", sm: "row" }} overflow="hidden" >
+					<Skeleton className="flex ">
+						<Skeleton objectFit="cover" overflow="hidden" rounded={"full"} className="h-24 w-24" src="https://cdn.britannica.com/84/73184-050-05ED59CB/Sunflower-field-Fargo-North-Dakota.jpg" alt="" />
+					</Skeleton>
+					<Skeleton className="flex justify-between ">
+						<div className="flex flex-col justify-between items-start">
+							<div>
+								<span className="font-bold text-xl">Dilamo Wondimu</span>
+								<div className="flex items-center whitespace-nowrap">
+									<Skeleton className="text-xs whitespace-pre">4.5 </Skeleton>
+
+									<Skeleton className="text-xs whitespace-pre ">(20) </Skeleton>
+
+									<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
+
+									<Skeleton className="text-xs whitespace-pre ">Add Review </Skeleton>
+
+									<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
+
+									<Skeleton className="text-xs whitespace-pre ">See Reviews </Skeleton>
+
+									<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
+
+									<Skeleton className="text-xs whitespace-pre ">See Reviews </Skeleton>
+
+									<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
+
+									<Skeleton className="text-xs whitespace-pre ">See Reviews </Skeleton>
+
+									<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
+
+									<Skeleton className="text-xs whitespace-pre ">See Reviews </Skeleton>
+
+									<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
+
+									<Skeleton className="text-xs whitespace-pre ">See Reviews </Skeleton>
+
+									<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
+								</div>
+							</div>
+							<Link>
+								<div>
+									<Skeleton className="hover:text-blue-600">View Profile</Skeleton>
+								</div>
+							</Link>
+						</div>
+						<div className="flex flex-col justify-center">
+							<Skeleton colorScheme="blue">Follow</Skeleton>
+						</div>
+					</Skeleton>
+				</div>
 	}
 };
 

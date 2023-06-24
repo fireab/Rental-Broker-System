@@ -1,7 +1,7 @@
 import { StarIcon } from "@chakra-ui/icons";
 import { Badge, Button, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import React, { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { ScrollRestoration, useLocation, useNavigate } from "react-router-dom";
 
 import Followers from "./components/Account/user.followers";
 import Following from "./components/Account/user.following";
@@ -15,6 +15,11 @@ import capitalize from "./utils/Capitalize";
 const UserLayout = () => {
 	const { pathname } = useLocation();
 	const navigate = useNavigate();
+	const [navClick, setNavClick] = React.useState();
+
+	React.useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [navClick]);
 	const {
 		follow,
 		followData,
@@ -44,7 +49,7 @@ const UserLayout = () => {
 	}, [refetchUserProfileByUsername, refetchFollowers, refetchFollowing]);
 
 	if (isGetUserProfileByUsernameLoading || isGetUserProfileByIdFetching || !getUserProfileByUsername) {
-		return <SkeletonPage page="profile"/>;
+		return <SkeletonPage page="profile" />;
 	}
 
 	const user = getUserProfileByUsername.user;
@@ -56,7 +61,7 @@ const UserLayout = () => {
 	const handleFollow = async (userId) => {
 		await follow(userId);
 	};
-
+	
 
 	return (
 		<div>
@@ -88,7 +93,7 @@ const UserLayout = () => {
 											<span className="text-xs ">{user.postsCount} Posts</span>
 
 											<span className="text-xs ">|</span>
-											
+
 											<span className="text-xs ">{(!isFollowersLoading || !isFollowersFetching || followers) && followers.followersCount} Followers</span>
 
 											<span className="text-xs ">|</span>
