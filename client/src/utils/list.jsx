@@ -1,3 +1,7 @@
+import { BiBookBookmark, BiCar, BiDish, BiMobile, BiParty, BiRun, BiTable } from "react-icons/bi";
+import { BsBicycle, BsBuildingsFill, BsChevronDown, BsGlobe } from "react-icons/bs";
+import { BrandFacebook, BrandInstagram, BrandTelegram, BrandTiktok, BrandTwitter, BrandWhatsapp, BrandYoutube, Mail, PhoneCall } from "tabler-icons-react";
+
 export const steps = [
 	{ title: "Personal Information", description: ["Enter your personal information ", "to create an account"] },
 	{ title: "Account Information", description: ["Choose a username and password", "to secure your account."] },
@@ -315,4 +319,246 @@ export const citiesList = [
 	"Yirgalem",
 	"Aleta Wendo",
 	"Boditi",
+];
+
+export const Price_Type = [
+	{
+		name: "per day",
+		value: "per day",
+	},
+	{
+		name: "per week",
+		value: "per week",
+	},
+	{
+		name: "per month",
+		value: "per month",
+	},
+	{
+		name: "per year",
+		value: "per year",
+	},
+];
+export const Lease_Length_Type = [
+	{
+		name: "days",
+		value: "days",
+	},
+	{
+		name: "weeks",
+		value: "weeks",
+	},
+	{
+		name: "months",
+		value: "months",
+	},
+	{
+		name: "years",
+		value: "years",
+	},
+];
+export const Contact_Type = [
+	{
+		name: "email",
+		value: "email",
+		icon: <Mail />,
+	},
+	{
+		name: "phone",
+		value: "phone",
+		icon: <PhoneCall />,
+	},
+	{
+		name: "whatsapp",
+		value: "whatsapp",
+		icon: <BrandWhatsapp />,
+	},
+	{
+		name: "telegram",
+		value: "telegram",
+		icon: <BrandTelegram />,
+	},
+	{
+		name: "facebook",
+		value: "facebook",
+		icon: <BrandFacebook />,
+	},
+	{
+		name: "instagram",
+		value: "instagram",
+		icon: <BrandInstagram />,
+	},
+	{
+		name: "twitter",
+		value: "twitter",
+		icon: <BrandTwitter />,
+	},
+	{
+		name: "youtube",
+		value: "youtube",
+		icon: <BrandYoutube />,
+	},
+	{
+		name: "tiktok",
+		value: "tiktok",
+		icon: <BrandTiktok />,
+	},
+];
+
+export const Property_Type = [
+	{
+		name: "House",
+		value: "House",
+	},
+	{
+		name: "Room",
+		value: "Room",
+	},
+	{
+		name: "Construction Material",
+		value: "Construction Material",
+	},
+	{
+		name: "Land",
+		value: "Land",
+	},
+	{
+		name: "Apartment",
+		value: "Apartment",
+	},
+	{
+		name: "Clothing",
+		value: "Clothing",
+	},
+	{
+		name: "Electronics",
+		value: "Electronics",
+	},
+	{
+		name: "Furniture",
+		value: "Furniture",
+	},
+	{
+		name: "Kitchen Utensils",
+		value: "Kitchen Utensils",
+	},
+	{
+		name: "Sports Equipment",
+		value: "Sports Equipment",
+	},
+	{
+		name: "Motorcycle",
+		value: "Motorcycle",
+	},
+	{
+		name: "Video Games",
+		value: "Video Games",
+	},
+	{
+		name: "Party Supplies",
+		value: "Party Supplies",
+	},
+	{
+		name: "Outdoor Equipment",
+		value: "Outdoor Equipment",
+	},
+	{
+		name: "Computer",
+		value: "Computer",
+	},
+
+	// materials that can be rented
+
+	{
+		name: "Books",
+		value: "Books",
+	},
+	{
+		name: "Bicycle",
+		value: "Bicycle",
+	},
+	{
+		name: "Services",
+		value: "Services",
+	},
+	{
+		name: "Sports Equipment",
+		value: "Sports Equipment",
+	},
+	{
+		name: "Vehicle",
+		value: "Vehicle",
+	},
+	{
+		name: "Other",
+		value: "Other",
+	},
+];
+
+export const filter_options = [
+	{
+		name: "All",
+		value: "",
+		icon: <BsGlobe />,
+	},
+	{
+		name: "Construction",
+		value: "construction",
+		icon: <BsBuildingsFill />,
+	},
+	{
+		name: "Clothing",
+		value: "clothing",
+		icon: <BsBuildingsFill />,
+	},
+	{
+		name: "Electronics",
+		value: "electronics",
+		icon: <BiMobile />,
+	},
+	{
+		name: "Furniture",
+		value: "furniture",
+		icon: <BiTable />,
+	},
+	{
+		name: "Kitchen Utensils",
+		value: "kitchen utensils",
+		icon: <BiDish />,
+	},
+	{
+		name: "Sports Equipment",
+		value: "sports equipment",
+		icon: <BiRun />,
+	},
+	{
+		name: "Vehicle",
+		value: "vehicle",
+		icon: <BiCar />,
+	},
+	{
+		name: "Party Supplies",
+		value: "party supplies",
+		icon: <BiParty />,
+	},
+	{
+		name: "Outdoor Equipment",
+		value: "outdoor equipment",
+		icon: <BsBuildingsFill />,
+	},
+	{
+		name: "Books",
+		value: "books",
+		icon: <BiBookBookmark />,
+	},
+	{
+		name: "Bicycle",
+		value: "bicycle",
+		icon: <BsBicycle />,
+	},
+	{
+		name: "Other",
+		value: "other",
+		icon: <BsChevronDown />,
+	},
 ];

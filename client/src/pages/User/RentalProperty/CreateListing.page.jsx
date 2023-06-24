@@ -1,392 +1,27 @@
 import { AddIcon, CloseIcon, DeleteIcon } from "@chakra-ui/icons";
 import { Button, FormControl, FormLabel, Heading, IconButton, Input, InputLeftElement, InputRightElement, useDisclosure } from "@chakra-ui/react";
 import { InputGroup } from "@chakra-ui/react";
+import axios from "axios";
 import { Form, Formik } from "formik";
 import React from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Baguette, BrandFacebook, BrandInstagram, BrandTelegram, BrandTiktok, BrandTwitter, BrandWhatsapp, BrandYoutube, ClockCancel, Mail, PhoneCall } from "tabler-icons-react";
 import * as yup from "yup";
 
 import AdPreviewModal from "../../../components/RentalProperty/AdPreview.modal";
 import { useRentalPosts } from "../../../hooks/rentalPost";
+import { cities, Contact_Type, Lease_Length_Type, Price_Type, Property_Type, regions } from "../../../utils/list";
 import ImageDrop from "./../../../components/RentalProperty/ImageDrop";
 import InputField from "./../../../components/RentalProperty/InputField";
 import InputFieldSelect from "./../../../components/RentalProperty/InputField.select";
 import InputFieldTextarea from "./../../../components/RentalProperty/InputField.textarea";
 
-const Price_Type = [
-	{
-		name: "per day",
-		value: "per day",
-	},
-	{
-		name: "per week",
-		value: "per week",
-	},
-	{
-		name: "per month",
-		value: "per month",
-	},
-	{
-		name: "per year",
-		value: "per year",
-	},
-];
-const Lease_Length_Type = [
-	{
-		name: "days",
-		value: "days",
-	},
-	{
-		name: "weeks",
-		value: "weeks",
-	},
-	{
-		name: "months",
-		value: "months",
-	},
-	{
-		name: "years",
-		value: "years",
-	},
-];
-const Contact_Type = [
-	{
-		name: "email",
-		value: "email",
-		icon: <Mail />,
-	},
-	{
-		name: "phone",
-		value: "phone",
-		icon: <PhoneCall />,
-	},
-	{
-		name: "whatsapp",
-		value: "whatsapp",
-		icon: <BrandWhatsapp />,
-	},
-	{
-		name: "telegram",
-		value: "telegram",
-		icon: <BrandTelegram />,
-	},
-	{
-		name: "facebook",
-		value: "facebook",
-		icon: <BrandFacebook />,
-	},
-	{
-		name: "instagram",
-		value: "instagram",
-		icon: <BrandInstagram />,
-	},
-	{
-		name: "twitter",
-		value: "twitter",
-		icon: <BrandTwitter />,
-	},
-	{
-		name: "youtube",
-		value: "youtube",
-		icon: <BrandYoutube />,
-	},
-	{
-		name: "tiktok",
-		value: "tiktok",
-		icon: <BrandTiktok />,
-	},
-];
-const regions = [
-	{
-		name: "Addis Ababa",
-		value: "Addis Ababa",
-	},
-	{
-		name: "Afar",
-		value: "Afar",
-	},
-	{
-		name: "Amhara",
-		value: "Amhara",
-	},
-	{
-		name: "Benishangul-Gumuz",
-		value: "Benishangul-Gumuz",
-	},
-	{
-		name: "Dire Dawa",
-		value: "Dire Dawa",
-	},
-	{
-		name: "Gambela",
-		value: "Gambela",
-	},
-	{
-		name: "Harari",
-		value: "Harari",
-	},
-	{
-		name: "Oromia",
-		value: "Oromia",
-	},
-	{
-		name: "Sidama",
-		value: "Sidama",
-	},
-	{
-		name: "Somali",
-		value: "Somali",
-	},
-	{
-		name: "Southern Nations, Nationalities, and Peoples' Region",
-		value: "Southern Nations, Nationalities, and Peoples' Region",
-	},
-	{
-		name: "Tigray",
-		value: "Tigray",
-	},
-];
-
-const cities = {
-	"Addis Ababa": [
-		{ name: "Addis Ababa", value: "Addis Ababa" },
-		{ name: "Addis Ketema", value: "Addis Ketema" },
-		{ name: "Akaki Kaliti", value: "Akaki Kaliti" },
-		{ name: "Arada", value: "Arada" },
-		{ name: "Bole", value: "Bole" },
-		{ name: "Gulele", value: "Gulele" },
-		{ name: "Kirkos", value: "Kirkos" },
-		{ name: "Kolfe Keranio", value: "Kolfe Keranio" },
-		{ name: "Lideta", value: "Lideta" },
-		{ name: "Nefas Silk Lafto", value: "Nefas Silk Lafto" },
-		{ name: "Yeka", value: "Yeka" },
-		{ name: "Addis Ababa", value: "Addis Ababa" },
-	],
-	Afar: [
-		{ name: "Semera", value: "Semera" },
-		{ name: "Awash", value: "Awash" },
-		{ name: "Gewane", value: "Gewane" },
-		{ name: "Dubti", value: "Dubti" },
-		{ name: "Mile", value: "Mile" },
-		{ name: "Asaita", value: "Asaita" },
-		{ name: "Elidar", value: "Elidar" },
-		{ name: "Chifra", value: "Chifra" },
-	],
-	Amhara: [
-		{ name: "Bahir Dar", value: "Bahir Dar" },
-		{ name: "Gondar", value: "Gondar" },
-		{ name: "Debre Markos", value: "Debre Markos" },
-		{ name: "Dessie", value: "Dessie" },
-		{ name: "Kombolcha", value: "Kombolcha" },
-		{ name: "Debre Birhan", value: "Debre Birhan" },
-		{ name: "Giyorgis", value: "Giyorgis" },
-		{ name: "Finote Selam", value: "Finote Selam" },
-		{ name: "Debre Tabor", value: "Debre Tabor" },
-		{ name: "Woldia", value: "Woldia" },
-		{ name: "Debre Sina", value: "Debre Sina" },
-		{ name: "Debre Berhan", value: "Debre Berhan" },
-	],
-	"Benishangul-Gumuz": [
-		{ name: "Assosa", value: "Assosa" },
-		{ name: "Menge", value: "Menge" },
-		{ name: "Bambasi", value: "Bambasi" },
-		{ name: "Guba", value: "Guba" },
-		{ name: "Kurmuk", value: "Kurmuk" },
-		{ name: "Mao-Komo special woreda", value: "Mao-Komo special woreda" },
-	],
-	"Dire Dawa": [{ name: "Dire Dawa", value: "Dire Dawa" }],
-	Gambela: [
-		{ name: "Gambela", value: "Gambela" },
-		{ name: "Abobo", value: "Abobo" },
-		{ name: "Dimma", value: "Dimma" },
-		{ name: "Gog", value: "Gog" },
-		{ name: "Itang", value: "Itang" },
-		{ name: "Jikawo", value: "Jikawo" },
-		{ name: "Lare", value: "Lare" },
-		{ name: "Mengesh", value: "Mengesh" },
-		{ name: "Nuer", value: "Nuer" },
-	],
-	Harari: [
-		{ name: "Harar", value: "Harar" },
-		{ name: "Gursum", value: "Gursum" },
-	],
-	Oromia: [
-		{ name: "Adama", value: "Adama" },
-		{ name: "Jimma", value: "Jimma" },
-		{ name: "Shashamane", value: "Shashamane" },
-		{ name: "Ambo", value: "Ambo" },
-		{ name: "Bale Robe", value: "Bale Robe" },
-		{ name: "Bishoftu", value: "Bishoftu" },
-		{ name: "Burayu", value: "Burayu" },
-		{ name: "Dukem", value: "Dukem" },
-		{ name: "Goba", value: "Goba" },
-		{ name: "Hawassa", value: "Hawassa" },
-		{ name: "Nekemte", value: "Nekemte" },
-		{ name: "Sebeta", value: "Sebeta" },
-		{ name: "Woliso", value: "Woliso" },
-		{ name: "Ziway", value: "Ziway" },
-		{ name: "Asella", value: "Asella" },
-		{ name: "Bako", value: "Bako" },
-		{ name: "Bedele", value: "Bedele" },
-		{ name: "Bekoji", value: "Bekoji" },
-		{ name: "Bonga", value: "Bonga" },
-	],
-	Somali: [
-		{ name: "Jijiga", value: "Jijiga" },
-		{ name: "Gode", value: "Gode" },
-		{ name: "Kebri Beyah", value: "Kebri Beyah" },
-		{ name: "Shilavo", value: "Shilavo" },
-		{ name: "Werder", value: "Werder" },
-		{ name: "Dollo", value: "Dollo" },
-		{ name: "Degehabur", value: "Degehabur" },
-		{ name: "Kelafo", value: "Kelafo" },
-		{ name: "Kebri Dahar", value: "Kebri Dahar" },
-	],
-	"Southern Nations, Nationalities, and Peoples' Region": [
-		{ name: "Awasa", value: "Awasa" },
-		{ name: "Arba Minch", value: "Arba Minch" },
-		{ name: "Hosaena", value: "Hosaena" },
-		{ name: "Jinka", value: "Jinka" },
-		{ name: "Sodo", value: "Sodo" },
-		{ name: "Yirga Alem", value: "Yirga Alem" },
-		{ name: "Yabelo", value: "Yabelo" },
-		{ name: "Wendo", value: "Wendo" },
-		{ name: "Wolkite", value: "Wolkite" },
-		{ name: "Waka", value: "Waka" },
-		{ name: "Shakiso", value: "Shakiso" },
-		{ name: "Sawla", value: "Sawla" },
-		{ name: "Soddo Zuria", value: "Soddo Zuria" },
-		{ name: "Silti", value: "Silti" },
-		{ name: "Shone", value: "Shone" },
-		{ name: "Sankura", value: "Sankura" },
-		{ name: "Sodo", value: "Sodo" },
-		{ name: "Soro", value: "Soro" },
-		{ name: "Shebedino", value: "Shebedino" },
-		{ name: "Sawla", value: "Sawla" },
-	],
-	Tigray: [
-		{ name: "Mekelle", value: "Mekelle" },
-		{ name: "Adwa", value: "Adwa" },
-		{ name: "Axum", value: "Axum" },
-		{ name: "Humera", value: "Humera" },
-		{ name: "Shire", value: "Shire" },
-		{ name: "Adigrat", value: "Adigrat" },
-		{ name: "Adwa", value: "Adwa" },
-		{ name: "Adigrat", value: "Adigrat" },
-		{ name: "Adwa", value: "Adwa" },
-		{ name: "Adigrat", value: "Adigrat" },
-		{ name: "Adwa", value: "Adwa" },
-		{ name: "Adigrat", value: "Adigrat" },
-		{ name: "Adwa", value: "Adwa" },
-		{ name: "Adigrat", value: "Adigrat" },
-		{ name: "Adwa", value: "Adwa" },
-		{ name: "Adigrat", value: "Adigrat" },
-		{ name: "Adwa", value: "Adwa" },
-		{ name: "Adigrat", value: "Adigrat" },
-	],
-	Sidama: [
-		{ name: "Hawassa", value: "Hawassa" },
-		{ name: "Yirgalem", value: "Yirgalem" },
-		{ name: "Aleta Wendo", value: "Aleta Wendo" },
-		{ name: "Boditi", value: "Boditi" },
-	],
-};
-
-const Property_Type = [
-	{
-		name: "House",
-		value: "House",
-	},
-	{
-		name: "Room",
-		value: "Room",
-	},
-	{
-		name: "Construction Material",
-		value: "Construction Material",
-	},
-	{
-		name: "Land",
-		value: "Land",
-	},
-	{
-		name: "Apartment",
-		value: "Apartment",
-	},
-	{
-		name: "Clothing",
-		value: "Clothing",
-	},
-	{
-		name: "Electronics",
-		value: "Electronics",
-	},
-	{
-		name: "Furniture",
-		value: "Furniture",
-	},
-	{
-		name: "Kitchen Utensils",
-		value: "Kitchen Utensils",
-	},
-	{
-		name: "Sports Equipment",
-		value: "Sports Equipment",
-	},
-	{
-		name: "Motorcycle",
-		value: "Motorcycle",
-	},
-	{
-		name: "Video Games",
-		value: "Video Games",
-	},
-	{
-		name: "Party Supplies",
-		value: "Party Supplies",
-	},
-	{
-		name: "Outdoor Equipment",
-		value: "Outdoor Equipment",
-	},
-	{
-		name: "Computer",
-		value: "Computer",
-	},
-
-	// materials that can be rented
-
-	{
-		name: "Books",
-		value: "Books",
-	},
-	{
-		name: "Bicycle",
-		value: "Bicycle",
-	},
-	{
-		name: "Services",
-		value: "Services",
-	},
-	{
-		name: "Sports Equipment",
-		value: "Sports Equipment",
-	},
-	{
-		name: "Vehicle",
-		value: "Vehicle",
-	},
-	{
-		name: "Other",
-		value: "Other",
-	},
-];
-
 const CreateListingPage = () => {
 	// creat me a yup validaton with fields to create a rental ad for my rental findet system
 	const { isOpen: isAdPreviewOpen, onOpen: onAdPreviewOpen, onClose: onAdPreviewClose } = useDisclosure();
 
-	const { createRentalPost} = useRentalPosts();
+	const { createRentalPost, isCreatingRentalPost, isRentalPostCreated, isRentalPostCreationError, rentalPostCreationError } = useRentalPosts();
 
 	const validationSchema = yup.object().shape({
 		propertyTitle: yup.string().required("Please enter a property title"),
@@ -429,7 +64,7 @@ const CreateListingPage = () => {
 			}),
 		),
 	});
-
+	const [isLoading, setLoading] = useState(false);
 	const initialValues = {
 		propertyTitle: "",
 		propertyType: "",
@@ -465,23 +100,39 @@ const CreateListingPage = () => {
 				value: "",
 			},
 		],
-		propertyImages: [
-			{
-				image: "",
-			}
-		]
 	};
 
 	const [previewAdValues, setpreviewAdValues] = React.useState(initialValues);
 
-	const handelSubmit = (values) => {
-		alert(JSON.stringify(values, null, 2));
-		createRentalPost(values);
+	const [images, setImages] = useState([]);
+	const navigate = useNavigate();
+
+	const handelSubmit = async (values) => {
+		setLoading(true);
+		const formData = new FormData();
+		images.forEach((image) => {
+			formData.append("images", image);
+		});
+
+		await axios
+			.post("/api/upload", formData)
+			.then(async (res) => {
+				console.log(res.data);
+				await createRentalPost({ ...values, propertyImages: res.data.map((image) => ({ image })) });
+			})
+			.then(() => {
+				navigate("/rentals");
+			})
+			.catch((err) => {
+				console.log("error dil");
+			});
+		setLoading(false);
 	};
 	const handelPreview = (values) => {
 		setpreviewAdValues(values);
 		onAdPreviewOpen();
 	};
+
 	return (
 		<div className="bg-[#EDF2FA] lg:px-20 py-10">
 			<AdPreviewModal previewAdValues={previewAdValues} isOpen={isAdPreviewOpen} onClose={onAdPreviewClose} />
@@ -489,7 +140,7 @@ const CreateListingPage = () => {
 				<Heading color={"#2b6aa0"} size={"lg"}>
 					Create Listing
 				</Heading>
-				<div className="p-4 bg-white lg:rounded-lg lg:shadow-2xl px-10">
+				<div className="p-4 bg-white lg:rounded-lg lg:shadow-2xl px-2 lg:px-10">
 					<Formik initialValues={initialValues} validationSchema={validationSchema} validateOnBlur={true} onSubmit={handelSubmit}>
 						{/* { values, errors, touched, handleChange, handleBlur, handleSubmit } */}
 						{(formik) => (
@@ -653,14 +304,14 @@ const CreateListingPage = () => {
 												</Button>
 											</div>
 											<div className="w-1/2">
-												<Button type="submit" className="!bg-[#2b6aa0] text-white p-2 rounded-md mt-4 w-full">
+												<Button isLoading={isCreatingRentalPost} type="submit" className="!bg-[#2b6aa0] text-white p-2 rounded-md mt-4 w-full">
 													Create Listing
 												</Button>
 											</div>
 										</div>
 									</div>
-									<div className="w-full lg:w-2/5 p-4 mt-10 ">
-										<ImageDrop />
+									<div className="create-post w-full lg:w-2/5 p-4 mt-10 ">
+										<ImageDrop setImages={setImages} images={images} />
 									</div>
 								</div>
 							</Form>

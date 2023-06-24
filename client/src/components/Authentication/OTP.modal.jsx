@@ -31,12 +31,18 @@ const OTPModal = (props) => {
 
 		onSubmit: async (values) => {
 			console.log(values);
+			console.log(props.email);
 			await checkOTP({ email: props.email, otp: values.otp })
 				.unwrap()
-				.then((res) => {
+				.then(async (res) => {
 					console.log("OTP correct");
 					props.onClose();
-					props.setActiveStep(props.activeStep + 1);
+					if (props.activeStep) {
+						props.setActiveStep(props.activeStep + 1);
+					} else {
+						await props.setPhoneisVerified(true)
+						props.handelSubmit();
+					}
 				})
 				.catch((err) => {
 					formik.setErrors({ otp: "Invalid OTP" });

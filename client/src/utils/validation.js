@@ -19,7 +19,7 @@ export const signupValidationSchema = [
                 const isAvailable = value !== "taken_username";
                 return isAvailable;
             }),
-        password: yup.string().required("Password is required").min(1, "Password must be at least 6 characters").max(20, "Password must not exceed 20 characters"),
+        password: yup.string().required("Password is required").min(6, "Password must be at least 6 characters").max(20, "Password must not exceed 20 characters").matches(/(?=.*[a-z])/, "Password must contain a lowercase letter"),
         confirmPassword: yup
             .string()
             .required("Confirm Password is required")
@@ -34,13 +34,13 @@ export const signupValidationSchema = [
 
 export const loginValidationSchema = yup.object().shape({
     email: yup.string().email("Invalid email").required("Email is required"),
-    password: yup.string().required("Password is required").min(1, "Password must be at least 6 characters").max(20, "Password must not exceed 20 characters"),
+    password: yup.string().required("Password is required").min(6, "Password must be at least 6 characters").max(20, "Password must not exceed 20 characters"),
     rememberMe: yup.boolean().oneOf([true, false], ""),
 });
 
 export const changePasswordValidationSchema = yup.object().shape({
     currentPassword: yup.string().required("Current Password is required").min(1, "Password must be at least 6 characters").max(20, "Password must not exceed 20 characters"),
-    newPassword: yup.string().required("New Password is required").min(1, "Password must be at least 6 characters").max(20, "Password must not exceed 20 characters"),
+    newPassword: yup.string().required("Password is required").min(6, "Password must be at least 6 characters").max(20, "Password must not exceed 20 characters").matches(/(?=.*[a-z])/, "Password must contain a lowercase letter"),
     confirmPassword: yup.string().required("Confirm Password is required").oneOf([yup.ref("newPassword"), null], "Passwords must match"),
 })
 

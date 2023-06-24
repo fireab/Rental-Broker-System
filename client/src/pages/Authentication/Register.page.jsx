@@ -65,19 +65,20 @@ const RegisterPage = () => {
 	const handleSubmit = async (values) => {
 		if (activeStep < 2) {
 			if (activeStep === 1) {
-				setOTPSending(true);
-				console.log({ email: values.email, phoneNumber: values.phoneNumber, username: values.username });
-				// setStepValues((stepValues) => ({ ...stepValues, ...values }));
+				// setOTPSending(true);
+				setStepValues((stepValues) => ({ ...stepValues, ...values }));
 				setupOTP({ email: values.email, phoneNumber: values.phoneNumber, username: values.username });
 				onOTPOpen();
 			} else {
-				// setStepValues((stepValues) => ({ ...stepValues, ...values }));
+				setStepValues((stepValues) => ({ ...stepValues, ...values }));
 				setActiveStep(activeStep + 1);
 			}
 		} else {
-			registerUser(values);
+			console.log("values", values);
+			await registerUser(values);
 			navigate('/rentals');
 		}
+		// setOTPSending(false);
 	};
 
 	return (

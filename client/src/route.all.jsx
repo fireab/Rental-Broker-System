@@ -4,8 +4,7 @@ import { createBrowserRouter, Outlet } from "react-router-dom";
 import ChangePasswordView from "./components/Account/ChangePassword.view";
 import EditProfileView from "./components/Account/EditProfile.view";
 import ProfilePageView from "./components/Account/ProfilePage.view";
-import Sidebar from "./components/common/Sidebar";
-import Sidenav from "./components/common/Sidenav";
+import UserprofileView from "./components/Account/userprofile.view";
 import IsAuthorized from "./components/isAuthorized";
 import IsNotAuthorized from "./components/isNotAuthorized";
 import Layout from "./Layout";
@@ -27,7 +26,9 @@ import AccountSettingPage from "./pages/User/Account/AccountSetting.page";
 import FavoriteRentalsPage from "./pages/User/Account/FavoriteRentals.page";
 import CreateListingPage from "./pages/User/RentalProperty/CreateListing.page";
 import EditPropertyPage from "./pages/User/RentalProperty/EditProperty.page";
+import SavedPropertyList from "./pages/User/RentalProperty/SavedPropertyList";
 import ProfileLayout from "./Profile.Layout";
+import UserLayout from "./User.Layout";
 
 const route = createBrowserRouter([
 	{
@@ -86,7 +87,8 @@ const route = createBrowserRouter([
 				),
 				children: [
 					{
-						path: "profile",
+						// path: "",
+						index: true,
 						Component: ProfilePageView,
 						// loader: async ({ request }) => {
 						// return await axios.get(`https://jsonplaceholder.typicode.com/users/`).then((res) => {
@@ -101,6 +103,27 @@ const route = createBrowserRouter([
 					{
 						path: "changePassword",
 						Component: ChangePasswordView,
+					},
+				],
+			},
+			{
+				path: "user",
+				element: (
+					<LayoutLogged>
+						<UserLayout>
+							<Outlet />
+						</UserLayout>
+					</LayoutLogged>
+				),
+				children: [
+					{
+						path: ":username",
+						Component: UserprofileView,
+						// loader: async ({ request }) => {
+						// return await axios.get(`https://jsonplaceholder.typicode.com/users/`).then((res) => {
+						// 	return res.data;
+						// });
+						// },
 					},
 				],
 			},
@@ -122,10 +145,13 @@ const route = createBrowserRouter([
 						Component: SearchResultsPage, // list of searched properties from a users
 					},
 					{
-						path: ":id",
+						path: "saved",
+						Component: SavedPropertyList,
+					},
+					{
+						path: ":postId",
 						Component: PropertyDetailPage, // property detail page for a specific property from other user
 					},
-
 					{
 						path: "CreateAd",
 						Component: CreateListingPage,
@@ -136,7 +162,7 @@ const route = createBrowserRouter([
 					},
 
 					{
-						path: "rentals",
+						path: "my",
 						Component: PropertyListPage, // list of all user properties from a other user
 					},
 					{
@@ -144,7 +170,7 @@ const route = createBrowserRouter([
 						Component: AccountSettingPage,
 					},
 					{
-						path: "favorites",
+						path: "userpost",
 						Component: FavoriteRentalsPage,
 					},
 				],

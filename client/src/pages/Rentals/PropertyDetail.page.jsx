@@ -1,72 +1,149 @@
-import { Box, Button, chakra, Container, Flex, Heading, Image, List, ListItem, SimpleGrid, Stack, StackDivider, Text, useColorModeValue, VisuallyHidden, VStack } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Avatar, Badge, Box, Button, Container, Heading, List, ListItem, Stack, StackDivider, Text, VStack } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { BiUserPlus } from "react-icons/bi";
 import { BsBookmarkFill } from "react-icons/bs";
-import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
-import { MdLocalShipping } from "react-icons/md";
-import {  Badge, Divider } from '@chakra-ui/react';
-import { useRentalPosts } from "../../hooks/rentalPost";
+import { useQueryClient } from "react-query";
+import { useNavigate, useParams } from "react-router-dom";
+import styled from "styled-components";
 
+import { useRentalPosts } from "../../hooks/rentalPost";
+import { useUser } from "../../hooks/user";
+import capitalize from "../../utils/Capitalize";
+import NumberWithCommas from "../../utils/numberWithCommas";
+
+const GridContainer = styled.div`
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	grid-auto-rows: repeat(auto-fill, minmax(200px, 1fr));
+	grid-gap: 20px;
+`;
 
 const PropertyDetailPage = () => {
+	const { postId } = useParams();
+	const queryClient = useQueryClient();
+	const navigate = useNavigate();
+
+	const {
+		fetchRentalPost,
+		refetchRentalPost,
+		isFetchingRentalPost,
+		isLoadingRentalPost,
+		errorRentalPost,
+		saveRentalPost,
+
+		saveRentalPostData,
+		isSavingRentalPost,
+	} = useRentalPosts(postId);
+	const { follow, followData, refetchFollow, isFollowLoading, isFollowFetching } = useUser();
+
+	useEffect(
+		(postId) => {
+			refetchRentalPost(postId);
+		},
+		[refetchRentalPost],
+	);
+
 	const [isSavedPost, setIsSavePost] = useState(false);
-	const { rentalsPosts, saveRentalPost, isLoading, error } = useRentalPosts();
+	if ((isFetchingRentalPost, isLoadingRentalPost || !fetchRentalPost)) {
+		return <div>Loading...</div>;
+	}
+	const post = fetchRentalPost?.post;
+	const author = fetchRentalPost?.post.author;
+
 	const handleSavePost = () => {
-		setIsSavePost(!isSavedPost);
-		saveRentalPost("1231")
+		saveRentalPost(post.id);
 	};
-	
+
+	const handleFollow = async () => {
+		await follow(author.id);
+	};
+
+	window.scrollTo(0, 0);
+
 	return (
 		<Container maxW={"7xl"} className="p-2 m-4 z-10 w-full md:!w-2/3 overflow-auto ">
 			<div className="flex flex-col">
 				<div className="flex justify-between items-center p-2">
-					<div className="flex flex-col">
-						<span className="text-lg font-bold">Dilamo Wondimu</span>
-						<div className="flex space-x-4">
-							<span className="text-sm font-light">4.2</span>
-							<span className="text-sm font-light">Addis Ababa, Bole</span>
-							<span className="text-sm font-light">dilamo</span>
+					<div
+						onClick={() => {
+							navigate(`/user/${author.username}`);
+						}}
+						className="flex cursor-pointer justify-center items-center space-x-4"
+					>
+						<Avatar name="user" size={"lg"} aria-label="User menu" src={`/api/user/profileimage/${author.username}`} />
+						<div className="flex flex-col">
+							<span className="text-md md:text-lg font-bold">{author.username}</span>
+							<div className="flex flex-col md:flex-row text-xs md:text-sm font-light md:space-x-4">
+								<span>4.2</span>
+								<span className="whitespace-nowrap">{`${author.address[0].region}, ${author.address[0].city}`}</span>
+								<span>{author.firstName}</span>
+							</div>
 						</div>
 					</div>
-					<div onClick={handleSavePost} className="p-2 cursor-pointer">
-						<BsBookmarkFill className={`${isSavedPost ? "text-red-600" : "text-black/70"}  transition-all duration-150 ease-in-out font-bold  text-lg`} size={25} />
-					</div>
-				</div>
-				<div className="flex flex-col md:flex-row justify-evenly space-x-4 w-full h-[50vh] ">
-					<div className="md:w-1/2 w-full flex-1 ">
-						{/* <Image  rounded={"md"} alt={"product image"} src={"https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080"} fit={"cover"} align={"center"} w={"100%"} h={{ base: "100%", sm: "400px", lg: "500px" }} /> */}
-						<Box rounded={"lg"}  className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-					</div>	
-					<div className="md:w-1/2 w-full flex">
-						<div className="md:grid md:grid-cols-3 md:grid-rown-3 w-full gap-4 hidden">
-							<Box rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-							<Box rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-							<Box rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-							<Box rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-							<Box rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-							<Box rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-							<Box rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
+					<div className="flex space-x-2">
+						<Button isLoading={isFollowLoading || isFollowFetching} onClick={handleFollow} colorScheme="messenger">
+							{followData ? followData.follow ? <span className="text-white">Unfollow</span> : <span className="text-white">Follow</span> : fetchRentalPost.isFollowed ? <span className="text-white">Unfollow</span> : <span className="text-white">Follow</span>}
+						</Button>
+
+			
+						<div onClick={handleSavePost} className="p-2  right-2 cursor-pointer top-2 z-[2]">
+							<BsBookmarkFill
+								style={{
+									color: saveRentalPostData ? (saveRentalPostData.isSaved ? "red" : "black") : post.savedBy.length > 0 ? "red" : "black",
+								}}
+								className={` transition-all duration-150 ease-in-out font-bold  text-lg`}
+							/>
 						</div>
 					</div>
 				</div>
+				{post.propertyImages.length > 0 && (
+					<div className="flex flex-col md:flex-row justify-evenly space-x-4 w-full h-[50vh] ">
+						<div className="md:w-1/2 w-full flex-1 ">
+							{console.log(post.propertyImages[0])}
+							<Box rounded={"lg"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage={`url(/api/posts/images/${post.propertyImages[0].image})`} />
+						</div>
+						{post.propertyImages.length > 1 && (
+							<div className="md:w-1/2 w-full flex ">
+								{/* <div className="md:grid md:grid-cols-3 md:grid-rown-3 w-full gap-4 hidden"></div> */}
+								<div
+									style={{
+										width: "100%",
+										display: "grid",
+										gridTemplateColumns: `repeat(${Math.ceil(post.propertyImages.slice(1).length / 2)}, minmax(auto, 1fr))`,
+										gridAutoRows: "repeat(auto-fill, minmax(200px, 1fr))",
+										gridGap: "20px",
+									}}
+								>
+									{/* <GridContainer> */}
+									{post.propertyImages.slice(1).map((image, index) => {
+										return <Box key={index} rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage={`url(/api/posts/images/${image.image})`} />;
+									})}
+									{/* </GridContainer> */}
+								</div>
+							</div>
+						)}
+					</div>
+				)}
 				<Stack w={"full"} spacing={{ base: 6, md: 10 }}>
 					<Box as={"header"}>
 						<Heading lineHeight={1.1} fontWeight={600} fontSize={{ base: "2xl", sm: "4xl", lg: "5xl" }}>
-							Product Title
+							{post.propertyTitle}
 						</Heading>
-						<Text color={useColorModeValue("gray.900", "gray.400")} fontWeight={300} fontSize={"2xl"}>
-							300 birr / month
+
+						<Text color={"gray.900"} fontWeight={300} fontSize={"2xl"}>
+							{`${NumberWithCommas(post.propertyPrice[post.propertyPrice.length - 1].price)} birr / ${post.propertyPrice[post.propertyPrice.length - 1].priceType.toLowerCase()}`}
 						</Text>
 					</Box>
 
-					<Stack spacing={{ base: 4, sm: 6 }} direction={"column"} divider={<StackDivider borderColor={useColorModeValue("gray.200", "gray.600")} />}>
+					<Stack spacing={{ base: 4, sm: 6 }} direction={"column"} divider={<StackDivider borderColor={"gray.200"} />}>
 						<VStack spacing={{ base: 4, sm: 6 }}>
-							<Text color={useColorModeValue("gray.500", "gray.400")} fontSize={"2xl"} fontWeight={"300"}>
-								Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
+							<Text color={"gray.500"} fontSize={"2xl"} fontWeight={"300"}>
+								{post.propertyDescription}
 							</Text>
-							<Text fontSize={"lg"}>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad aliquid amet at delectus doloribus dolorum expedita hic, ipsum maxime modi nam officiis porro, quae, quisquam quos reprehenderit velit? Natus, totam.</Text>
+							{/* <Text fontSize={"lg"}>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad aliquid amet at delectus doloribus dolorum expedita hic, ipsum maxime modi nam officiis porro, quae, quisquam quos reprehenderit velit? Natus, totam.</Text> */}
 						</VStack>
-						<Box>
-							<Text fontSize={{ base: "16px", lg: "18px" }} color={useColorModeValue("yellow.500", "yellow.300")} fontWeight={"500"} textTransform={"uppercase"} mb={"4"}>
+						{/* <Box>
+							<Text fontSize={{ base: "16px", lg: "18px" }} color={"yellow.500"} fontWeight={"500"} textTransform={"uppercase"} mb={"4"}>
 								Features
 							</Text>
 
@@ -81,55 +158,85 @@ const PropertyDetailPage = () => {
 									<ListItem>Small seconds</ListItem>
 								</List>
 							</SimpleGrid>
-						</Box>
+						</Box> */}
 						<Box>
-							<Text fontSize={{ base: "16px", lg: "18px" }} color={useColorModeValue("yellow.500", "yellow.300")} fontWeight={"500"} textTransform={"uppercase"} mb={"4"}>
+							<Text fontSize={{ base: "16px", lg: "18px" }} color={"yellow.500"} fontWeight={"500"} textTransform={"uppercase"} mb={"4"}>
 								Product Details
 							</Text>
 
 							<List spacing={2}>
 								<ListItem>
 									<Text as={"span"} fontWeight={"bold"}>
-										Between lugs:
+										Avalibliity:
 									</Text>{" "}
-									20 mm
+									{post.isAvailable ? (
+										<Badge fontWeight={"bold"} fontSize={"x-small"} p={1} px={2} bg={"green.500"} textColor={"white"} rounded={"full"}>
+											Available
+										</Badge>
+									) : (
+										<Badge fontWeight={"bold"} fontSize={"x-small"} p={1} px={2} bg={"red.500"} textColor={"white"} rounded={"full"}>
+											Not Available
+										</Badge>
+									)}
 								</ListItem>
 								<ListItem>
 									<Text as={"span"} fontWeight={"bold"}>
-										Bracelet:
+										Property Name:
 									</Text>{" "}
-									leather strap
+									<span>{post.propertyTitle}</span>
 								</ListItem>
 								<ListItem>
 									<Text as={"span"} fontWeight={"bold"}>
-										Case:
+										Type:
 									</Text>{" "}
-									Steel
+									<span>{post.propertyType}</span>
 								</ListItem>
 								<ListItem>
 									<Text as={"span"} fontWeight={"bold"}>
-										Case diameter:
+										Quantity:
 									</Text>{" "}
-									42 mm
+									<span>{post.propertyQuantity}</span>
 								</ListItem>
 								<ListItem>
 									<Text as={"span"} fontWeight={"bold"}>
-										Dial color:
+										Address:
 									</Text>{" "}
-									Black
+									<span>{`${post.propertyStreet} ${post.propertyRegion}, ${post.propertyCity}`}</span>
 								</ListItem>
 								<ListItem>
 									<Text as={"span"} fontWeight={"bold"}>
-										Crystal:
+										Maximum Lease Length:
 									</Text>{" "}
-									Domed, scratch‑resistant sapphire crystal with anti‑reflective treatment inside
+									<span>{`${post.maxLeaseLengthValue} ${post.maxLeaseLengthType}`}</span>
 								</ListItem>
 								<ListItem>
 									<Text as={"span"} fontWeight={"bold"}>
-										Water resistance:
+										Minimum Lease Length:
 									</Text>{" "}
-									5 bar (50 metres / 167 feet){" "}
+									<span>{`${post.minLeaseLengthValue} ${post.minLeaseLengthType}`}</span>
 								</ListItem>
+								<ListItem>
+									<div className="flex space-x-2 items-start">
+										<Text as={"span"} fontWeight={"bold"}>
+											Price:
+										</Text>
+										<div className="flex flex-col">
+											{post.propertyPrice.map((price, index) => {
+												return <span key={index}>{`${NumberWithCommas(price.price)} birr / ${price.priceType.toLowerCase()}`}</span>;
+											})}
+										</div>
+									</div>
+								</ListItem>
+								{post.propertyContact.map((contact, index) => {
+									return (
+										<ListItem key={index}>
+											<Text as={"span"} fontWeight={"bold"}>
+												{capitalize(contact.type)}:
+											</Text>{" "}
+											<span>{contact.value}</span>
+										</ListItem>
+									);
+								})}
 							</List>
 						</Box>
 					</Stack>
@@ -140,8 +247,8 @@ const PropertyDetailPage = () => {
 						mt={8}
 						size={"lg"}
 						py={"7"}
-						bg={useColorModeValue("gray.900", "gray.50")}
-						color={useColorModeValue("white", "gray.900")}
+						bg={"gray.900"}
+						color={"white"}
 						textTransform={"uppercase"}
 						_hover={{
 							transform: "translateY(2px)",
@@ -203,7 +310,7 @@ py={{ base: 18, md: 24 }}>
       Automatic Watch
     </Heading>
     <Text
-      color={useColorModeValue('gray.900', 'gray.400')}
+      color={'gray.900'}
       fontWeight={300}
       fontSize={'2xl'}>
       $350.00 USD
@@ -215,12 +322,12 @@ py={{ base: 18, md: 24 }}>
     direction={'column'}
     divider={
       <StackDivider
-        borderColor={useColorModeValue('gray.200', 'gray.600')}
+        borderColor={'gray.200'}
       />
     }>
     <VStack spacing={{ base: 4, sm: 6 }}>
       <Text
-        color={useColorModeValue('gray.500', 'gray.400')}
+        color={'gray.500'}
         fontSize={'2xl'}
         fontWeight={'300'}>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
@@ -236,7 +343,7 @@ py={{ base: 18, md: 24 }}>
     <Box>
       <Text
         fontSize={{ base: '16px', lg: '18px' }}
-        color={useColorModeValue('yellow.500', 'yellow.300')}
+        color={'yellow.500'}
         fontWeight={'500'}
         textTransform={'uppercase'}
         mb={'4'}>
@@ -259,7 +366,7 @@ py={{ base: 18, md: 24 }}>
     <Box>
       <Text
         fontSize={{ base: '16px', lg: '18px' }}
-        color={useColorModeValue('yellow.500', 'yellow.300')}
+        color={'yellow.500'}
         fontWeight={'500'}
         textTransform={'uppercase'}
         mb={'4'}>
@@ -320,9 +427,8 @@ py={{ base: 18, md: 24 }}>
     mt={8}
     size={'lg'}
     py={'7'}
-    bg={useColorModeValue('gray.900', 'gray.50')}
-    color={useColorModeValue('white', 'gray.900')}
-    textTransform={'uppercase'}
+    bg={'gray.900'}
+    color={'white'0    textTransform={'uppercase'}
     _hover={{
       transform: 'translateY(2px)',
       boxShadow: 'lg',
