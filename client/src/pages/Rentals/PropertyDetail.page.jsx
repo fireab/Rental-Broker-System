@@ -6,6 +6,7 @@ import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
+import SkeletonPage from "../../components/common/skeleton.page";
 import { useRentalPosts } from "../../hooks/rentalPost";
 import { useUser } from "../../hooks/user";
 import capitalize from "../../utils/Capitalize";
@@ -45,7 +46,7 @@ const PropertyDetailPage = () => {
 
 	const [isSavedPost, setIsSavePost] = useState(false);
 	if ((isFetchingRentalPost, isLoadingRentalPost || !fetchRentalPost)) {
-		return <div>Loading...</div>;
+		return <SkeletonPage page="rental detail" />;
 	}
 	const post = fetchRentalPost?.post;
 	const author = fetchRentalPost?.post.author;
@@ -66,7 +67,11 @@ const PropertyDetailPage = () => {
 				<div className="flex justify-between items-center p-2">
 					<div
 						onClick={() => {
-							navigate(`/user/${author.username}`);
+							if (author.id === fetchRentalPost.requestUserId) {
+								navigate(`/user`);
+							} else {
+								navigate(`/user/${author.username}`);
+							}
 						}}
 						className="flex cursor-pointer justify-center items-center space-x-4"
 					>
@@ -81,11 +86,12 @@ const PropertyDetailPage = () => {
 						</div>
 					</div>
 					<div className="flex space-x-2">
-						<Button isLoading={isFollowLoading || isFollowFetching} onClick={handleFollow} colorScheme="messenger">
-							{followData ? followData.follow ? <span className="text-white">Unfollow</span> : <span className="text-white">Follow</span> : fetchRentalPost.isFollowed ? <span className="text-white">Unfollow</span> : <span className="text-white">Follow</span>}
-						</Button>
+						{author.id !== fetchRentalPost.requestUserId && (
+							<Button isLoading={isFollowLoading || isFollowFetching} onClick={handleFollow} colorScheme="messenger">
+								{followData ? followData.follow ? <span className="text-white">Unfollow</span> : <span className="text-white">Follow</span> : fetchRentalPost.isFollowed ? <span className="text-white">Unfollow</span> : <span className="text-white">Follow</span>}
+							</Button>
+						)}
 
-			
 						<div onClick={handleSavePost} className="p-2  right-2 cursor-pointer top-2 z-[2]">
 							<BsBookmarkFill
 								style={{
@@ -99,7 +105,6 @@ const PropertyDetailPage = () => {
 				{post.propertyImages.length > 0 && (
 					<div className="flex flex-col md:flex-row justify-evenly space-x-4 w-full h-[50vh] ">
 						<div className="md:w-1/2 w-full flex-1 ">
-							{console.log(post.propertyImages[0])}
 							<Box rounded={"lg"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage={`url(/api/posts/images/${post.propertyImages[0].image})`} />
 						</div>
 						{post.propertyImages.length > 1 && (
@@ -114,11 +119,9 @@ const PropertyDetailPage = () => {
 										gridGap: "20px",
 									}}
 								>
-									{/* <GridContainer> */}
 									{post.propertyImages.slice(1).map((image, index) => {
 										return <Box key={index} rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage={`url(/api/posts/images/${image.image})`} />;
 									})}
-									{/* </GridContainer> */}
 								</div>
 							</div>
 						)}
@@ -140,25 +143,8 @@ const PropertyDetailPage = () => {
 							<Text color={"gray.500"} fontSize={"2xl"} fontWeight={"300"}>
 								{post.propertyDescription}
 							</Text>
-							{/* <Text fontSize={"lg"}>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad aliquid amet at delectus doloribus dolorum expedita hic, ipsum maxime modi nam officiis porro, quae, quisquam quos reprehenderit velit? Natus, totam.</Text> */}
 						</VStack>
-						{/* <Box>
-							<Text fontSize={{ base: "16px", lg: "18px" }} color={"yellow.500"} fontWeight={"500"} textTransform={"uppercase"} mb={"4"}>
-								Features
-							</Text>
 
-							<SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
-								<List spacing={2}>
-									<ListItem>Chronograph</ListItem>
-									<ListItem>Master Chronometer Certified</ListItem> <ListItem>Tachymeter</ListItem>
-								</List>
-								<List spacing={2}>
-									<ListItem>Anti‑magnetic</ListItem>
-									<ListItem>Chronometer</ListItem>
-									<ListItem>Small seconds</ListItem>
-								</List>
-							</SimpleGrid>
-						</Box> */}
 						<Box>
 							<Text fontSize={{ base: "16px", lg: "18px" }} color={"yellow.500"} fontWeight={"500"} textTransform={"uppercase"} mb={"4"}>
 								Product Details
@@ -269,177 +255,3 @@ const PropertyDetailPage = () => {
 };
 
 export default PropertyDetailPage;
-
-{
-	/* <div className="w-1/2 h-[50vh] bg-red-500">
-					<div className="grid grid-cols-3 grid-rown-3 gap-4 bg-blue-700">
-					<Image rounded={"2xl"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-
-            <Box rounded={"2xl"} overflow={"clip"} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-						<Box rounded={"2xl"} overflow={"clip"} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-						<Box rounded={"2xl"} overflow={"clip"} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-						<Box rounded={"2xl"} overflow={"clip"} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" /> 
-					</div>
-				</div> 
-      */
-}
-{
-	/* <SimpleGrid
-columns={{ base: 1, lg: 2 }}
-spacing={{ base: 8, md: 10 }}
-py={{ base: 18, md: 24 }}>
-<Flex>
-  <Image
-    rounded={'md'}
-    alt={'product image'}
-    src={
-      'https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080'
-    }
-    fit={'cover'}
-    align={'center'}
-    w={'100%'}
-    h={{ base: '100%', sm: '400px', lg: '500px' }}
-  />
-</Flex>
-<Stack spacing={{ base: 6, md: 10 }}>
-  <Box as={'header'}>
-    <Heading
-      lineHeight={1.1}
-      fontWeight={600}
-      fontSize={{ base: '2xl', sm: '4xl', lg: '5xl' }}>
-      Automatic Watch
-    </Heading>
-    <Text
-      color={'gray.900'}
-      fontWeight={300}
-      fontSize={'2xl'}>
-      $350.00 USD
-    </Text>
-  </Box>
-
-  <Stack
-    spacing={{ base: 4, sm: 6 }}
-    direction={'column'}
-    divider={
-      <StackDivider
-        borderColor={'gray.200'}
-      />
-    }>
-    <VStack spacing={{ base: 4, sm: 6 }}>
-      <Text
-        color={'gray.500'}
-        fontSize={'2xl'}
-        fontWeight={'300'}>
-        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-        diam nonumy eirmod tempor invidunt ut labore
-      </Text>
-      <Text fontSize={'lg'}>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad
-        aliquid amet at delectus doloribus dolorum expedita hic, ipsum
-        maxime modi nam officiis porro, quae, quisquam quos
-        reprehenderit velit? Natus, totam.
-      </Text>
-    </VStack>
-    <Box>
-      <Text
-        fontSize={{ base: '16px', lg: '18px' }}
-        color={'yellow.500'}
-        fontWeight={'500'}
-        textTransform={'uppercase'}
-        mb={'4'}>
-        Features
-      </Text>
-
-      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
-        <List spacing={2}>
-          <ListItem>Chronograph</ListItem>
-          <ListItem>Master Chronometer Certified</ListItem>{' '}
-          <ListItem>Tachymeter</ListItem>
-        </List>
-        <List spacing={2}>
-          <ListItem>Anti‑magnetic</ListItem>
-          <ListItem>Chronometer</ListItem>
-          <ListItem>Small seconds</ListItem>
-        </List>
-      </SimpleGrid>
-    </Box>
-    <Box>
-      <Text
-        fontSize={{ base: '16px', lg: '18px' }}
-        color={'yellow.500'}
-        fontWeight={'500'}
-        textTransform={'uppercase'}
-        mb={'4'}>
-        Product Details
-      </Text>
-
-      <List spacing={2}>
-        <ListItem>
-          <Text as={'span'} fontWeight={'bold'}>
-            Between lugs:
-          </Text>{' '}
-          20 mm
-        </ListItem>
-        <ListItem>
-          <Text as={'span'} fontWeight={'bold'}>
-            Bracelet:
-          </Text>{' '}
-          leather strap
-        </ListItem>
-        <ListItem>
-          <Text as={'span'} fontWeight={'bold'}>
-            Case:
-          </Text>{' '}
-          Steel
-        </ListItem>
-        <ListItem>
-          <Text as={'span'} fontWeight={'bold'}>
-            Case diameter:
-          </Text>{' '}
-          42 mm
-        </ListItem>
-        <ListItem>
-          <Text as={'span'} fontWeight={'bold'}>
-            Dial color:
-          </Text>{' '}
-          Black
-        </ListItem>
-        <ListItem>
-          <Text as={'span'} fontWeight={'bold'}>
-            Crystal:
-          </Text>{' '}
-          Domed, scratch‑resistant sapphire crystal with anti‑reflective
-          treatment inside
-        </ListItem>
-        <ListItem>
-          <Text as={'span'} fontWeight={'bold'}>
-            Water resistance:
-          </Text>{' '}
-          5 bar (50 metres / 167 feet){' '}
-        </ListItem>
-      </List>
-    </Box>
-  </Stack>
-
-  <Button
-    rounded={'none'}
-    w={'full'}
-    mt={8}
-    size={'lg'}
-    py={'7'}
-    bg={'gray.900'}
-    color={'white'0    textTransform={'uppercase'}
-    _hover={{
-      transform: 'translateY(2px)',
-      boxShadow: 'lg',
-    }}>
-    Add to cart
-  </Button>
-
-  <Stack direction="row" alignItems="center" justifyContent={'center'}>
-    <MdLocalShipping />
-    <Text>2-3 business days delivery</Text>
-  </Stack>
-</Stack>
-</SimpleGrid> */
-}

@@ -4,7 +4,7 @@ import React from "react";
 
 import capitalize from "../../utils/Capitalize";
 
-const InputFieldSelect = ({ label, leftIcon, rightIcon, options,defaultValue, ...props }) => {
+const InputFieldSelect = ({ label, leftIcon, rightIcon, options,defaultValue, del,...props }) => {
 	const [field, meta] = useField(props);
 	
 
@@ -13,7 +13,7 @@ const InputFieldSelect = ({ label, leftIcon, rightIcon, options,defaultValue, ..
 			<FormLabel fontSize={"sm"}>
 				<span className="whitespace-nowrap">{capitalize(label)}</span>
 			</FormLabel>
-			<InputGroup size="lg" className="bg-white/40 ">
+			<InputGroup size="lg" className="bg-white/40 flex justify-center space-x-2 ">
 				{leftIcon && <InputLeftElement>{leftIcon}</InputLeftElement>}
 				<Select  fontSize={"sm"} color={"black"} {...field} {...props} className="border-[0.8px !important] border-[#2b6aa0]" _placeholder={{ color: "red", fontSize: "sm" }} spellCheck={false} autoComplete="off" 
 				>
@@ -25,7 +25,7 @@ const InputFieldSelect = ({ label, leftIcon, rightIcon, options,defaultValue, ..
 						);
 					})}
 				</Select>
-				{rightIcon && <InputRightElement>{rightIcon}</InputRightElement>}
+				{rightIcon}
 			</InputGroup>
 			<FormErrorMessage>{meta.error}</FormErrorMessage>
 		</FormControl>

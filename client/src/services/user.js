@@ -10,7 +10,6 @@ export const editUserProfile = async (userData) => {
 };
 
 export const fetchUserProfileByUsername = async (username) => {
-	console.log(username);
 	const response = await axios.get(`/api/user/${username.queryKey[1]}`);
 	return response.data;
 };

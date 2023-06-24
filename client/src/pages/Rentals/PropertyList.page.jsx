@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 
 import PropertyCard from "../../components/RentalProperty/PropertyCard";
 import { useRentalPosts } from "../../hooks/rentalPost";
+import SkeletonPage from "../../components/common/skeleton.page";
 
 const PropertyListPage = (props) => {
 
@@ -18,7 +19,7 @@ const PropertyListPage = (props) => {
 		<div>
 			<div className="min-h-screen">
 				{isLoadingUserPosts || isFetchingUserPosts || !userPosts ? (
-					<div className="h-full w-full flex justify-center items-center">Loading...</div>
+					<SkeletonPage page="rentals"/>
 				) : userPosts.length > 0 ? (
 					<div className="grid grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
 						{userPosts &&

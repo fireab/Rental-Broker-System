@@ -42,7 +42,6 @@ function ProfileImage() {
 			<FilePond
 				oninit={handleInit}
 				onChange={(fileItems) => {
-					console.log(files);
 				}}
                 imageResizeUpscale={true}
 				dropOnPage: false
@@ -70,8 +69,6 @@ function ProfileImage() {
 				// server="/api/user/profileimage"
 				// console out the returned server response
 				onprocessfile={(error, filex) => {
-					console.log(filex.serverId);
-					console.log(files);
 				}}
 				server="/api/user/profileimage"
 				styleLoadIndicatorPosition={"center bottom"}

@@ -24,8 +24,11 @@ import RentalsPage from "./pages/Rentals/Rentals.page";
 import SearchResultsPage from "./pages/Rentals/SearchResults.page";
 import AccountSettingPage from "./pages/User/Account/AccountSetting.page";
 import FavoriteRentalsPage from "./pages/User/Account/FavoriteRentals.page";
+import FollowersPage from "./pages/User/Account/Followers.page";
+import FollowingPage from "./pages/User/Account/Following.page";
 import CreateListingPage from "./pages/User/RentalProperty/CreateListing.page";
 import EditPropertyPage from "./pages/User/RentalProperty/EditProperty.page";
+import RequestRental from "./pages/User/RentalProperty/Request.rental";
 import SavedPropertyList from "./pages/User/RentalProperty/SavedPropertyList";
 import ProfileLayout from "./Profile.Layout";
 import UserLayout from "./User.Layout";
@@ -75,6 +78,46 @@ const route = createBrowserRouter([
 			{
 				index: true,
 				element: <LayoutLogged>Homepage</LayoutLogged>,
+			},
+			{
+				path: "followers",
+				element: (
+					<LayoutLogged>
+						<FollowersPage />
+					</LayoutLogged>
+				),
+			},
+			{
+				path: "following",
+				element: (
+					<LayoutLogged>
+						<FollowingPage />
+					</LayoutLogged>
+				),
+			},
+			{
+				path: "requests",
+				element: (
+					<LayoutLogged>
+						<RequestRental />
+					</LayoutLogged>
+				),
+			},
+			{
+				path: "report",
+				element: (
+					<LayoutLogged>
+						<h1>Report</h1>
+					</LayoutLogged>
+				),
+			},
+			{
+				path: "report",
+				element: (
+					<LayoutLogged>
+						<h1>help</h1>
+					</LayoutLogged>
+				),
 			},
 			{
 				path: "user",

@@ -74,7 +74,6 @@ const RegisterPage = () => {
 				setActiveStep(activeStep + 1);
 			}
 		} else {
-			console.log("values", values);
 			await registerUser(values);
 			navigate('/rentals');
 		}

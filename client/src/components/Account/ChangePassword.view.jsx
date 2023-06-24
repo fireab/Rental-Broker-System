@@ -1,10 +1,11 @@
 import { Button } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
+import { useUser } from "../../hooks/user";
 import { changePasswordValidationSchema as validationSchema } from "../../utils/validation";
 import InputField from "../RentalProperty/InputField";
-import { useUser } from "../../hooks/user";
-import { useNavigate } from "react-router-dom";
 
 const ChangePasswordView = () => {
 	const { changeUserPassword, isChangeUserPasswordFetching } = useUser();
@@ -17,7 +18,6 @@ const ChangePasswordView = () => {
 	const handelSubmit = async (values) => {
 		// alert(JSON.stringify(values, null, 2));
 		const res = await changeUserPassword(values)
-		console.log(res)
 		navigate("/user/profile");
 		
 	};

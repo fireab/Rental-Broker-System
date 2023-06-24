@@ -29,9 +29,10 @@ export const useUser = (params) => {
 
 
     const followUserAction = useMutation(followUser, {
-        // enabled: false,
         onSuccess: (data) => {
-            console.log(data, "followed or not");
+            queryClient.invalidateQueries(["follow",params]);
+            // queryClient.setQueryData(["follow",params], data);
+            userFollowers.refetch();
             return data;
         }
     });
@@ -66,7 +67,6 @@ export const useUser = (params) => {
         //
         follow: followUserAction.mutateAsync,
         followData: followUserAction.data,
-        refetchFollow: followUserAction.refetch,
         isFollowLoading: followUserAction.isLoading,
         isFollowFetching: followUserAction.isFetching,
 
@@ -74,6 +74,7 @@ export const useUser = (params) => {
         // follwers
 
         followers: userFollowers.data,
+        refetchFollowers: userFollowers.refetch,
         isFollowersLoading: userFollowers.isLoading,
         isFollowersFetching: userFollowers.isFetching,
 

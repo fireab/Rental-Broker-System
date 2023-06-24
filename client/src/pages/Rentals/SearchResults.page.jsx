@@ -10,6 +10,7 @@ import capitalize from "../../utils/Capitalize";
 import { cities, Price_Type, regions } from "../../utils/list";
 import NumberWithCommas from "../../utils/numberWithCommas";
 import InputField from "./../../components/Authentication/InputField";
+import SkeletonPage from "./../../components/common/skeleton.page";
 import InputFieldSelect from "./../../components/RentalProperty/InputField.select";
 
 const SearchResultsPage = () => {
@@ -219,14 +220,18 @@ const SearchResultsPage = () => {
 					)}
 				</Formik>
 			</div>
-			{!(isLoadingSearchedPosts || refetchSearchedPosts || !searchedPosts) ? (
-				<h1>Loading</h1>
+			{isLoadingSearchedPosts || isRefetchingSearchedPosts || !searchedPosts ? (
+				<SkeletonPage page="rentals" />
+			) : searchedPosts.length === 0 ? (
+				<div className="flex flex-col items-center justify-center h-[50vh]">
+					<div className="text-2xl font-bold">No results found</div>
+					<div className="text-lg font-bold">Try different keywords</div>
+				</div>
 			) : (
 				<div className="grid grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
 					{searchedPosts?.map((post, index) => (
 						<PropertyCard key={post.id} propertyImages={post.propertyImages} propertyTitle={post.propertyTitle} propertyPrice={post.propertyPrice} propertyType={post.propertyType} propertyDescription={post.propertyDescription} propertyContact={post.propertyContact} propertyRegion={post.propertyRegion} propertyCity={post.propertyCity} propertyStreet={post.propertyStreet} maxLeaseLengthValue={post.maxLeaseLengthValue} maxLeaseLengthType={post.maxLeaseLengthType} minLeaseLengthValue={post.minLeaseLengthValue} minLeaseLengthType={post.minLeaseLengthType} propertyLeaseTerm={post.propertyLeaseTerm} authorId={post.authorId} isAvailable={post.isAvailable} propertyQuantity={post.propertyQuantity} savedBy={post.savedBy} postId={post.id} />
 					))}
-					{/* <PropertyCard image="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" title="Property 1" price="1000" />  */}
 				</div>
 			)}
 		</div>

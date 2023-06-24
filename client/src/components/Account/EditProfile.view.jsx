@@ -25,13 +25,6 @@ const EditProfileView = () => {
 		refetchUserProfile();
 	}, [refetchUserProfile]);
 
-	// useEffect(() => {
-	// 	if (setupOTPSuccess) {
-	// 		onOTPClose();
-	// 		editUserProfile({ ...getUserProfile, phoneNumber: getUserProfile.phoneNumber });
-	// 	}
-	// },[phoneisVerified])
-
 	if (isGetUserProfileLoading || isGetUserProfileFetching || !getUserProfile) {
 		return <div>Loading...</div>;
 	}
