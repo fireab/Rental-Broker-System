@@ -14,6 +14,10 @@ const {
   getOthersPosts,
   editPost,
   getSuggested,
+  addrequest,
+  suggest,
+  getRequests,
+  getMyRequests,
 } = require("../controllers/postController.js");
 
 const authenticateUser = require("../middleware/autorization.js");
@@ -23,7 +27,11 @@ const router = express.Router();
 
 // router.post("/addpost", authenticateUser, upload.array("images"), addPost);
 router.post("/addpost", authenticateUser, addPost);
+router.post("/request", authenticateUser, addrequest);
+router.get("/requests", authenticateUser, getRequests);
+router.get("/requests/my", authenticateUser, getMyRequests);
 router.get("/getsuggested", authenticateUser, getSuggested);
+router.get("/getposts", authenticateUser, suggest);
 router.get("/getposts", authenticateUser, getPosts);
 router.get("/savedposts", authenticateUser, getSavedPosts);
 router.get("/userposts", authenticateUser, getMyPosts);

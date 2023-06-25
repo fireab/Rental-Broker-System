@@ -63,6 +63,58 @@ const addPost = async (req, res) => {
   }
 };
 
+const addrequest = async (req, res) => {
+  try {
+    console.log(req.body);
+    // Extract data from request body
+    const {
+      propertyTitle,
+      propertyType,
+      propertyDescription,
+      region,
+      city,
+      propertyAddress,
+      // propertyQuantity,
+      maxLeaseLength,
+      // minLeaseLength,
+      propertyImages,
+
+      // propertyPrice,
+      propertyContact,
+    } = req.body;
+
+    const newPost = await prisma.Request.create({
+      data: {
+        RequestTitle: propertyTitle,
+        RequestType: propertyType,
+        RequestDescription: propertyDescription,
+        RequestRegion: region,
+        RequestCity: city,
+        propertyStreet: propertyAddress,
+        maxLeaseLengthValue: maxLeaseLength.value,
+        maxLeaseLengthType: maxLeaseLength.type,
+        authorId: req.userInfo.id,
+        propertyImages: {
+          create: { image: propertyImages },
+        },
+        propertyContact: {
+          create: propertyContact,
+        },
+      },
+      select: {
+        RequestTitle: true,
+        RequestDescription: true,
+        propertyImages: true,
+      },
+    });
+    console.log(newPost);
+    return res.status(200).json(newPost);
+  } catch (error) {
+    res.status(500).json("Internal server error");
+    console.log(error);
+  }
+};
+
 const getPosts = async (req, res) => {
   try {
     const { propertyType, region, city } = req.query;
@@ -108,6 +160,269 @@ const getPosts = async (req, res) => {
     if (allposts.length === 0) return res.status(200).json([]);
     // console.log(allposts);
     return res.status(200).json(allposts);
+  } catch (error) {
+    console.log(error);
+    res.json("Internal server error");
+  }
+};
+
+const getRequests = async (req, res) => {
+  try {
+    const allposts = await prisma.Request.findMany({
+      select: {
+        id: true,
+        RequestTitle: true,
+        RequestType: true,
+        maxLeaseLengthValue: true,
+        maxLeaseLengthType: true,
+        RequestDescription: true,
+        RequestRegion: true,
+        RequestCity: true,
+        propertyImages: true,
+        propertyContact: true,
+        propertyImages: true,
+        author: {
+          select: {
+            id: true,
+            username: true,
+            firstName: true,
+            lastName: true,
+            image: true,
+            phoneNumber: true,
+          },
+        },
+      },
+    });
+    if (allposts.length === 0) return res.status(200).json([]);
+    // console.log(allposts);
+    console.log(allposts);
+    return res.status(200).json(allposts);
+  } catch (error) {
+    console.log(error);
+    res.json("Internal server error");
+  }
+};
+const getMyRequests = async (req, res) => {
+  try {
+    const allposts = await prisma.Request.findMany({
+      where: { authorId: req.userInfo.id },
+      select: {
+        id: true,
+        RequestTitle: true,
+        RequestType: true,
+        maxLeaseLengthValue: true,
+        maxLeaseLengthType: true,
+        RequestDescription: true,
+        RequestRegion: true,
+        RequestCity: true,
+        propertyImages: true,
+        propertyContact: true,
+        propertyImages: true,
+        authorId: true,
+        users: true,
+      },
+    });
+    if (allposts.length === 0) return res.status(200).json([]);
+    // console.log(allposts);
+    console.log(allposts);
+    return res.status(200).json(allposts);
+  } catch (error) {
+    console.log(error);
+    res.json("Internal server error");
+  }
+};
+// const suggest = async (req, res) => {
+//   try {
+//     const { propertyType, region, city } = req.query;
+
+//     const filters = {};
+//     if (region) filters.propertyRegion = region;
+//     if (city) filters.propertyCity = city;
+//     if (propertyType) filters.propertyType = { in: propertyType };
+
+//     const followingUsers = await prisma.users
+//       .findUnique({
+//         where: { id: req.userInfo.id },
+//       })
+//       .following();
+
+//     const followingUserIds = followingUsers.map((user) => user.followingId);
+
+//     console.log("id", followingUserIds);
+
+//     const followingPosts = await prisma.posts.findMany({
+//       where: {
+//         authorId: { in: followingUserIds },
+//         ...filters,
+//       },
+
+//       select: {
+//         id: true,
+//         propertyTitle: true,
+//         propertyDescription: true,
+//         propertyType: true,
+//         postType: true,
+//         propertyRegion: true,
+//         propertyCity: true,
+//         propertyStreet: true,
+//         maxLeaseLengthValue: true,
+//         maxLeaseLengthType: true,
+//         minLeaseLengthValue: true,
+//         minLeaseLengthType: true,
+//         propertyLeaseTerm: true,
+//         authorId: true,
+//         isAvailable: true,
+//         propertyQuantity: true,
+//         propertyImages: true,
+//         propertyContact: true,
+//         propertyPrice: true,
+//         savedBy: {
+//           where: { usersId: req.userInfo.id },
+//           select: {
+//             usersId: true,
+//           },
+//         },
+//       },
+//     });
+
+//     console.log("following Post", followingPosts);
+
+//     const otherPosts = await prisma.posts.findMany({
+//       where: {
+//         authorId: { notIn: followingUserIds },
+//         ...filters,
+//       },
+//       select: {
+//         id: true,
+//         propertyTitle: true,
+//         propertyDescription: true,
+//         propertyType: true,
+//         postType: true,
+//         propertyRegion: true,
+//         propertyCity: true,
+//         propertyStreet: true,
+//         maxLeaseLengthValue: true,
+//         maxLeaseLengthType: true,
+//         minLeaseLengthValue: true,
+//         minLeaseLengthType: true,
+//         propertyLeaseTerm: true,
+//         authorId: true,
+//         isAvailable: true,
+//         propertyQuantity: true,
+//         propertyImages: true,
+//         propertyContact: true,
+//         propertyPrice: true,
+//         savedBy: {
+//           where: { usersId: req.userInfo.id },
+//           select: {
+//             usersId: true,
+//           },
+//         },
+//       },
+//     });
+//     // console.log("following Pots", otherPosts);
+
+//     const suggestedPosts = [...followingPosts, ...otherPosts];
+
+//     return res.status(200).json(suggestedPosts);
+//   } catch (error) {
+//     console.log(error);
+//     res.json("Internal server error");
+//   }
+// };
+
+const suggest = async (req, res) => {
+  try {
+    const { propertyType, region, city } = req.query;
+
+    const filters = {};
+    if (region) filters.propertyRegion = region;
+    if (city) filters.propertyCity = city;
+    if (propertyType) filters.propertyType = { in: propertyType };
+
+    const followingUsers = await prisma.users
+      .findUnique({
+        where: { id: req.userInfo.id },
+      })
+      .following();
+
+    const followingUserIds = followingUsers.map((user) => user.followingId);
+
+    const followingPosts = await prisma.posts.findMany({
+      where: {
+        authorId: { in: followingUserIds },
+        ...filters,
+      },
+      orderBy: { createdAt: "desc" }, // Order following posts by createdAt in descending order
+      select: {
+        // Select relevant fields
+        id: true,
+        propertyTitle: true,
+        propertyDescription: true,
+        propertyType: true,
+        postType: true,
+        propertyRegion: true,
+        propertyCity: true,
+        propertyStreet: true,
+        maxLeaseLengthValue: true,
+        maxLeaseLengthType: true,
+        minLeaseLengthValue: true,
+        minLeaseLengthType: true,
+        propertyLeaseTerm: true,
+        authorId: true,
+        isAvailable: true,
+        propertyQuantity: true,
+        propertyImages: true,
+        propertyContact: true,
+        propertyPrice: true,
+        savedBy: {
+          where: { usersId: req.userInfo.id },
+          select: {
+            usersId: true,
+          },
+        },
+      },
+    });
+
+    const otherPosts = await prisma.posts.findMany({
+      where: {
+        authorId: { notIn: followingUserIds },
+        ...filters,
+      },
+      orderBy: { createdAt: "desc" }, // Order other posts by createdAt in descending order
+      select: {
+        // Select relevant fields
+        id: true,
+        propertyTitle: true,
+        propertyDescription: true,
+        propertyType: true,
+        postType: true,
+        propertyRegion: true,
+        propertyCity: true,
+        propertyStreet: true,
+        maxLeaseLengthValue: true,
+        maxLeaseLengthType: true,
+        minLeaseLengthValue: true,
+        minLeaseLengthType: true,
+        propertyLeaseTerm: true,
+        authorId: true,
+        isAvailable: true,
+        propertyQuantity: true,
+        propertyImages: true,
+        propertyContact: true,
+        propertyPrice: true,
+        savedBy: {
+          where: { usersId: req.userInfo.id },
+          select: {
+            usersId: true,
+          },
+        },
+      },
+    });
+
+    const suggestedPosts = [...followingPosts, ...otherPosts];
+
+    return res.status(200).json(suggestedPosts);
   } catch (error) {
     console.log(error);
     res.json("Internal server error");
@@ -534,7 +849,8 @@ const deletePost = async (req, res) => {
 const reportPost = async (req, res) => {
   try {
     const { postId } = req.params;
-    const { reason, reportType } = req.body;
+    const { Report_Description, Report_Type } = req.body;
+    console.log(req.params);
 
     // Check if the post exists
     const post = await prisma.posts.findUnique({
@@ -547,14 +863,14 @@ const reportPost = async (req, res) => {
     // Create a report
     const report = await prisma.report.create({
       data: {
-        reason,
+        reason: Report_Description,
         postId: postId,
-        reportType,
+        reportType: Report_Type,
         reporterId: req.userInfo.id,
       },
     });
-
-    res.status(201).json(report);
+    console.log(report);
+    return res.status(200).json(report);
   } catch (error) {
     res.status(500).json("Internal server error");
     console.log();
@@ -585,7 +901,7 @@ const savePost = async (req, res) => {
 
       return res
         .status(200)
-        .json({ message: "unsave succesful", isSaved: false });
+        .json({ message: "unsave succesful", isSaved: false, postId });
     }
     const save = await prisma.savedPosts.create({
       data: {
@@ -594,7 +910,7 @@ const savePost = async (req, res) => {
       },
     });
 
-    return res.status(200).json({ save, isSaved: true });
+    return res.status(200).json({ save, isSaved: true, postId });
   } catch (error) {
     res.status(500).json("Internal server error");
   }
@@ -967,4 +1283,8 @@ module.exports = {
   getOthersPosts,
   editPost,
   getSuggested,
+  addrequest,
+  suggest,
+  getRequests,
+  getMyRequests,
 };
