@@ -31,9 +31,12 @@ model Users {
   address                   Address[]
   savedPosts                SavedPosts[]
   posts                     Posts[]
+  ///new fild
+  isBanned                  Boolean        @default(true)
   following                 UserFollower[] @relation("Following")
   followers                 UserFollower[] @relation("Followers")
   Report                    Report[]
+  Request                   Request[]
 }
 
 model UserFollower {
@@ -68,12 +71,14 @@ model Address {
 }
 
 model SavedPosts {
-  id      String   @id @default(uuid())
-  Users   Users?   @relation(fields: [usersId], references: [id])
-  usersId String?
-  Posts   Posts?   @relation(fields: [postsId], references: [id])
-  postsId String?
-  savedAt DateTime @default(now())
+  id        String   @id @default(uuid())
+  Users     Users?   @relation(fields: [usersId], references: [id])
+  usersId   String?
+  Posts     Posts?   @relation(fields: [postsId], references: [id])
+  postsId   String?
+  savedAt   DateTime @default(now())
+  Request   Request? @relation(fields: [requestId], references: [id])
+  requestId String?
 }
 
 model Posts {
@@ -93,9 +98,12 @@ model Posts {
   author              Users?             @relation(fields: [authorId], references: [id])
   authorId            String?
   createdAt           DateTime           @default(now())
+  ///new fild
+  isBanned            Boolean            @default(false)
   updatedAt           DateTime           @updatedAt
   postExpiration      DateTime?
   isAvailable         Boolean            @default(true)
+  rate                Int                @default(0)
   propertyQuantity    Int?
   propertyContact     propertyContacts[]
   propertyPrice       propertyPrices[]
@@ -104,44 +112,97 @@ model Posts {
   reports             Report[]
 }
 
+model Request {
+  id                 String  @id @default(uuid())
+  RequestTitle       String  @db.VarChar(255)
+  RequestDescription String  @db.Text
+  RequestType        String?
+  postType           String  @default("requst")
+  RequestRegion      String?
+  RequestCity        String?
+  propertyStreet     String?
+
+  maxLeaseLengthValue Int?
+  maxLeaseLengthType  String?
+  minLeaseLengthValue Int?
+  minLeaseLengthType  String?
+  author              Users?             @relation(fields: [authorId], references: [id])
+  authorId            String?
+  createdAt           DateTime           @default(now())
+  ///new fild
+  isBanned            Boolean            @default(false)
+  updatedAt           DateTime           @updatedAt
+  postExpiration      DateTime?
+  propertyQuantity    Int?
+  propertyContact     propertyContacts[]
+  propertyPrice       propertyPrices[]
+  propertyImages      PostImages[]
+  reports             Report[]
+  SavedPosts          SavedPosts[]
+}
+
 model Report {
   id         String   @id @default(uuid())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   reason     String
+  ///new fild
+  reportType String
   postId     String
   post       Posts    @relation(fields: [postId], references: [id])
   reporterId String
   reporter   Users    @relation(fields: [reporterId], references: [id])
+  Request    Request? @relation(fields: [requestId], references: [id])
+  requestId  String?
 }
 
 model propertyContacts {
-  id      String  @id @default(uuid())
-  type    String?
-  value   String?
-  Posts   Posts?  @relation(fields: [postsId], references: [id])
-  postsId String?
+  id        String   @id @default(uuid())
+  type      String?
+  value     String?
+  Posts     Posts?   @relation(fields: [postsId], references: [id])
+  postsId   String?
+  Request   Request? @relation(fields: [requestId], references: [id])
+  requestId String?
 }
 
 model propertyPrices {
-  id        String  @id @default(uuid())
+  id        String   @id @default(uuid())
   price     Decimal
   priceType String
-  Posts     Posts?  @relation(fields: [postsId], references: [id])
+  Posts     Posts?   @relation(fields: [postsId], references: [id])
   postsId   String?
+  Request   Request? @relation(fields: [requestId], references: [id])
+  requestId String?
 }
 
 model PostImages {
-  id      String  @id @default(uuid())
-  image   String  @db.VarChar(255)
-  Posts   Posts?  @relation(fields: [postsId], references: [id])
-  postsId String?
+  id        String   @id @default(uuid())
+  image     String   @db.VarChar(255)
+  Posts     Posts?   @relation(fields: [postsId], references: [id])
+  postsId   String?
+  Request   Request? @relation(fields: [requestId], references: [id])
+  requestId String?
 }
 
 model Admin {
   id          String   @id @default(uuid())
   username    String   @unique
   email       String   @unique
+  password    String
+  firstName   String
+  lastName    String
+  image       String?  @db.VarChar(255)
+  phoneNumber String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model customerCare {
+  id          String   @id @default(uuid())
+  username    String   @unique
+  email       String   @unique
+  role        String   @default("customercare")
   password    String
   firstName   String
   lastName    String

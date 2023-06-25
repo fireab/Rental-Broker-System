@@ -114,6 +114,154 @@ const getPosts = async (req, res) => {
   }
 };
 
+const getSuggested = async (req, res) => {
+  try {
+    const userId = req.userInfo.id;
+
+    // Get IDs of the users being followed by the current user
+    const followingIds = await prisma.userFollower.findMany({
+      where: {
+        followerId: userId,
+      },
+      select: {
+        followingId: true,
+      },
+    });
+
+    // Extract the following user IDs
+    const followingUserIds = followingIds.map((follow) => follow.followingId);
+
+    // Get user's address
+    const userAddress = await prisma.address.findUnique({
+      where: {
+        usersId: userId,
+      },
+      select: {
+        region: true,
+        city: true,
+      },
+    });
+
+    // Get posts authored by the following users from the last 11 days, ordered by time
+    const followingPosts = await prisma.posts.findMany({
+      where: {
+        authorId: {
+          in: followingUserIds,
+        },
+        createdAt: {
+          gte: new Date(Date.now() - 11 * 24 * 60 * 60 * 1000), // Retrieve posts from the last 11 days
+        },
+      },
+      orderBy: {
+        createdAt: "desc", // Order by most recent posts
+      },
+    });
+
+    // Get posts with the same address as the user from the last 11 days, ordered by time
+    const addressPosts = await prisma.posts.findMany({
+      where: {
+        propertyRegion: userAddress.region,
+        propertyCity: userAddress.city,
+        authorId: {
+          notIn: followingUserIds,
+        },
+        createdAt: {
+          gte: new Date(Date.now() - 11 * 24 * 60 * 60 * 1000), // Retrieve posts from the last 11 days
+        },
+      },
+      orderBy: {
+        createdAt: "desc", // Order by most recent posts
+      },
+    });
+
+    // Get all other posts excluding the following and address posts
+    const otherPosts = await prisma.posts.findMany({
+      where: {
+        authorId: {
+          notIn: [...followingUserIds, userId],
+        },
+        propertyRegion: {
+          not: userAddress.region,
+        },
+        propertyCity: {
+          not: userAddress.city,
+        },
+      },
+      orderBy: {
+        createdAt: "desc", // Order by most recent posts
+      },
+    });
+
+    // Combine and deduplicate the post IDs in the desired order
+    const suggestedPostIds = [
+      ...followingPosts.map((post) => post.id),
+      ...addressPosts.map((post) => post.id),
+      ...otherPosts.map((post) => post.id),
+    ];
+
+    // Retrieve the full details of the suggested posts
+    const suggestedPosts = await prisma.posts.findMany({
+      where: {
+        id: {
+          in: suggestedPostIds,
+        },
+      },
+      select: {
+        id: true,
+        propertyTitle: true,
+        propertyDescription: true,
+        propertyType: true,
+        postType: true,
+        propertyRegion: true,
+        propertyCity: true,
+        propertyStreet: true,
+        maxLeaseLengthValue: true,
+        maxLeaseLengthType: true,
+        minLeaseLengthValue: true,
+        minLeaseLengthType: true,
+        propertyLeaseTerm: true,
+        authorId: true,
+        isAvailable: true,
+        propertyQuantity: true,
+        propertyImages: true,
+        propertyContact: true,
+        propertyPrice: true,
+
+        savedBy: {
+          where: { usersId: req.userInfo.id },
+          select: {
+            usersId: true,
+          },
+        },
+      },
+    });
+
+    if (suggestedPosts.length === 0) {
+      return res.status(404).json("No posts found");
+    }
+
+    // Apply additional filter based on property type, region, and city
+    const { propertyType, region, city } = req.query;
+    const filteredPosts = suggestedPosts.filter((post) => {
+      if (propertyType && !propertyType.includes(post.propertyType)) {
+        return false;
+      }
+      if (region && post.propertyRegion !== region) {
+        return false;
+      }
+      if (city && post.propertyCity !== city) {
+        return false;
+      }
+      return true;
+    });
+
+    return res.status(200).json(filteredPosts);
+  } catch (error) {
+    console.log(error);
+    res.json("Internal server error");
+  }
+};
+
 const getPost = async (req, res) => {
   try {
     const { postId } = req.params;
@@ -179,9 +327,15 @@ const getPost = async (req, res) => {
         followingId: post.authorId,
       },
     });
+
     if (!isfollowedByMe)
-      return res.status(200).json({ post, isFollowed: false });
-    if (isfollowedByMe) return res.status(200).json({ post, isFollowed: true });
+      return res
+        .status(200)
+        .json({ post, isFollowed: false, requestUserId: req.userInfo.id });
+    if (isfollowedByMe)
+      return res
+        .status(200)
+        .json({ post, isFollowed: true, requestUserId: req.userInfo.id });
 
     // return res.status(200).json({post,isFollowed});
   } catch (error) {
@@ -380,7 +534,7 @@ const deletePost = async (req, res) => {
 const reportPost = async (req, res) => {
   try {
     const { postId } = req.params;
-    const { reason } = req.body;
+    const { reason, reportType } = req.body;
 
     // Check if the post exists
     const post = await prisma.posts.findUnique({
@@ -395,6 +549,7 @@ const reportPost = async (req, res) => {
       data: {
         reason,
         postId: postId,
+        reportType,
         reporterId: req.userInfo.id,
       },
     });
@@ -729,8 +884,9 @@ const sendImg = async (req, res) => {
 async function searchAndFilterPosts(req, res) {
   try {
     console.log("search");
+    console.log(req.query);
     const { searchWord, propertyType, region, city, minPrice, maxPrice } =
-      req.query.queryKey[1];
+      req.query;
     const filters = {};
     console.log(searchWord, propertyType, region, city, minPrice, maxPrice);
     console.log(req.query);
@@ -750,7 +906,7 @@ async function searchAndFilterPosts(req, res) {
       //   if (maxPrice) filters.propertyPrice.price = { lte: parseInt(maxPrice) };
       if (minPrice)
         filters.propertyPrice.some = {
-          price: { gte: parseIsnt(minPrice, 10) },
+          price: { gte: parseInt(minPrice, 10) },
         };
       if (maxPrice)
         filters.propertyPrice.some = { price: { lte: parseInt(maxPrice, 10) } };
@@ -810,4 +966,5 @@ module.exports = {
   getMyPosts,
   getOthersPosts,
   editPost,
+  getSuggested,
 };

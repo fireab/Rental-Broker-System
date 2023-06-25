@@ -212,14 +212,14 @@ const resendVerificationCode = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const { email, username } = req.body;
+  const { username } = req.body;
   console.log(req.body);
 
   try {
     // Find the user based on the provided username
-    const user = await prisma.users.findUnique({
+    const user = await prisma.users.findFirst({
       where: {
-        email,
+        OR: [{ email: username }, { username: username }],
       },
     });
 

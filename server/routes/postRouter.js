@@ -13,6 +13,7 @@ const {
   getMyPosts,
   getOthersPosts,
   editPost,
+  getSuggested,
 } = require("../controllers/postController.js");
 
 const authenticateUser = require("../middleware/autorization.js");
@@ -22,6 +23,7 @@ const router = express.Router();
 
 // router.post("/addpost", authenticateUser, upload.array("images"), addPost);
 router.post("/addpost", authenticateUser, addPost);
+router.get("/getsuggested", authenticateUser, getSuggested);
 router.get("/getposts", authenticateUser, getPosts);
 router.get("/savedposts", authenticateUser, getSavedPosts);
 router.get("/userposts", authenticateUser, getMyPosts);

@@ -50,7 +50,7 @@ router.post(
 );
 
 router.get("/profileimage", authenticateUser, sendProfileImg);
-router.get("/searchuser", authenticateUser, searchUser);
+router.get("/searchusers", authenticateUser, searchUser);
 
 router.get("/:username", authenticateUser, getprofile);
 

@@ -193,6 +193,7 @@ const getprofile = async (req, res) => {
     // if (username == "mine") userId = req.userInfo.id;
     // console.log("profile picture");
     // console.log(username);
+
     const user = await prisma.users.findFirst({
       where: { username: username },
       select: {
@@ -202,6 +203,7 @@ const getprofile = async (req, res) => {
         firstName: true,
         lastName: true,
         phoneNumber: true,
+        createdAt: true,
         address: {
           select: {
             region: true,
@@ -213,6 +215,19 @@ const getprofile = async (req, res) => {
     });
     // Return the user profile
     if (!user) return res.status(404).json("user is not found!!");
+    const postsCount = await prisma.posts.count({
+      where: { authorId: user.id },
+    });
+
+    const followersCount = await prisma.userFollower.count({
+      where: { followingId: user.id },
+    });
+
+    const followingCount = await prisma.userFollower.count({
+      where: { followerId: user.id },
+    });
+
+    const userProfile = { postsCount, followersCount, followingCount, ...user };
 
     const isfollowedByMe = await prisma.userFollower.findFirst({
       where: {
@@ -222,9 +237,9 @@ const getprofile = async (req, res) => {
     });
     let isFollowed;
     if (!isfollowedByMe) {
-      return res.status(200).json({ user, isFollowed: false });
+      return res.status(200).json({ user: userProfile, isFollowed: false });
     }
-    return res.status(200).json({ user, isFollowed: true });
+    return res.status(200).json({ user: userProfile, isFollowed: true });
   } catch (error) {
     // Return error message for internal server error
     console.log(error);
@@ -365,6 +380,7 @@ const toggleFollowUser = async (req, res) => {
     }
 
     // Follow the user
+    console.log({ followerId: req.userInfo.id });
     await prisma.userFollower.create({
       data: {
         followingId,
@@ -573,6 +589,7 @@ const getOtherFollowers = async (req, res) => {
     return res.status(200).json({
       followersCount,
       followers: followersWithIsFollowed,
+      loggedInUserId,
     });
   } catch (error) {
     console.error(error);
@@ -583,6 +600,7 @@ const getOtherFollowers = async (req, res) => {
 const getFollowers = async (req, res) => {
   try {
     const loggedInUserId = req.userInfo.id;
+    console.log("currnt user followewr");
 
     // const followersCount = await prisma.userFollower.count({
     //   where: {
@@ -794,6 +812,7 @@ const getOtherFollowing = async (req, res) => {
     return res.status(200).json({
       followingCount,
       following: followingWithIsFollowed,
+      loggedInUserId,
     });
   } catch (error) {
     console.error(error);
@@ -803,6 +822,7 @@ const getOtherFollowing = async (req, res) => {
 
 const getFollowing = async (req, res) => {
   try {
+    console.log("dill followers");
     const loggedInUserId = req.userInfo.id;
 
     // const followingCount = await prisma.userFollower.count({
@@ -822,6 +842,7 @@ const getFollowing = async (req, res) => {
             firstName: true,
             lastName: true,
             username: true,
+            email: true,
             followers: {
               where: {
                 followerId: loggedInUserId,
@@ -868,7 +889,6 @@ const getFollowing = async (req, res) => {
 };
 
 const profilePic = async (req, res) => {
-  console.log("profile pic");
   try {
     const files = req.files; // an array of uploaded files
     const filenames = files.map((file) => file.filename);
@@ -993,6 +1013,47 @@ const deleteProfilePic = async (req, res) => {
   }
 };
 
+// const searchUser = async (req, res) => {
+//   try {
+//     const { search } = req.query;
+//     console.log(search);
+
+//     // Perform the search query using Prisma
+//     const users = await prisma.users.findMany({
+//       where: {
+//         OR: [
+//           { username: { contains: search } },
+//           { email: { contains: search } },
+//           { firstName: { contains: search } },
+//           { lastName: { contains: search } },
+//           // Add more search criteria based on your model fields
+//         ],
+//       },
+//       select: {
+//         id: true,
+//         username: true,
+//         email: true,
+//         firstName: true,
+//         lastName: true,
+//         image: true,
+//         phoneNumber: true,
+//         address: {
+//           select: { region: true, city: true },
+//         },
+//         posts: true,
+//         followers: true,
+//       },
+//     });
+
+//     if (!users) return res.status(200).json([]);
+//     return res.status(200).json(users);
+//     // Return the search results
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// };
+
 const searchUser = async (req, res) => {
   try {
     const { search } = req.query;
@@ -1020,12 +1081,33 @@ const searchUser = async (req, res) => {
         address: {
           select: { region: true, city: true },
         },
+        posts: true,
+        followers: {
+          where: {
+            followerId: req.userInfo.id, // Assuming req.userInfo.id contains the authenticated user's ID
+          },
+          select: {
+            followerId: true,
+          },
+        },
       },
     });
 
     if (!users) return res.status(200).json([]);
-    return res.status(200).json(users);
-    // Return the search results
+
+    // Add isFollowed property to each user
+    const usersWithIsFollowed = users.map((user) => {
+      const isFollowed = user.followers.length > 0;
+      return {
+        ...user,
+        isFollowed,
+      };
+    });
+
+    return res
+      .status(200)
+      .json({ usersWithIsFollowed, loggedInUserId: req.userInfo.id });
+    // Return the search results with isFollowed property
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal server error" });

@@ -5,6 +5,7 @@ const authRoutes = require("./routes/authRouter.js");
 const postRoutes = require("./routes/postRouter.js");
 const userRouter = require("./routes/userRouter.js");
 const adminRouter = require("./routes/adminRoutes.js");
+const chatRoutes = require("./routes/chatRoutes.js");
 const multer = require("multer");
 
 const app = express();
@@ -41,28 +42,6 @@ app.post("/api/upload", upload.array("images"), function (req, res) {
   const filenames = files.map((file) => file.filename);
   res.status(200).json(filenames);
 });
-// app.post(
-//   "/api/user/profileimage",
-//   upload.array("image"),
-//   function async(req, res) {
-//     const files = req.files; // an array of uploaded files
-//     // Process the files or perform any required operations
-//     const filenames = files.map((file) => file.filename);
-
-//     res.status(200).json(filenames);
-//   }
-// );
-
-// app.post(
-//   "/api/user/profileimage",
-//   uploadProfile.single("image"),
-//   function (req, res) {
-//     console.log("dilamooo");
-//     const file = req.file;
-//     res.status(200).json(file.filename);
-//   }
-// );
-
 app.get("/download", (req, res) => {
   const filePath = "./upload"; // Replace with the actual file path
   res.download(filePath);
@@ -72,6 +51,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/user", userRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/chat", chatRoutes);
 
 // Start the server and listen on port 3030
 app.listen(3032, () => {
