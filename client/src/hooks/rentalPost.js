@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
-import { createUserRentalPost, deleteUserRentalPost, fetchRentalPosts, fetchRentalPostsBySearch, fetchRentalPostsByUser, fetchSavedRentalPosts, fetchUserRentalPost, saveRentalPost, updateUserRentalPost } from "../services/rental.api";
+import { createUserRentalPost, deleteUserRentalPost, fetchRentalPostRequests, fetchRentalPosts, fetchRentalPostsBySearch, fetchRentalPostsByUser, fetchSavedRentalPosts, fetchUserRentalPost, makeRentalPostRequest, saveRentalPost, updateUserRentalPost } from "../services/rental.api";
 
 export const useRentalPosts = (params) => {
 	const {
@@ -39,7 +39,7 @@ export const useRentalPosts = (params) => {
 
 	const savePost = useMutation((postId) => saveRentalPost(postId), {
 		onSuccess: async (data) => {
-			console.log(data,"data");
+			savedPosts.refetch();
 			return data;
 		},
 	});
@@ -59,13 +59,27 @@ export const useRentalPosts = (params) => {
 		onSuccess: () => {
 			queryClient.invalidateQueries("userPosts");
 			userPosts.refetch();
-			return "Post deleted Succesfully"
+			return "Post deleted Succesfully";
 		},
 	});
 
 	// serched posts with filter
 	const searchedPosts = useQuery(["searchedPosts", params], fetchRentalPostsBySearch, {
 		// refetchOnMount: true,
+		enabled: false,
+	});
+
+	const requestPost = useMutation((requestData) => makeRentalPostRequest(requestData), {
+		onSuccess: () => {
+			queryClient.invalidateQueries("posts request");
+		},
+	});
+
+	const getRentalRequests = useQuery(["posts request", params], (user)=>fetchRentalPostRequests(user), {
+		enabled: false,
+
+	});
+	const getUserRentalRequests = useQuery(["user posts request", params], (user)=>fetchRentalPostRequests(user), {
 		enabled: false,
 	});
 
@@ -91,7 +105,7 @@ export const useRentalPosts = (params) => {
 		rentalPostCreationError: create.error,
 		updateRentalPost: update.mutate,
 		removeRentalPost: remove.mutate,
-		// 
+		//
 		saveRentalPost: savePost.mutateAsync,
 		saveRentalPostData: savePost.data,
 		isSavingRentalPost: savePost.isLoading,
@@ -121,5 +135,23 @@ export const useRentalPosts = (params) => {
 
 		deleteUserPost: deleteUserPost.mutateAsync,
 		isDeletingUserPost: deleteUserPost.isLoading,
+
+		// request post
+		requestPost: requestPost.mutateAsync,
+		requestPostLoading: requestPost.isLoading,
+
+		// get requests
+		getRentalRequests: getRentalRequests.data,
+		isLoadingGetRentalRequests: getRentalRequests.isLoading,
+		isFetchingGetRentalRequests: getRentalRequests.isFetching,
+		refetchGetRentalRequests: getRentalRequests.refetch,
+
+		// 
+
+		getUserRentalRequests: getUserRentalRequests.data,
+		isLoadingGetUserRentalRequests: getUserRentalRequests.isLoading,
+		isFetchingGetUserRentalRequests: getUserRentalRequests.isFetching,
+		refetchGetUserRentalRequests: getUserRentalRequests.refetch,
+		
 	};
 };

@@ -105,14 +105,6 @@ const route = createBrowserRouter([
 				path: "report",
 				element: (
 					<LayoutLogged>
-						<h1>Report</h1>
-					</LayoutLogged>
-				),
-			},
-			{
-				path: "report",
-				element: (
-					<LayoutLogged>
 						<h1>help</h1>
 					</LayoutLogged>
 				),

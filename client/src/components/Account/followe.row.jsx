@@ -15,6 +15,8 @@ const FolloweRow = ({ user, loggedUser }) => {
 		await follow(userId);
 	};
 
+	console.log("loggedUser",loggedUser)
+
 	return (
 		<Tr
 			onClick={() => {

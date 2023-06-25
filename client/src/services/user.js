@@ -14,6 +14,16 @@ export const fetchUserProfileByUsername = async (username) => {
 	return response.data;
 };
 
+export const fetchUserSearch = async (searchTerm) => {
+	const response = await axios.get("/api/user/searchusers", {
+		params: {
+			search: searchTerm.queryKey[1],
+		},
+	});
+
+	return response.data;
+};
+
 export const changePassword = async (passwordData) => {
 	const response = await axios.put("/api/user/changePassword", passwordData);
 	return response.data;
@@ -27,7 +37,6 @@ export const followUser = async (userId) => {
 };
 
 export const fetchUserFollowers = async (username) => {
-	console.log(username, "username");
 	if (username.queryKey[1] == "user") {
 		const response = await axios.get("/api/user/followers");
 		return response.data;
@@ -46,3 +55,9 @@ export const fetchUserFollowing = async (username) => {
 	const response = await axios.get(`/api/user/${username.queryKey[1]}/following`);
 	return response.data;
 };
+
+export const reportPost = async (reportData) => {
+	// console.log(reportData, "reportData")
+	const response = await axios.post(`/api/posts/${reportData.postId}/report`, reportData);
+	return response.data;
+}

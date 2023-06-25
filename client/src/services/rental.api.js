@@ -19,6 +19,7 @@ export const fetchRentalPosts = async (params) => {
 };
 
 export const fetchUserRentalPost = async (postId) => {
+	console.log(postId)
 	const response = await axios.get(`/api/posts/${postId.queryKey[1]}`);
 	return response.data;
 };
@@ -58,9 +59,25 @@ export const fetchRentalPostsByUser = async (userId) => {
 };
 
 export const fetchRentalPostsBySearch = async (params) => {
-	
 	const response = await axios.get("/api/posts/search", {
 		params: params.queryKey[1],
 	});
+	return response.data;
+};
+
+export const makeRentalPostRequest = async (requestPostData) => {
+	const response = await axios.post(`/api/posts/request`, requestPostData);
+	return response.data;
+};
+
+export const fetchRentalPostRequests = async () => {
+	const response = await axios.get("/api/posts/requests");
+	console.log(response.data, "response.data")
+	return response.data;
+};
+
+export const fetchUserRentalPostRequest = async () => {
+	const response = await axios.get(`/api/posts/requests/my`);
+	console.log(response.data, "response.data")
 	return response.data;
 };

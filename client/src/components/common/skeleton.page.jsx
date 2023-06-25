@@ -105,58 +105,78 @@ const SkeletonPage = (props) => {
 				</div>
 			</div>
 		);
-	}else if(props.page == "follow page"){
-		<div direction={{ base: "column", sm: "row" }} overflow="hidden" >
-					<Skeleton className="flex ">
-						<Skeleton objectFit="cover" overflow="hidden" rounded={"full"} className="h-24 w-24" src="https://cdn.britannica.com/84/73184-050-05ED59CB/Sunflower-field-Fargo-North-Dakota.jpg" alt="" />
-					</Skeleton>
-					<Skeleton className="flex justify-between ">
-						<div className="flex flex-col justify-between items-start">
-							<div>
-								<span className="font-bold text-xl">Dilamo Wondimu</span>
-								<div className="flex items-center whitespace-nowrap">
-									<Skeleton className="text-xs whitespace-pre">4.5 </Skeleton>
+	} else if (props.page == "follow page") {
+		<div direction={{ base: "column", sm: "row" }} overflow="hidden">
+			<Skeleton className="flex ">
+				<Skeleton objectFit="cover" overflow="hidden" rounded={"full"} className="h-24 w-24" src="https://cdn.britannica.com/84/73184-050-05ED59CB/Sunflower-field-Fargo-North-Dakota.jpg" alt="" />
+			</Skeleton>
+			<Skeleton className="flex justify-between ">
+				<div className="flex flex-col justify-between items-start">
+					<div>
+						<span className="font-bold text-xl">Dilamo Wondimu</span>
+						<div className="flex items-center whitespace-nowrap">
+							<Skeleton className="text-xs whitespace-pre">4.5 </Skeleton>
 
-									<Skeleton className="text-xs whitespace-pre ">(20) </Skeleton>
+							<Skeleton className="text-xs whitespace-pre ">(20) </Skeleton>
 
-									<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
+							<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
 
-									<Skeleton className="text-xs whitespace-pre ">Add Review </Skeleton>
+							<Skeleton className="text-xs whitespace-pre ">Add Review </Skeleton>
 
-									<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
+							<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
 
-									<Skeleton className="text-xs whitespace-pre ">See Reviews </Skeleton>
+							<Skeleton className="text-xs whitespace-pre ">See Reviews </Skeleton>
 
-									<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
+							<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
 
-									<Skeleton className="text-xs whitespace-pre ">See Reviews </Skeleton>
+							<Skeleton className="text-xs whitespace-pre ">See Reviews </Skeleton>
 
-									<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
+							<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
 
-									<Skeleton className="text-xs whitespace-pre ">See Reviews </Skeleton>
+							<Skeleton className="text-xs whitespace-pre ">See Reviews </Skeleton>
 
-									<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
+							<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
 
-									<Skeleton className="text-xs whitespace-pre ">See Reviews </Skeleton>
+							<Skeleton className="text-xs whitespace-pre ">See Reviews </Skeleton>
 
-									<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
+							<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
 
-									<Skeleton className="text-xs whitespace-pre ">See Reviews </Skeleton>
+							<Skeleton className="text-xs whitespace-pre ">See Reviews </Skeleton>
 
-									<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
-								</div>
-							</div>
-							<Link>
-								<div>
-									<Skeleton className="hover:text-blue-600">View Profile</Skeleton>
-								</div>
-							</Link>
+							<Skeleton className="text-xs whitespace-pre ">| </Skeleton>
 						</div>
-						<div className="flex flex-col justify-center">
-							<Skeleton colorScheme="blue">Follow</Skeleton>
+					</div>
+					<Link>
+						<div>
+							<Skeleton className="hover:text-blue-600">View Profile</Skeleton>
 						</div>
-					</Skeleton>
+					</Link>
 				</div>
+				<div className="flex flex-col justify-center">
+					<Skeleton colorScheme="blue">Follow</Skeleton>
+				</div>
+			</Skeleton>
+		</div>;
+	} else if (props.page == "search user") {
+		<Skeleton rounded="xl" className="flex-1 h-32 rounded-xl bg-slate-300 ">
+			<div className=" flex flex-row justify-between items-center  h-full flex-1 p-2">
+				<div className="flex items-center space-x-2">
+					{/* cat image */}
+					<Image objectFit="cover" src="https://cdni.autocarindia.com/Utils/ImageResizer.ashx?n=https://cms.haymarketindia.net/model/uploads/modelimages/Hyundai-Grand-i10-Nios-200120231541.jpg&w=373&h=245&q=75&c=1" className="w-20 h-20 rounded-full" />
+					<div className="flex flex-col">
+						<span className="whitespace-nowrap font-bold">Dailmo Wondimu</span>
+						<div className="flex items-center whitespace-nowrap">
+							<span className="text-xs">20 Followers</span>
+							<span className="whitespace-pre">{` | `}</span>
+							<span className="text-xs">20 Following</span>
+							<span className="whitespace-pre">{` | `}</span>
+							<span className="text-xs">3 Posts</span>
+						</div>
+					</div>
+				</div>
+				<Button>Follow</Button>
+			</div>
+		</Skeleton>;
 	}
 };
 

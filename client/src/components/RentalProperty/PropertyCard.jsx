@@ -152,7 +152,7 @@ const PropertyCard = ({ preview, ...post }) => {
 								</div>
 							) : post.saved ? (
 								<div onMouseEnter={handleHover} onMouseLeave={handleLeave} onClick={handleSavePost} className="p-2 absolute  right-2 cursor-pointer top-2 z-[2]">
-									<EditIcon className={`transition-all duration-150 ease-in-out font-bold  text-lg`} size={isSaveHover ? 22 : 20} />
+									{/* <EditIcon className={`transition-all duration-150 ease-in-out font-bold  text-lg`} size={isSaveHover ? 22 : 20} /> */}
 								</div>
 							) : (
 								<div onMouseEnter={handleHover} onMouseLeave={handleLeave} onClick={handleSavePost} className="p-2 absolute  right-2 cursor-pointer top-2 z-[2]">
@@ -169,17 +169,7 @@ const PropertyCard = ({ preview, ...post }) => {
 						<div className="w-full">
 							<Slider {...settings} ref={(slider) => setSlider(slider)}>
 								{images.length == 0 ? (
-									<Box
-										rounded={"2xl"}
-										overflow={"clip"}
-										style={{
-											height: preview ? "15rem" : "10rem",
-										}}
-										backgroundPosition={"center"}
-										backgroundRepeat={"no-repeat"}
-										backgroundSize={"cover"}
-										backgroundImage={`url(/api/posts/images/noimage)`}
-									/>
+									<Box rounded={"2xl"} overflow={"clip"} className={`${preview ? "h-60" : "h-40"}`} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage={`url(/api/posts/images/noimage)`} />
 								) : (
 									images.map((image, index) => {
 										return <Box rounded={"2xl"} overflow={"clip"} className={`${preview ? "h-60" : "h-40"}`} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} key={index} backgroundImage={`url(/api/posts/images/${image.image.image})`} />;

@@ -9,9 +9,15 @@ const InputFieldSelect = ({ label, leftIcon, required, rightIcon, options, defau
 
 	return (
 		<FormControl isRequired={required} isInvalid={meta.error && meta.touched}>
-			<FormLabel fontSize={"sm"}>
-				<span className="whitespace-nowrap">{capitalize(label)}</span>
-			</FormLabel>
+				<FormLabel fontSize={"sm"}>
+			{label ? (
+					<span className="whitespace-nowrap">{capitalize(label)}</span>
+			):(
+
+					<span className="whitespace-nowrap opacity-0 ">label</span>
+			)
+			}
+				</FormLabel>
 			<InputGroup size="lg" className="bg-white/40 flex justify-center space-x-2 ">
 				{leftIcon && <InputLeftElement>{leftIcon}</InputLeftElement>}
 				<Select fontSize={"sm"} color={"black"} {...field} {...props} className="border-[0.8px !important] border-[#2b6aa0]" _placeholder={{ color: "red", fontSize: "sm" }} spellCheck={false} autoComplete="off">

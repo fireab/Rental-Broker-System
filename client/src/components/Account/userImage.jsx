@@ -11,11 +11,12 @@ import { FilePond, registerPlugin } from "react-filepond";
 import "filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import "filepond/dist/filepond.min.css";
+import { Image, filter } from "@chakra-ui/react";
 
 registerPlugin(FilePondPluginFileValidateType, FilePondPluginImagePreview, FilePondPluginFilePoster, FilePondPluginImageCrop, FilePondPluginImageResize);
 // a example to upload profile image with crop and resize feature and preview image before upload to server
 
-function UserImage({username}) {
+function UserImage({ username }) {
 	let pondRef = useRef(null);
 	const [files, setFiles] = useState([
 		{
@@ -28,18 +29,20 @@ function UserImage({username}) {
 					type: "image/*",
 				},
 				metadata: {
-                    // cat image
+					// cat image
 					poster: `/api/user/profileimage/${username}`,
 				},
 			},
 		},
 	]);
 
-    const handleInit = () => {};
+	const handleInit = () => {};
 
 	return (
 		<div className="App">
-			<FilePond
+			<Image src={files[0].options.metadata.poster} className="h-52 w-52 border-2 border-red-700 p-1 " objectFit="cover" objectPosition="top" rounded="full" backgroundRepeat="no-repeat" />
+
+			{/* <FilePond
 				oninit={handleInit}
 				acceptedFileTypes={["image/png", "image/jpeg", "image/jpg"]}
 				files={files}
@@ -59,7 +62,7 @@ function UserImage({username}) {
 				server="/api/user/profileimage"
 				styleLoadIndicatorPosition={"center bottom"}
 			
-			/>
+			/> */}
 		</div>
 	);
 }
