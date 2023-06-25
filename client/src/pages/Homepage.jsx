@@ -50,9 +50,9 @@ const Homepage = () => {
 			<div className="object-cover bg-cover bg-no-repeat bg-center">
 				{}
 
-				<Flex className="" bg="#edf3f8" _dark={{ bg: "#3e3e3e" }} p={0} alignItems="center" justifyContent="center">
-					<Flex w="full" overflow="hidden">
-						<Flex pos="relative" h="400px" w="full" {...carouselStyle}>
+				<Flex  bg="#edf3f8" _dark={{ bg: "#3e3e3e" }} p={0} alignItems="center" justifyContent="center">
+					<Flex w="full" h="full"   overflow="hidden">
+						<Flex pos="relative" className="!bg-blue-700 h-[60vh]" w="full" {...carouselStyle}>
 							{slides.map((slide, sid) => (
 								<Box key={`slide-${sid}`} flex="none" boxSize="full" shadow="md">
 									<Text color="white" fontSize="xs" p="8px 12px" pos="absolute" top="0" whiteSpace="nowrap" />
