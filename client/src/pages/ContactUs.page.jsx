@@ -10,7 +10,7 @@ const ContactUsPage = () => {
 				{/* This is homepage */}
 				{/* <img className="h-screen w-screen" src="https://cdn.sanity.io/images/za5m6yef/production/46152070cc2faf24d3f035d2ade2426da25a5361-960x600.jpg?rect=0,67,960,465" alt="" /> */}
 
-				<div className="flex w-full min-h-screen justify-center items-center text-white">
+				<div className="flex w-full min-h-screen pt-14 justify-center items-center text-white">
 					<div className="flex flex-col md:flex-row md:space-x-6 space-y-6 md:space-y-0 bg-gray-800 w-full max-w-4xl p-8 sm:p-12 rounded-xl shadow-lg">
 						<div className="flex flex-col space-y-8 justify-between">
 							<div>

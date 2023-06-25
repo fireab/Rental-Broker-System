@@ -58,7 +58,7 @@ const Homepage = () => {
 									<Text color="white" fontSize="xs" p="8px 12px" pos="absolute" top="0" whiteSpace="nowrap" />
 									<Image src={slide.img} alt="carousel image" boxSize="full" backgroundSize="cover" />
 									<Stack p="8px 12px" pos="absolute" bottom="24px" textAlign="center" w="full" mb="8" color="white">
-										<Text className="font-semibold text-7xl">{slide.description}</Text>
+										<Text className="font-semibold animate-bounce text-5xl lg:text-7xl">{slide.description}</Text>
 									</Stack>
 								</Box>
 							))}
