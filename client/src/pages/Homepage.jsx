@@ -118,7 +118,7 @@ const Homepage = () => {
                     mb="8"
                     color="white"
                   >
-                    <Text className="font-semibold text-7xl">{slide.description}</Text>
+                    <Text className="font-semibold text-5xl lg:text-7xl">{slide.description}</Text>
                   </Stack>
                 </Box>
               ))}
