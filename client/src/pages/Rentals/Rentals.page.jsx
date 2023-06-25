@@ -154,8 +154,17 @@ const RentalsPage = () => {
 					</div>
 				) : (
 					<div className="flex flex-col items-center justify-center h-[50vh]">
-						<div className="text-2xl font-bold">Sorry, There is no post of {param.propertyType}</div>
-						<div className="text-lg font-bold">Try different Catagory or Filter</div>
+						{param.propertyType ? (
+							<>
+								<div className="text-2xl font-bold">Sorry, There is no post of {param.propertyType}</div>
+								<div className="text-lg font-bold">Try different Catagory or Filter</div>
+							</>
+						) : (
+							<>
+								<div className="text-2xl font-bold">Sorry, There is no post</div>
+								<div className="text-lg font-bold">Try another Time</div>
+							</>
+						)}
 					</div>
 				)}
 			</div>

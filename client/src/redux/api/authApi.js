@@ -23,12 +23,9 @@ export const authApi = createApi({
 			async onQueryStarted(args, { dispatch, queryFulfilled }) {
 				try {
 					const { data } = await queryFulfilled;
-					console.log("data authApi registeration");
-					console.log(data);
-
-					// await dispatch(userApi.endpoints.user.initiate(null));
+					await dispatch(userApi.endpoints.user.initiate(null));
 				} catch (error) {
-					console.log("error authApi registeration");
+					console.log("registration error bro",error)
 				}
 			},
 		}),
@@ -42,16 +39,12 @@ export const authApi = createApi({
 					credentials: "include",
 				};
 			},
-
 			async onQueryStarted(args, { dispatch, queryFulfilled }) {
 				try {
 					const { data } = await queryFulfilled;
-					console.log("data authApi login");
-					console.log(data);
-
 					await dispatch(userApi.endpoints.user.initiate(null));
 				} catch (error) {
-					console.log("error authApi login");
+					console.log("login error bro",error)
 				}
 			},
 		}),

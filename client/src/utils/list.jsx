@@ -7,7 +7,6 @@ export const steps = [
 	{ title: "Account Information", description: ["Choose a username and password", "to secure your account."] },
 	{ title: "Personal Preferences", description: ["your rental preferences or personal preferences", "to personalize your experience. "] },
 ];
-
 export const languages = [
 	{ name: "English", value: "English" },
 	{ name: "Amheric", value: "Amheric" },
@@ -63,7 +62,6 @@ export const regions = [
 		value: "Tigray",
 	},
 ];
-
 export const cities = {
 	"Addis Ababa": [
 		{ name: "Addis Ababa", value: "Addis Ababa" },
@@ -207,9 +205,7 @@ export const cities = {
 		{ name: "Boditi", value: "Boditi" },
 	],
 };
-
 export const regionsList = ["Addis Ababa", "Afar", "Amhara", "Benishangul-Gumuz", "Dire Dawa", "Gambela", "Harari", "Oromia", "Somali", "Southern Nations, Nationalities, and Peoples' Region", "Tigray", "Sidama"];
-
 export const citiesList = [
 	"Addis Ababa",
 	"Addis Ketema",
@@ -320,7 +316,6 @@ export const citiesList = [
 	"Aleta Wendo",
 	"Boditi",
 ];
-
 export const Price_Type = [
 	{
 		name: "per day",
@@ -404,7 +399,6 @@ export const Contact_Type = [
 		icon: <BrandTiktok />,
 	},
 ];
-
 export const Property_Type = [
 	{
 		name: "House",
@@ -466,9 +460,6 @@ export const Property_Type = [
 		name: "Computer",
 		value: "Computer",
 	},
-
-	// materials that can be rented
-
 	{
 		name: "Books",
 		value: "Books",
@@ -494,8 +485,6 @@ export const Property_Type = [
 		value: "Other",
 	},
 ];
-
-// report types for rental finder system posetd by users
 export const Report_Type = [
 	{
 		name: "Inappropriate Content",
@@ -517,13 +506,11 @@ export const Report_Type = [
 		name: "Duplicate",
 		value: "Duplicate",
 	},
-
 	{
 		name: "Other",
 		value: "Other",
 	},
 ];
-
 export const filter_options = [
 	{
 		name: "All",
