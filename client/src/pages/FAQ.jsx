@@ -20,9 +20,9 @@ export default function FAQ() {
     <TabPanels>
       <TabPanel>
         <div>
-            <div className="text-center pt-10">
-                <p className="text-xl">WELCOME TO RBS APP SUPPORT</p>
-                <h1 className="text-8xl font-semibold">How can we help?</h1>
+            <div className="text-center pt-3">
+                <p className="text-xl animate-pulse ">WELCOME TO RBS APP SUPPORT</p>
+                <h1 className="lg:text-8xl  from-blue-800 via-pink-600 to-blue-800 bg-gradient-to-r bg-clip-text text-transparent text-5xl font-semibold">How can we help?</h1>
             </div>
             <div className="p-5 text-center space-y-8">
                 <div className="grid grid-cols-3 gap-5">
@@ -42,7 +42,7 @@ export default function FAQ() {
                 </div>
             </div>
             <div>
-                <h1 className="text-6xl font-semibold lg:pl-32 lg:pt-6 pb-10">Most Popular Questions</h1>
+                <h1 className="lg:text-6xl text-4xl font-semibold pl-5 lg:pt-6 pb-10">Most Popular Questions</h1>
                 <div className="">
                 <Accordion defaultIndex={[0]} allowMultiple>
   <AccordionItem>
