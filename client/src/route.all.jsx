@@ -1,4 +1,3 @@
-import axios from "axios";
 import { createBrowserRouter, Outlet } from "react-router-dom";
 
 import ChangePasswordView from "./components/Account/ChangePassword.view";
@@ -37,7 +36,6 @@ const route = createBrowserRouter([
 	{
 		path: "/",
 		element: <IsNotAuthorized />,
-
 		children: [
 			{
 				path: "/",
@@ -130,14 +128,8 @@ const route = createBrowserRouter([
 				),
 				children: [
 					{
-						// path: "",
 						index: true,
 						Component: ProfilePageView,
-						// loader: async ({ request }) => {
-						// return await axios.get(`https://jsonplaceholder.typicode.com/users/`).then((res) => {
-						// 	return res.data;
-						// });
-						// },
 					},
 					{
 						path: "Edit",
@@ -162,15 +154,9 @@ const route = createBrowserRouter([
 					{
 						path: ":username",
 						Component: UserprofileView,
-						// loader: async ({ request }) => {
-						// return await axios.get(`https://jsonplaceholder.typicode.com/users/`).then((res) => {
-						// 	return res.data;
-						// });
-						// },
 					},
 				],
 			},
-
 			{
 				path: "rentals",
 				element: (
@@ -181,11 +167,11 @@ const route = createBrowserRouter([
 				children: [
 					{
 						index: true,
-						Component: RentalsPage, // list of properties for rent from all users
+						Component: RentalsPage,
 					},
 					{
 						path: "search",
-						Component: SearchResultsPage, // list of searched properties from a users
+						Component: SearchResultsPage,
 					},
 					{
 						path: "saved",
@@ -193,7 +179,7 @@ const route = createBrowserRouter([
 					},
 					{
 						path: ":postId",
-						Component: PropertyDetailPage, // property detail page for a specific property from other user
+						Component: PropertyDetailPage,
 					},
 					{
 						path: "CreateAd",
@@ -203,10 +189,9 @@ const route = createBrowserRouter([
 						path: "EditAd/:id",
 						Component: EditPropertyPage,
 					},
-
 					{
 						path: "my",
-						Component: PropertyListPage, // list of all user properties from a other user
+						Component: PropertyListPage,
 					},
 					{
 						path: "settings",
@@ -242,7 +227,6 @@ const route = createBrowserRouter([
 			},
 		],
 	},
-
 	{
 		path: "*",
 		Component: () => <div>404</div>,

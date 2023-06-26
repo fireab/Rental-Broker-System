@@ -1,15 +1,5 @@
+import { Box, Checkbox, FormControl, FormLabel, Icon, Stack, Text, VStack } from "@chakra-ui/react";
 import React from "react";
-import {
-  Box,
-  Checkbox,
-  FormControl,
-  FormLabel,
-  Icon,
-  Stack,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
-// import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings } from "react-icons/fi";
 import { Home } from 'tabler-icons-react';
 
 const sidebarItems = [
@@ -19,13 +9,10 @@ const sidebarItems = [
   { name: "Brand", icon: Home, content: "Brand content" },
   { name: "Color", icon: Home, content: "Color content" },
 ];
-
 const Sidebar = () => {
   const [selectedFilters, setSelectedFilters] = React.useState([]);
-
   const handleFilterChange = (event) => {
     const { value, checked } = event.target;
-
     if (checked) {
       setSelectedFilters((prevFilters) => [...prevFilters, value]);
     } else {
@@ -34,7 +21,6 @@ const Sidebar = () => {
       );
     }
   };
-
   return (
     <Box bg="gray.100" p={4} w="250px">
       <VStack alignItems={'center'} spacing={4} align="start">
@@ -57,5 +43,4 @@ const Sidebar = () => {
     </Box>
   );
 };
-
 export default Sidebar;

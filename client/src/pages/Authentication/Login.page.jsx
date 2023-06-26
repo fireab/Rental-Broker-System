@@ -11,6 +11,7 @@ import * as yup from "yup";
 import Header from "../../components/Authentication/header";
 import { useLoginUserMutation } from "../../redux/api/authApi";
 import { loginValidationSchema as validationSchema } from "../../utils/validation";
+import logo from "./../../assets/Awashlogo.svg";
 import InputField from "./../../components/Authentication/InputField";
 import InputFieldCheckbox from "./../../components/Authentication/InputField.checkbox";
 import Message from "./../Message/Message";
@@ -28,16 +29,23 @@ const LoginPage = () => {
 		rememberMe: false,
 	};
 	const handelSubmit = async (values) => {
-		loginUser(values).unwrap().then((res) => {
-			console.log("Login Success fucker");
-		});
+		loginUser(values)
+			.unwrap()
+			.then((res) => {
+				console.log("Login Success fucker");
+			});
 	};
 	return (
 		<main className="min-h-screen flex flex-col bg-gradient-to-r from-[#870bad] to-[#d60c60]">
 			<div className="w-full h-16">
 				<div className="flex  items-center p-4">
-					<div className="hidden md:block md:w-1/2 ">
+					{/* <div className="hidden md:block md:w-1/2 ">
 						<span className="bg-red-500 ">Logo</span>
+					</div> */}
+					<div className=" hidden md:block md:w-1/2 px-2 m-0">
+						<div className="font-bold inline-block">
+							<Image className="w-10 md:w-14" src={logo} />
+						</div>
 					</div>
 					<div className="w-full md:w-1/2 px-2">
 						<div className="flex justify-end space-x-8 items-center">
@@ -69,7 +77,7 @@ const LoginPage = () => {
 							{isError && (
 								<Alert status="error">
 									<AlertIcon />
-									{}
+									Error Logging in
 									<AlertDescription>{error.data}</AlertDescription>
 								</Alert>
 							)}

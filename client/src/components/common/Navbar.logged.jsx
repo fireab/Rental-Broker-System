@@ -1,15 +1,10 @@
-import { BellIcon, ChatIcon, ChevronDownIcon, EditIcon, EmailIcon, ExternalLinkIcon, HamburgerIcon, RepeatIcon } from "@chakra-ui/icons";
-import { Avatar, Box, Button, Center, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, IconButton, Image, Input, Link, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, Text, useBoolean, useBreakpointValue, useDisclosure } from "@chakra-ui/react";
+import { BellIcon, ChatIcon } from "@chakra-ui/icons";
+import { Avatar, Box, Button, Center, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, IconButton, Image, Link, Menu, MenuButton, MenuDivider, MenuItem, MenuList, useBreakpointValue, useDisclosure } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
-import { BiQuestionMark } from "react-icons/bi";
-import { useSelector } from "react-redux";
-import { NavLink, redirect, Route, Router, Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
-// import { toast } from "../../hooks/useAuth";
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import styled from "styled-components";
-import { ChevronRight, ClipboardList, Heart, Help, HomeQuestion, Logout, Plus, Report, Search, Settings, User, UserCheck, UserPlus } from "tabler-icons-react";
+import { ChevronRight, ClipboardList, Heart, Help, HomeQuestion, Logout, Plus, Report, Search, User, UserCheck, UserPlus } from "tabler-icons-react";
 
 import { useUser } from "../../hooks/user";
 import { useLogoutUserMutation } from "../../redux/api/authApi";
@@ -21,24 +16,17 @@ import MessageNav from "./../Message/message.nav";
 import NotificationNav from "./../notification/notification.nav";
 
 const NavbarLogged = () => {
-	// redux get user
-
 	const { getUserProfile, refetchUserProfile, isGetUserProfileLoading, isGetUserProfileFetching } = useUser("userprofile");
-
 	useEffect(() => {
 		refetchUserProfile();
 	}, [refetchUserProfile]);
-
 	const navigate = useNavigate();
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const isMobile = useBreakpointValue({ base: true, md: false });
 	const [logoutUser, { isLoading: LogoutLoading, isError: LogoutError, error: LogoutErrorData, isSuccess: LogoutSuccess }] = useLogoutUserMutation();
-
 	const { isOpen: isMessageMenuOpen, onOpen: onMessageMenuOpen, onClose: onMessageMenuClose } = useDisclosure(false);
 	const { isOpen: isNotificationMenuOpen, onOpen: onNotificationMenuOpen, onClose: onNotificationMenuClose } = useDisclosure(false);
-
 	const [chatWindow, setChatWindow] = useState(false);
-
 	const {
 		isOpen: isMesssageModalOpen,
 		onOpen: onMessageModalOpen,
@@ -51,43 +39,32 @@ const NavbarLogged = () => {
 		},
 		onOpen: (value) => {
 			onMessageMenuClose();
-			// setChatWindow(value)
 			onMessageMenuOpen();
 		},
 	});
 	const { isOpen: isNotificationModalOpen, onOpen: onNotificationModalOpen, onClose: onNotificationModalClose } = useDisclosure();
-
 	const handleAvatarClick = () => {
 		if (isMobile) {
 			setIsDrawerOpen(true);
 		}
 	};
-
 	const handleCloseDrawer = () => {
 		setIsDrawerOpen(false);
 	};
-	// useLogoutUserMutation
-
 	const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
 	useEffect(() => {
 		const handleResize = () => {
 			setViewportWidth(window.innerWidth);
 		};
-
 		window.addEventListener("resize", handleResize);
-
 		return () => window.removeEventListener("resize", handleResize);
 	}, [viewportWidth]);
-
 	const location = useLocation();
-
-	// const from = location.state?.from.pathname || "/login";
 	useEffect(() => {
 		if (LogoutSuccess) {
 			window.location.href = "/login";
 			navigate("/login");
 		}
-
 		if (LogoutError) {
 			if (Array.isArray(LogoutErrorData.data.error)) {
 				LogoutErrorData.data.error.forEach((el) =>
@@ -101,7 +78,6 @@ const NavbarLogged = () => {
 				});
 			}
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [LogoutLoading]);
 	const onLogoutHandler = async () => {
 		await logoutUser()
@@ -111,7 +87,6 @@ const NavbarLogged = () => {
 				window.location.href = "/login";
 			});
 	};
-
 	return (
 		<>
 			<MessagesModal chatWindow={chatWindow} isOpen={isMesssageModalOpen} onClose={onMessageModalClose} />
@@ -127,7 +102,7 @@ const NavbarLogged = () => {
 									</div>
 								</div>
 							</RouterLink>
-							{/* {location.pathname !== "/rentals/search" && ( */}
+							{}
 							<div className="">
 								<Formik
 									initialValues={{
@@ -146,7 +121,6 @@ const NavbarLogged = () => {
 													<Search size={18} strokeWidth={3} color={"#2b6cb0"} />
 												</div>
 												<input type="text" onChange={formik.handleChange} value={formik.values.search} name="search" placeholder="Search" className="lg:w-54 w-56 pl-10 pr-16 py-2 bg-gray-100/80 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white/80 focus:border-transparent" />
-
 												<button type="submit" className="absolute right-2.5 top-[0.5rem] tracking-wider font-bold text-[#2b6cb0] text-sm">
 													Search
 												</button>
@@ -155,7 +129,7 @@ const NavbarLogged = () => {
 									)}
 								</Formik>
 							</div>
-							{/* )} */}
+							{}
 						</div>
 						<div className="flex justify-center space-x-1">
 							<div className="flex items-center justify-evenly space-x-2 z-20">
@@ -238,7 +212,6 @@ const NavbarLogged = () => {
 														<span className="text-sm pl-2 text-center w-full font-semibold text-[#2b6cb0]">Profile</span>
 													</div>
 												</MenuItem>
-
 												<MenuItem as={RouterLink} to={"/rentals/saved"}>
 													<div className="flex items-center">
 														<ClipboardList color="#2b6cb0" size={25} />
@@ -271,7 +244,6 @@ const NavbarLogged = () => {
 													</div>
 												</MenuItem>
 												<MenuDivider />
-
 												<MenuItem as={RouterLink} to={"/report"}>
 													<div className="flex items-center">
 														<Report color="#2b6cb0" size={25} />
@@ -298,12 +270,11 @@ const NavbarLogged = () => {
 							<div className="">
 								{isMobile && (
 									<Box>
-										{/* <IconButton aria-label="User menu" icon={<HamburgerIcon />} onClick={() => setIsDrawerOpen(true)} /> */}
+										{}
 										<div className="flex cursor-pointer justify-center items-center space-x-2" onClick={() => setIsDrawerOpen(true)}>
 											<h1 className="text-sm hidden md:block font-bold">{!isGetUserProfileFetching && !isGetUserProfileLoading && getUserProfile && capitalize(getUserProfile.username)}</h1>
 											<Avatar name="Dan Abrahmov" aria-label="User menu" src="/api/user/profileimage" />
 										</div>
-
 										<Box>
 											<Drawer isOpen={isDrawerOpen} onClose={handleCloseDrawer} size="sm">
 												<DrawerOverlay />
@@ -447,5 +418,4 @@ const NavbarLogged = () => {
 		</>
 	);
 };
-
 export default NavbarLogged;

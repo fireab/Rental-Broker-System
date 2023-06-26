@@ -1,7 +1,7 @@
 import { StarIcon } from "@chakra-ui/icons";
 import { Badge, Button, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import React, { useEffect } from "react";
-import { ScrollRestoration, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import Followers from "./components/Account/user.followers";
 import Following from "./components/Account/user.following";
@@ -16,7 +16,6 @@ const UserLayout = () => {
 	const { pathname } = useLocation();
 	const navigate = useNavigate();
 	const [navClick, setNavClick] = React.useState();
-
 	React.useEffect(() => {
 		window.scrollTo(0, 0);
 	}, [navClick]);
@@ -27,42 +26,32 @@ const UserLayout = () => {
 		isFollowFetching,
 		getUserProfileByUsername,
 		isGetUserProfileByUsernameLoading,
-
 		refetchUserProfileByUsername,
 		isGetUserProfileByIdFetching,
-
 		followers,
 		refetchFollowers,
 		isFollowersLoading,
 		isFollowersFetching,
-
 		following,
 		refetchFollowing,
 		isFollowingLoading,
 		isFollowingFetching,
 	} = useUser(location.pathname.split("/")[2]);
-
 	useEffect(() => {
 		refetchUserProfileByUsername();
 		refetchFollowers();
 		refetchFollowing();
 	}, [refetchUserProfileByUsername, refetchFollowers, refetchFollowing]);
-
 	if (isGetUserProfileByUsernameLoading || isGetUserProfileByIdFetching || !getUserProfileByUsername) {
 		return <SkeletonPage page="profile" />;
 	}
-
 	const user = getUserProfileByUsername.user;
-
 	if (getUserProfileByUsername.username == pathname.split("/")[2]) {
 		navigate("/user");
 	}
-
 	const handleFollow = async (userId) => {
 		await follow(userId);
 	};
-	
-
 	return (
 		<div>
 			<div className="px-4  lg:px-12 pb-10">
@@ -81,26 +70,16 @@ const UserLayout = () => {
 										<div className="flex items-center space-x-1 whitespace-nowrap">
 											<StarIcon color="white" />
 											<span>4.5</span>
-
 											<span className="text-xs ">(20)</span>
-
 											<span className="text-xs ">|</span>
-
-											{/* <span className="text-xs ">{user.rate} Reviews</span> */}
-
+											{}
 											<span className="text-xs ">|</span>
-
 											<span className="text-xs ">{user.postsCount} Posts</span>
-
 											<span className="text-xs ">|</span>
-
 											<span className="text-xs ">{(!isFollowersLoading || !isFollowersFetching || followers) && followers.followersCount} Followers</span>
-
 											<span className="text-xs ">|</span>
-
 											<span className="text-xs ">{(!isFollowingLoading || !isFollowingFetching || following) && following.followingCount} Following</span>
 										</div>
-
 										<div className="flex items-center space-x-1 text-black whitespace-nowrap">
 											<span className="text-xs ">Joined</span>
 											<span className="text-xs ">{new Date(user.createdAt).toLocaleDateString()}</span>
@@ -116,7 +95,6 @@ const UserLayout = () => {
 						</div>
 					</div>
 				</div>
-
 				<div className="mt-56 md:mt-28">
 					<Tabs align="center" variant="line">
 						<TabList>
@@ -134,7 +112,6 @@ const UserLayout = () => {
 								<Badge colorScheme="purple">{(!isFollowingLoading || !isFollowingFetching || following) && following.followingCount}</Badge>
 							</Tab>
 						</TabList>
-
 						<TabPanels className="">
 							<TabPanel overflowX={"auto"}>
 								<div className="w-full md:w-2/3">
@@ -179,5 +156,4 @@ const UserLayout = () => {
 		</div>
 	);
 };
-
 export default UserLayout;
