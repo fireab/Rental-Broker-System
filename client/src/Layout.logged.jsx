@@ -10,7 +10,7 @@ function LayoutLogged({ children }) {
 	const navigate = useNavigate();
 	const location = useLocation();
 	return (
-		<div className="bg-[#EDF2F4]">
+		<div className="bg-[#EDF2F4] ">
 			{location.pathname === "/rentals/CreateAd" ? null : (
 				<Container className="md:hidden !bottom-5 z-30">
 					<Button

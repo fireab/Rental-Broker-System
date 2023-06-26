@@ -6,10 +6,10 @@ import { PulseLoader } from "react-spinners";
 
 import capitalize from "../../utils/Capitalize";
 
-const InputField = ({ label, leftIcon, rightIcon, isValidating, liveValidate, inputLeftAddon, rightButton, ...props }) => {
+const InputField = ({ label, leftIcon, rightIcon, isValidating, required, liveValidate, inputLeftAddon, rightButton, ...props }) => {
 	const [field, meta] = useField(props);
 	return (
-		<FormControl isInvalid={(meta.error && meta.touched) || (meta.error && liveValidate == true)}>
+		<FormControl isRequired={required} isInvalid={(meta.error && meta.touched) || (meta.error && liveValidate == true)}>
 			<FormLabel fontSize={"sm"}>
 				<span className="whitespace-nowrap">{capitalize(label)}</span>
 			</FormLabel>

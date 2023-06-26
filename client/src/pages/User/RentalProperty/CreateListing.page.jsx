@@ -239,6 +239,8 @@ const CreateListingPage = () => {
 												<InputField name="propertyQuantity" label="Property Quantity" placeholder="Property Quantity" type="number" />
 											</div>
 										</div>
+
+										sigara ?? its killing me men you know it/... tnafeshalesh? slken wsegi gn..
 										<div className="border p-2 flex flex-col space-y-2">
 											<Heading color={"#2b6aa0"} size={"sm"}>
 												Lease Details
@@ -324,7 +326,7 @@ const CreateListingPage = () => {
 										</div>
 									</div>
 									<div className="create-post w-full lg:w-2/5 p-4 mt-10 ">
-										<ImageDrop setImages={setImages} images={images} />
+										<ImageDrop allowmultiple={true} setImages={setImages} images={images} />
 									</div>
 								</div>
 							</Form>

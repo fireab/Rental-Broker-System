@@ -59,7 +59,7 @@ const UserLayout = () => {
 					<div className="flex flex-col md:flex-row items-end space-x-4">
 						<div className=" flex flex-col w-full md:flex-row items-end  space-x-4 ">
 							<div className="relative  -bottom-16 w-full flex flex-col md:flex-row items-center md:items-end">
-								<div className="profile-image relative md:left-20  !w-52  bg-transparent ">
+								<div className="user profile-image relative md:left-20  !w-52  bg-transparent ">
 									<UserImage username={pathname.split("/")[2]} />
 								</div>
 								<div className=" flex-1">
