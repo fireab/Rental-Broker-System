@@ -48,7 +48,7 @@ const Homepage = () => {
 	return (
 		<>
 			<div className="object-cover bg-cover bg-no-repeat bg-center">
-				{}
+				
 
 				<Flex  bg="#edf3f8" _dark={{ bg: "#3e3e3e" }} p={0} alignItems="center" justifyContent="center">
 					<Flex w="full" h="full"   overflow="hidden">
@@ -67,7 +67,7 @@ const Homepage = () => {
 				</Flex>
 
 				<div className="">
-					<Box px={8} py={24} mx="auto">
+					<Box px={8} py={"10"} mx="auto">
 						<Box w={{ base: "full", md: 11 / 12, xl: 9 / 12 }} mx="auto" textAlign={{ base: "left", md: "center" }}>
 							<chakra.h1 mb={6} fontSize={{ base: "4xl", md: "6xl" }} fontWeight="bold" lineHeight="none" letterSpacing={{ base: "normal", md: "tight" }} color="gray.900" _dark={{ color: "gray.100" }}>
 								All your{" "}
@@ -78,7 +78,7 @@ const Homepage = () => {
 							</chakra.h1>
 							<chakra.p px={{ base: 0, lg: 24 }} mb={6} fontSize={{ base: "lg", md: "xl" }} color="gray.600" _dark={{ color: "gray.300" }}>
 								A rental system is a platform that allows customers to rent items for a specific period of time. and it is easy to use, secure, fast, best and provide a seamless rental experience for customers 24/7.
-								<h1 className="text-2xl pt-2 text-black">Get what you need, when you need it.</h1>
+								<h1 className="text-2xl pt-2  from-purple-600 via-pink-600 to-blue-600 bg-gradient-to-r bg-clip-text text-transparent">Get what you need, when you need it.</h1>
 							</chakra.p>
 							<Stack direction={{ base: "column", sm: "row" }} mb={{ base: 4, md: 8 }} spacing={2} justifyContent={{ sm: "left", md: "center" }}>
 								<GridItem as="label" colSpan={{ base: "auto", lg: 4 }}>
@@ -97,7 +97,7 @@ const Homepage = () => {
 					</Box>
 				</div>
 
-				<div>
+				<div className="">
 					<SimpleGrid columns={{ base: 1, md: 2 }} spacing={0}>
 						<Flex bg="brand.400">
 							<Image src="https://kmslh.com/wp-content/uploads/2021/05/shutterstock_1153862578-1-scaled.jpg" alt="3 women looking at a laptop" fit="cover" w="full" h={{ base: 64, md: "full" }} bg="gray.100" loading="lazy" opacity={1} />

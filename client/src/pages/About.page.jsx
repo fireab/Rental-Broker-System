@@ -8,7 +8,7 @@ const AboutPage = () => {
     return (
         <div className='mx-auto'>
             <div className='bg-black p-20'>
-                <div className='text-white from-purple-600 via-pink-600 to-blue-600 bg-gradient-to-r bg-clip-text text-transparent text-center text-5xl lg:text-7xl font-bold pt-20 '>
+                <div className=' from-purple-600 via-pink-600 to-blue-600 bg-gradient-to-r bg-clip-text text-transparent text-center text-5xl lg:text-7xl font-bold pt-20 '>
                 <h1 className=' '>WELCOME TO</h1>
                 <h1 className=' '>RBS</h1>
                 </div>
