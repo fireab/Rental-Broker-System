@@ -15,6 +15,7 @@ import { useUser } from "../../hooks/user";
 import capitalize from "../../utils/Capitalize";
 import { Report_Type } from "../../utils/list";
 import NumberWithCommas from "../../utils/numberWithCommas";
+import InputFieldTextarea from "./../../components/RentalProperty/InputField.textarea";
 
 const GridContainer = styled.div`
 	display: grid;
@@ -43,7 +44,18 @@ const PropertyDetailPage = () => {
 		isSavingRentalPost,
 	} = useRentalPosts(postId);
 
-	const { follow, followData, refetchFollow, isFollowLoading, isFollowFetching } = useUser();
+	// report: actionReportPost.mutateAsync,
+	//     isReportLoading: actionReportPost.isLoading,
+	const {
+		follow,
+		followData,
+		refetchFollow,
+		isFollowLoading,
+		isFollowFetching,
+
+		report,
+		isReportLoading,
+	} = useUser();
 	const [navClick, setNavClick] = React.useState();
 
 	React.useEffect(() => {
@@ -87,23 +99,22 @@ const PropertyDetailPage = () => {
 								Report_Description: "",
 							}}
 							onSubmit={async (values, actions) => {
-								alert(JSON.stringify(values, null, 2));
+								// alert(JSON.stringify(values, null, 2));
+								report({ postId: post.id, ...values }).then((data) => {
+									onCloseReport();
+								});
 							}}
 						>
 							{(formik) => (
 								<Form>
 									<div className="flex flex-col space-y-2">
-									<InputFieldSelect required={true} placeholder="Please Select" name="Report_Type" label="Report Type" options={Report_Type} />
-									<FormControl>
-										<FormLabel htmlFor="Report_Description">Description</FormLabel>
-										<InputGroup>
-											<Textarea name="Report_Description" placeholder="Here is a sample placeholder" size="sm" />
-										</InputGroup>
-									</FormControl>
+										<InputFieldSelect required={true} placeholder="Please Select" name="Report_Type" label="Report Type" options={Report_Type} />
 
-									<Button colorScheme="blue" mr={3} type="submit">
-										Submit
-									</Button>
+										<InputFieldTextarea name="Report_Description" label="Description" placeholder="Description" type="text" />
+
+										<Button isLoading={isReportLoading} colorScheme="blue" mr={3} type="submit">
+											Submit
+										</Button>
 									</div>
 								</Form>
 							)}
@@ -179,7 +190,7 @@ const PropertyDetailPage = () => {
 										gridGap: "20px",
 									}}
 								>
-									{post.propertyImages.slice(1).map((image, index) => {
+									{post.propertyImages.slice().map((image, index) => {
 										return <Box key={index} rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage={`url(/api/posts/images/${image.image})`} />;
 									})}
 								</div>
@@ -187,6 +198,7 @@ const PropertyDetailPage = () => {
 						)}
 					</div>
 				)}
+				
 				<Stack w={"full"} spacing={{ base: 6, md: 10 }}>
 					<Box as={"header"}>
 						<Heading lineHeight={1.1} fontWeight={600} fontSize={{ base: "2xl", sm: "4xl", lg: "5xl" }}>

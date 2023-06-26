@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { redirect, Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { ChevronLeft, Lock, Mail, Plus } from "tabler-icons-react";
+import { ChevronLeft, Lock, Mail, Plus, User } from "tabler-icons-react";
 import * as yup from "yup";
 
 import Header from "../../components/Authentication/header";
@@ -24,7 +24,7 @@ const LoginPage = () => {
 	const location = useLocation();
 	const from = location.state?.from.pathname || "/rentals";
 	const initialValues = {
-		email: "",
+		username: "",
 		password: "",
 		rememberMe: false,
 	};
@@ -32,16 +32,15 @@ const LoginPage = () => {
 		loginUser(values)
 			.unwrap()
 			.then((res) => {
-				console.log("Login Success fucker");
+				toast.success(
+					"You Have LoggedIn Succesfully!"
+				)
 			});
 	};
 	return (
 		<main className="min-h-screen flex flex-col bg-gradient-to-r from-[#870bad] to-[#d60c60]">
 			<div className="w-full h-16">
 				<div className="flex  items-center p-4">
-					{/* <div className="hidden md:block md:w-1/2 ">
-						<span className="bg-red-500 ">Logo</span>
-					</div> */}
 					<div className=" hidden md:block md:w-1/2 px-2 m-0">
 						<div className="font-bold inline-block">
 							<Image className="w-10 md:w-14" src={logo} />
@@ -85,8 +84,8 @@ const LoginPage = () => {
 								<Formik initialValues={initialValues} validateOnBlur={true} validateOnChange={false} validationSchema={validationSchema} onSubmit={handelSubmit}>
 									{(formik) => (
 										<Form className="space-y-4">
-											<InputField placeholder="Enter Your Email" name="email" label="Email" leftIcon={<Mail size={22} strokeWidth={1.5} color={"#2b6cb0"} />} type="text" />
-											<InputField placeholder="Password" name="password" label="Password" leftIcon={<Lock size={22} strokeWidth={1.5} color={"#2b6cb0"} />} type="password" />
+											<InputField required={true} placeholder="Enter Your Email or Username" name="username" label="Email or Username" leftIcon={<User size={22} strokeWidth={1.5} color={"#2b6cb0"} />} type="text" />
+											<InputField required={true} placeholder="Password" name="password" label="Password" leftIcon={<Lock size={22} strokeWidth={1.5} color={"#2b6cb0"} />} type="password" />
 											<div className="flex justify-between">
 												<InputFieldCheckbox size={"md"} name="rememberMe" label="Remember me?" />
 												<RouterLink to="/resetPassword">

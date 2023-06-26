@@ -79,11 +79,31 @@ body {
 	height: 100% !important;
 }
 
-.profile-image .filepond--drop-label{
+.profile-image .filepond--drop-label {
 	background-color: transparent !important;
 }
 
-
 img {
-    max-width: none;
+	max-width: none;
+}
+
+.user .filepond--file Button {
+	display: none !important;
+}
+
+/* scroll */
+
+.scroll::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+	background-color: #f5f5f5;
+}
+
+.scroll::-webkit-scrollbar {
+	width: 10px;
+	background-color: #f5f5f5;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+	background-color: #000000;
+	border: 2px solid #555555;
 }

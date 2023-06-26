@@ -1,10 +1,12 @@
 import { Button, Card, CardBody, Image, Link } from "@chakra-ui/react";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import { useUser } from "../../hooks/user";
 import capitalize from "./../../utils/Capitalize";
 
 const FollowCard = ({ user }) => {
+	const navigate = useNavigate();
 	const { follow, followData, isFollowLoading, isFollowFetching } = useUser(user.username);
 
 	const handleFollow = async (e, userId) => {
@@ -12,7 +14,11 @@ const FollowCard = ({ user }) => {
 		await follow(userId);
 	};
 	return (
-		<Card className="p-4" direction={{ base: "column", sm: "row" }} overflow="hidden" variant="outline">
+		<Card onClick={
+			() => {
+				navigate(`/user/${user.username}`);
+			}
+		} className="p-4" direction={{ base: "column", sm: "row" }} cursor="pointer" overflow="hidden" variant="outline">
 			<div className="flex ">
 				<Image objectFit="cover" overflow="hidden" rounded={"full"} className="h-32 w-32" src={`/api/user/profileimage/${user.username}`} alt="" />
 			</div>
