@@ -30,15 +30,17 @@ const AboutPage = () => {
                 <p className='p-2 text-center font-semibold sm:text-md md:text-xl lg:text-2xl'>
                 RBS is Ethiopia's largest trusted online classifieds platform that conveniently connects owners and rentees.
                 </p>
+                <div className='p-5 text-center'>
                 <p>
-                Quikr is all about you - Our aim is to empower every person in the country to independently connect with buyers and sellers online. Brainchild of Pranay Chulet, Quikr is widely known as India’s no. 1 online classifieds platform - and there’s a reason behind that. We care about you - and the transactions that bring you closer to your dreams. Want to buy your first car? We’re here for you. Want to sell commercial property to buy a home for your family? We’re here for you. Whatever job you’ve got, we promise to get it done.
+                RBS is all about you - Our aim is to empower every person in the country to independently connect with owners and rentees online.RBS is widely known as Ethiopias no. 1 online classifieds platform - and there’s a reason behind that. We care about you, Want to rent your first car? We’re here for you. Want to rent a home for your family? We’re here for you, we promise to get it done.
                 </p> 
-                <p className='pt-2 text-blue-900'>Founded in 2008 and headquartered in Bangalore, Quikr has left a memorable footprint in over 1000 cities. And we continue to work towards building the future of trading and e-commerce.
+                <p className='pt-2 from-purple-600 via-pink-600 to-blue-600 bg-gradient-to-r bg-clip-text text-transparent text-xl'>Founded in 2023 and headquartered in Adama.
                  </p>
                 
                 <p className='pt-2'>
-                Our mission to create economic opportunities so people have better lives has taken us so much further. As a result, we’ve become the world’s work marketplace where every day businesses of all sizes and independent talent from around the globe meet here to accomplish incredible things.
+                Our mission to create economic opportunities so people have better lives has taken us so much further.
                 </p>
+                </div>
             </div>
             <h1 className='text-center text-4xl font-semibold pt-2'>Who are we</h1>
             <div className='lg:flex'>
