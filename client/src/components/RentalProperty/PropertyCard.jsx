@@ -1,27 +1,11 @@
-import { ChevronLeftIcon, ChevronRightIcon, EditIcon, StarIcon } from "@chakra-ui/icons";
-import { Box, Button, Card, CardBody, CardFooter, CardHeader, Center, Container, Flex, Grid, Heading, Icon, IconButton, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spacer, Square, Stack, Text, useBreakpointValue, useDisclosure } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import React from "react";
-import { BiLeftArrowAlt, BiRightArrowAlt, BiSave } from "react-icons/bi";
-import { BsBookmark, BsBookmarkFill, BsBookmarkHeart, BsFillStarFill, BsTrash, BsTrashFill } from "react-icons/bs";
+import { ChevronLeftIcon, ChevronRightIcon, EditIcon } from "@chakra-ui/icons";
+import { Box, Button, Card, CardBody, IconButton, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useBreakpointValue, useDisclosure } from "@chakra-ui/react";
+import React, { useState } from "react";
+import { BsBookmarkFill, BsFillStarFill, BsTrashFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
-import styled from "styled-components";
-import { EditCircle } from "tabler-icons-react";
 
-import img from "../../assets/imgs/house.jpg";
 import { useRentalPosts } from "../../hooks/rentalPost";
-import { userApi } from "../../redux/api/userApi";
-
-// const img = styled(Image)`
-// 	border: none;
-// 	transition: all 0.3s ease-in-out;
-
-// 	&:hover {
-// 		transform: scale(1.06);
-// 		box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
-// 	}
-// `;
 
 const PropertyCard = ({ preview, ...post }) => {
 	const {
@@ -32,9 +16,6 @@ const PropertyCard = ({ preview, ...post }) => {
 		saveRentalPostData,
 		isSavingRentalPost,
 	} = useRentalPosts();
-
-	console.log("saveRentalPostData", saveRentalPostData);
-	console.log("saveRentalPostData", post.savedBy.length > 0);
 
 	const navigate = useNavigate();
 	const settings = {
@@ -83,15 +64,8 @@ const PropertyCard = ({ preview, ...post }) => {
 	};
 	const handleDeletePost = (e) => {
 		e.stopPropagation();
-		// console.log("delete");
 		onOpen();
-		// saveRentalPost(post.postId);
-		// setIsSavePost(!isSavedPost);
 	};
-
-	// const user = userApi.endpoints.user.useQueryState(null, {
-	// 	selectFromResult: ({ data }) => data,
-	// });
 
 	return (
 		<>
@@ -178,7 +152,7 @@ const PropertyCard = ({ preview, ...post }) => {
 								</div>
 							) : post.saved ? (
 								<div onMouseEnter={handleHover} onMouseLeave={handleLeave} onClick={handleSavePost} className="p-2 absolute  right-2 cursor-pointer top-2 z-[2]">
-									<EditIcon className={`transition-all duration-150 ease-in-out font-bold  text-lg`} size={isSaveHover ? 22 : 20} />
+									{/* <EditIcon className={`transition-all duration-150 ease-in-out font-bold  text-lg`} size={isSaveHover ? 22 : 20} /> */}
 								</div>
 							) : (
 								<div onMouseEnter={handleHover} onMouseLeave={handleLeave} onClick={handleSavePost} className="p-2 absolute  right-2 cursor-pointer top-2 z-[2]">
@@ -195,7 +169,7 @@ const PropertyCard = ({ preview, ...post }) => {
 						<div className="w-full">
 							<Slider {...settings} ref={(slider) => setSlider(slider)}>
 								{images.length == 0 ? (
-									<Box rounded={"2xl"} overflow={"clip"} className={`${preview ? "h-60" : "h-40"}`} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage={`url(/api/posts/images/noimage.jpg)`} />
+									<Box rounded={"2xl"} overflow={"clip"} className={`${preview ? "h-60" : "h-40"}`} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage={`url(/api/posts/images/noimage)`} />
 								) : (
 									images.map((image, index) => {
 										return <Box rounded={"2xl"} overflow={"clip"} className={`${preview ? "h-60" : "h-40"}`} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} key={index} backgroundImage={`url(/api/posts/images/${image.image.image})`} />;
@@ -206,12 +180,10 @@ const PropertyCard = ({ preview, ...post }) => {
 					</div>
 					<div className="p-2">
 						<div className="flex flex-col">
-							<div className="flex items-start font-medium text-sm justify-start ">
-								{/* [Address] */}
-								{/* <span>Addis Ababa, Bole</span> */}
+							<div className="flex items-center justify-between font-medium text-sm ">
 								<span className="line-clamp-1 text-left">{`${post.propertyRegion}, ${post.propertyCity}`}</span>
-								{/* [rating] */}
-								<div className="flex justify-center space-x-1 ">
+
+								<div className="flex items-center space-x-1 ">
 									<span className="">
 										<BsFillStarFill className="text-yellow-400" />
 									</span>
@@ -220,11 +192,10 @@ const PropertyCard = ({ preview, ...post }) => {
 							</div>
 							<div className="flex justify-between">
 								<div className="flex flex-col items-start">
-									{/* [product title] */}
-									<span className={`${preview ? "font-lg text-sm" : "font-medium text-xs"} text-blue-900`}>{post.propertyTitle}</span>
-									{/* [product type] */}
+									<span className={`${preview ? "font-lg text-sm" : "font-medium text-xs"} line-clamp-1 text-blue-900`}>{post.propertyTitle}</span>
+
 									<span className={`${preview ? "text-sm" : "text-xs"} text-gray-600`}>{post.propertyType}</span>
-									{/* [property price] */}
+
 									<span className={`${preview ? "text-sm" : "text-xs"} text-gray-900`}>{`${post.propertyPrice[0].price} / ${post.propertyPrice[0].priceType}`}</span>
 								</div>
 								{post.saved && (

@@ -5,10 +5,10 @@ import React from "react";
 
 import capitalize from "../../utils/Capitalize";
 
-const InputField = ({ label, leftIcon, rightIcon, inputLeftAddon, inputRightAddon, ...props }) => {
+const InputField = ({ label, leftIcon, rightIcon, required,inputLeftAddon, inputRightAddon, ...props }) => {
 	const [field, meta] = useField(props);
 	return (
-		<FormControl isInvalid={meta.error && meta.touched}>
+		<FormControl isRequired={required} isInvalid={meta.error && meta.touched}>
 			<FormLabel fontSize={"sm"}>
 				<span className="whitespace-nowrap">{capitalize(label)}</span>
 			</FormLabel>

@@ -11,11 +11,6 @@ const BASE_URL = "/api"; // Replace with your actual API base URL
 const state = store.getState();
 
 export const fetchRentalPosts = async (params) => {
-	console.log("fetchRentalPosts param ", params);
-
-	// const response = await axios.get("/api/posts/getposts", {
-	// 	params,
-	// });
 	const response = await axios.get("/api/posts/getposts", {
 		params: params,
 	});
@@ -24,12 +19,12 @@ export const fetchRentalPosts = async (params) => {
 };
 
 export const fetchUserRentalPost = async (postId) => {
+	console.log(postId)
 	const response = await axios.get(`/api/posts/${postId.queryKey[1]}`);
 	return response.data;
 };
 
 export const createUserRentalPost = async (postData) => {
-	console.log("createUserRentalPost postData ", postData);
 	const response = await axios.post("/api/posts/addpost", postData);
 	return response.data;
 };
@@ -45,22 +40,17 @@ export const saveRentalPost = async (postId) => {
 };
 
 export const fetchSavedRentalPosts = async () => {
-	console.log("fetchSavedRentalPosts");
 	const response = await axios.get("/api/posts/savedposts");
 	return response.data;
 };
 
 export const deleteUserRentalPost = async (postId) => {
-	console.log(postId);
 	return await axios.delete(`/api/posts/userpost`, {
 		data: { postId: postId },
 	});
 };
 export const fetchRentalPostsByUser = async (userId) => {
-	console.log("fetchRentalPostsByUser userId ", userId.queryKey[1]);
-
 	if (userId.queryKey[1] === "user") {
-		console.log("freab");
 		const response = await axios.get(`/api/posts/userposts`);
 		return response.data;
 	}
@@ -69,10 +59,25 @@ export const fetchRentalPostsByUser = async (userId) => {
 };
 
 export const fetchRentalPostsBySearch = async (params) => {
-	// console.log("fetchRentalPostsBySearch params ", params);
 	const response = await axios.get("/api/posts/search", {
-		params: params,
+		params: params.queryKey[1],
 	});
-	// console.log("fetchRentalPostsBySearch response ", response);
+	return response.data;
+};
+
+export const makeRentalPostRequest = async (requestPostData) => {
+	const response = await axios.post(`/api/posts/request`, requestPostData);
+	return response.data;
+};
+
+export const fetchRentalPostRequests = async () => {
+	const response = await axios.get("/api/posts/requests");
+	console.log(response.data, "response.data")
+	return response.data;
+};
+
+export const fetchUserRentalPostRequest = async () => {
+	const response = await axios.get(`/api/posts/requests/my`);
+	console.log(response.data, "response.data")
 	return response.data;
 };

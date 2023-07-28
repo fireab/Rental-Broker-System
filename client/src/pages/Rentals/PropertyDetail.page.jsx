@@ -1,15 +1,21 @@
-import { Avatar, Badge, Box, Button, Container, Heading, List, ListItem, Stack, StackDivider, Text, VStack } from "@chakra-ui/react";
+import { Avatar, Badge, Box, Button, Container, FormControl, FormLabel, Heading, IconButton, InputGroup, List, ListItem, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, StackDivider, Text, Textarea, useDisclosure, VStack } from "@chakra-ui/react";
+import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { BiUserPlus } from "react-icons/bi";
 import { BsBookmarkFill } from "react-icons/bs";
 import { useQueryClient } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { ScrollRestoration, useNavigate, useParams } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 import styled from "styled-components";
 
+import SkeletonPage from "../../components/common/skeleton.page";
+import InputFieldSelect from "../../components/RentalProperty/InputField.select";
 import { useRentalPosts } from "../../hooks/rentalPost";
 import { useUser } from "../../hooks/user";
 import capitalize from "../../utils/Capitalize";
+import { Report_Type } from "../../utils/list";
 import NumberWithCommas from "../../utils/numberWithCommas";
+import InputFieldTextarea from "./../../components/RentalProperty/InputField.textarea";
 
 const GridContainer = styled.div`
 	display: grid;
@@ -19,6 +25,9 @@ const GridContainer = styled.div`
 `;
 
 const PropertyDetailPage = () => {
+	const { isOpen: isOpenReport, onOpen: onOpenReport, onClose: onCloseReport } = useDisclosure();
+	// const notify = (message) => toast(message);
+	// notify("Welcome to the property detail page");
 	const { postId } = useParams();
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
@@ -34,7 +43,24 @@ const PropertyDetailPage = () => {
 		saveRentalPostData,
 		isSavingRentalPost,
 	} = useRentalPosts(postId);
-	const { follow, followData, refetchFollow, isFollowLoading, isFollowFetching } = useUser();
+
+	// report: actionReportPost.mutateAsync,
+	//     isReportLoading: actionReportPost.isLoading,
+	const {
+		follow,
+		followData,
+		refetchFollow,
+		isFollowLoading,
+		isFollowFetching,
+
+		report,
+		isReportLoading,
+	} = useUser();
+	const [navClick, setNavClick] = React.useState();
+
+	React.useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [navClick]);
 
 	useEffect(
 		(postId) => {
@@ -45,7 +71,7 @@ const PropertyDetailPage = () => {
 
 	const [isSavedPost, setIsSavePost] = useState(false);
 	if ((isFetchingRentalPost, isLoadingRentalPost || !fetchRentalPost)) {
-		return <div>Loading...</div>;
+		return <SkeletonPage page="rental detail" />;
 	}
 	const post = fetchRentalPost?.post;
 	const author = fetchRentalPost?.post.author;
@@ -55,37 +81,88 @@ const PropertyDetailPage = () => {
 	};
 
 	const handleFollow = async () => {
-		await follow(author.id);
+		await follow(author.id).then((data) => {});
 	};
-
-	window.scrollTo(0, 0);
 
 	return (
 		<Container maxW={"7xl"} className="p-2 m-4 z-10 w-full md:!w-2/3 overflow-auto ">
+			<Modal isOpen={isOpenReport} onClose={onCloseReport}>
+				<ModalOverlay />
+				<ModalContent>
+					<ModalHeader>Report</ModalHeader>
+					<ModalCloseButton />
+
+					<ModalBody className="p-4">
+						<Formik
+							initialValues={{
+								Report_Type: "",
+								Report_Description: "",
+							}}
+							onSubmit={async (values, actions) => {
+								// alert(JSON.stringify(values, null, 2));
+								report({ postId: post.id, ...values }).then((data) => {
+									onCloseReport();
+								});
+							}}
+						>
+							{(formik) => (
+								<Form>
+									<div className="flex flex-col space-y-2">
+										<InputFieldSelect required={true} placeholder="Please Select" name="Report_Type" label="Report Type" options={Report_Type} />
+
+										<InputFieldTextarea name="Report_Description" label="Description" placeholder="Description" type="text" />
+
+										<Button isLoading={isReportLoading} colorScheme="blue" mr={3} type="submit">
+											Submit
+										</Button>
+									</div>
+								</Form>
+							)}
+						</Formik>
+					</ModalBody>
+
+					{/* <ModalFooter>
+						<Button colorScheme="blue" mr={3} onClick={onCloseReport}>
+							Close
+						</Button>
+						<Button variant="ghost">Secondary Action</Button>
+					</ModalFooter> */}
+				</ModalContent>
+			</Modal>
 			<div className="flex flex-col">
 				<div className="flex justify-between items-center p-2">
 					<div
 						onClick={() => {
-							navigate(`/user/${author.username}`);
+							if (author.id === fetchRentalPost.requestUserId) {
+								navigate(`/user`);
+							} else {
+								navigate(`/user/${author.username}`);
+							}
 						}}
 						className="flex cursor-pointer justify-center items-center space-x-4"
 					>
 						<Avatar name="user" size={"lg"} aria-label="User menu" src={`/api/user/profileimage/${author.username}`} />
 						<div className="flex flex-col">
-							<span className="text-md md:text-lg font-bold">{author.username}</span>
+							<span className="text-md md:text-lg font-bold">{capitalize(author.username)}</span>
 							<div className="flex flex-col md:flex-row text-xs md:text-sm font-light md:space-x-4">
 								<span>4.2</span>
-								<span className="whitespace-nowrap">{`${author.address[0].region}, ${author.address[0].city}`}</span>
+								<span className="whitespace-nowrap">{`${capitalize(author.address[0].region)}, ${capitalize(author.address[0].city)}`}</span>
 								<span>{author.firstName}</span>
 							</div>
 						</div>
 					</div>
 					<div className="flex space-x-2">
-						<Button isLoading={isFollowLoading || isFollowFetching} onClick={handleFollow} colorScheme="messenger">
-							{followData ? followData.follow ? <span className="text-white">Unfollow</span> : <span className="text-white">Follow</span> : fetchRentalPost.isFollowed ? <span className="text-white">Unfollow</span> : <span className="text-white">Follow</span>}
-						</Button>
+						{author.id !== fetchRentalPost.requestUserId && (
+							<div className="flex items-center space-x-2">
+								<Button onClick={onOpenReport} colorScheme="orange" size="xs">
+									Report
+								</Button>
+								<Button isLoading={isFollowLoading || isFollowFetching} onClick={handleFollow} colorScheme="messenger">
+									{followData ? followData.follow ? <span className="text-white">Unfollow</span> : <span className="text-white">Follow</span> : fetchRentalPost.isFollowed ? <span className="text-white">Unfollow</span> : <span className="text-white">Follow</span>}
+								</Button>
+							</div>
+						)}
 
-			
 						<div onClick={handleSavePost} className="p-2  right-2 cursor-pointer top-2 z-[2]">
 							<BsBookmarkFill
 								style={{
@@ -99,7 +176,6 @@ const PropertyDetailPage = () => {
 				{post.propertyImages.length > 0 && (
 					<div className="flex flex-col md:flex-row justify-evenly space-x-4 w-full h-[50vh] ">
 						<div className="md:w-1/2 w-full flex-1 ">
-							{console.log(post.propertyImages[0])}
 							<Box rounded={"lg"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage={`url(/api/posts/images/${post.propertyImages[0].image})`} />
 						</div>
 						{post.propertyImages.length > 1 && (
@@ -114,16 +190,15 @@ const PropertyDetailPage = () => {
 										gridGap: "20px",
 									}}
 								>
-									{/* <GridContainer> */}
-									{post.propertyImages.slice(1).map((image, index) => {
+									{post.propertyImages.slice().map((image, index) => {
 										return <Box key={index} rounded={"lg"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage={`url(/api/posts/images/${image.image})`} />;
 									})}
-									{/* </GridContainer> */}
 								</div>
 							</div>
 						)}
 					</div>
 				)}
+				
 				<Stack w={"full"} spacing={{ base: 6, md: 10 }}>
 					<Box as={"header"}>
 						<Heading lineHeight={1.1} fontWeight={600} fontSize={{ base: "2xl", sm: "4xl", lg: "5xl" }}>
@@ -140,25 +215,8 @@ const PropertyDetailPage = () => {
 							<Text color={"gray.500"} fontSize={"2xl"} fontWeight={"300"}>
 								{post.propertyDescription}
 							</Text>
-							{/* <Text fontSize={"lg"}>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad aliquid amet at delectus doloribus dolorum expedita hic, ipsum maxime modi nam officiis porro, quae, quisquam quos reprehenderit velit? Natus, totam.</Text> */}
 						</VStack>
-						{/* <Box>
-							<Text fontSize={{ base: "16px", lg: "18px" }} color={"yellow.500"} fontWeight={"500"} textTransform={"uppercase"} mb={"4"}>
-								Features
-							</Text>
 
-							<SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
-								<List spacing={2}>
-									<ListItem>Chronograph</ListItem>
-									<ListItem>Master Chronometer Certified</ListItem> <ListItem>Tachymeter</ListItem>
-								</List>
-								<List spacing={2}>
-									<ListItem>Anti‑magnetic</ListItem>
-									<ListItem>Chronometer</ListItem>
-									<ListItem>Small seconds</ListItem>
-								</List>
-							</SimpleGrid>
-						</Box> */}
 						<Box>
 							<Text fontSize={{ base: "16px", lg: "18px" }} color={"yellow.500"} fontWeight={"500"} textTransform={"uppercase"} mb={"4"}>
 								Product Details
@@ -269,177 +327,3 @@ const PropertyDetailPage = () => {
 };
 
 export default PropertyDetailPage;
-
-{
-	/* <div className="w-1/2 h-[50vh] bg-red-500">
-					<div className="grid grid-cols-3 grid-rown-3 gap-4 bg-blue-700">
-					<Image rounded={"2xl"} overflow={"clip"} className="h-full" backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-
-            <Box rounded={"2xl"} overflow={"clip"} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-						<Box rounded={"2xl"} overflow={"clip"} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-						<Box rounded={"2xl"} overflow={"clip"} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" />
-						<Box rounded={"2xl"} overflow={"clip"} backgroundPosition={"center"} backgroundRepeat={"no-repeat"} backgroundSize={"cover"} backgroundImage="https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080" /> 
-					</div>
-				</div> 
-      */
-}
-{
-	/* <SimpleGrid
-columns={{ base: 1, lg: 2 }}
-spacing={{ base: 8, md: 10 }}
-py={{ base: 18, md: 24 }}>
-<Flex>
-  <Image
-    rounded={'md'}
-    alt={'product image'}
-    src={
-      'https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080'
-    }
-    fit={'cover'}
-    align={'center'}
-    w={'100%'}
-    h={{ base: '100%', sm: '400px', lg: '500px' }}
-  />
-</Flex>
-<Stack spacing={{ base: 6, md: 10 }}>
-  <Box as={'header'}>
-    <Heading
-      lineHeight={1.1}
-      fontWeight={600}
-      fontSize={{ base: '2xl', sm: '4xl', lg: '5xl' }}>
-      Automatic Watch
-    </Heading>
-    <Text
-      color={'gray.900'}
-      fontWeight={300}
-      fontSize={'2xl'}>
-      $350.00 USD
-    </Text>
-  </Box>
-
-  <Stack
-    spacing={{ base: 4, sm: 6 }}
-    direction={'column'}
-    divider={
-      <StackDivider
-        borderColor={'gray.200'}
-      />
-    }>
-    <VStack spacing={{ base: 4, sm: 6 }}>
-      <Text
-        color={'gray.500'}
-        fontSize={'2xl'}
-        fontWeight={'300'}>
-        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-        diam nonumy eirmod tempor invidunt ut labore
-      </Text>
-      <Text fontSize={'lg'}>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad
-        aliquid amet at delectus doloribus dolorum expedita hic, ipsum
-        maxime modi nam officiis porro, quae, quisquam quos
-        reprehenderit velit? Natus, totam.
-      </Text>
-    </VStack>
-    <Box>
-      <Text
-        fontSize={{ base: '16px', lg: '18px' }}
-        color={'yellow.500'}
-        fontWeight={'500'}
-        textTransform={'uppercase'}
-        mb={'4'}>
-        Features
-      </Text>
-
-      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
-        <List spacing={2}>
-          <ListItem>Chronograph</ListItem>
-          <ListItem>Master Chronometer Certified</ListItem>{' '}
-          <ListItem>Tachymeter</ListItem>
-        </List>
-        <List spacing={2}>
-          <ListItem>Anti‑magnetic</ListItem>
-          <ListItem>Chronometer</ListItem>
-          <ListItem>Small seconds</ListItem>
-        </List>
-      </SimpleGrid>
-    </Box>
-    <Box>
-      <Text
-        fontSize={{ base: '16px', lg: '18px' }}
-        color={'yellow.500'}
-        fontWeight={'500'}
-        textTransform={'uppercase'}
-        mb={'4'}>
-        Product Details
-      </Text>
-
-      <List spacing={2}>
-        <ListItem>
-          <Text as={'span'} fontWeight={'bold'}>
-            Between lugs:
-          </Text>{' '}
-          20 mm
-        </ListItem>
-        <ListItem>
-          <Text as={'span'} fontWeight={'bold'}>
-            Bracelet:
-          </Text>{' '}
-          leather strap
-        </ListItem>
-        <ListItem>
-          <Text as={'span'} fontWeight={'bold'}>
-            Case:
-          </Text>{' '}
-          Steel
-        </ListItem>
-        <ListItem>
-          <Text as={'span'} fontWeight={'bold'}>
-            Case diameter:
-          </Text>{' '}
-          42 mm
-        </ListItem>
-        <ListItem>
-          <Text as={'span'} fontWeight={'bold'}>
-            Dial color:
-          </Text>{' '}
-          Black
-        </ListItem>
-        <ListItem>
-          <Text as={'span'} fontWeight={'bold'}>
-            Crystal:
-          </Text>{' '}
-          Domed, scratch‑resistant sapphire crystal with anti‑reflective
-          treatment inside
-        </ListItem>
-        <ListItem>
-          <Text as={'span'} fontWeight={'bold'}>
-            Water resistance:
-          </Text>{' '}
-          5 bar (50 metres / 167 feet){' '}
-        </ListItem>
-      </List>
-    </Box>
-  </Stack>
-
-  <Button
-    rounded={'none'}
-    w={'full'}
-    mt={8}
-    size={'lg'}
-    py={'7'}
-    bg={'gray.900'}
-    color={'white'0    textTransform={'uppercase'}
-    _hover={{
-      transform: 'translateY(2px)',
-      boxShadow: 'lg',
-    }}>
-    Add to cart
-  </Button>
-
-  <Stack direction="row" alignItems="center" justifyContent={'center'}>
-    <MdLocalShipping />
-    <Text>2-3 business days delivery</Text>
-  </Stack>
-</Stack>
-</SimpleGrid> */
-}

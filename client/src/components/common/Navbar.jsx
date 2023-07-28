@@ -1,10 +1,11 @@
 import { HamburgerIcon } from "@chakra-ui/icons";
-import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, IconButton, Input, useDisclosure } from "@chakra-ui/react";
+import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, IconButton, Image, Input, useDisclosure } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { NavLink, Link as RouterLink } from "react-router-dom";
+import { NavLink, Link as RouterLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { ChevronRight, Menu2, Search } from "tabler-icons-react";
 
+import logo from "./../../assets/Awashlogo.svg";
 
 const LoginButton = styled(NavLink)`
 	border: none;
@@ -66,6 +67,7 @@ const Navbar = () => {
 	const [isScrolled, setIsScrolled] = useState(false);
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const btnRef = React.useRef();
+	const navigate = useNavigate()
 	useEffect(() => {
 		function handleScroll() {
 			if (window.scrollY > 60) {
@@ -85,10 +87,16 @@ const Navbar = () => {
 			<div className="w-full h-full">
 				<div className="h-full flex items-center justify-between">
 					<div className="flex justify-between items-center md:w-2/5 w-1/2">
-						<div>
-							<a href="" className="font-bold p-3">
-								<span>LOGO</span>
-							</a>
+						<div onClick={
+							()=>{
+								navigate('/')
+							}
+						}>
+							<div className=" px-2 m-0">
+								<div className="font-bold inline-block">
+									<Image className="w-10 md:w-14" src={logo} />
+								</div>
+							</div>
 						</div>
 						<div className="hidden md:block">
 							<form action="/search">
@@ -126,7 +134,7 @@ const Navbar = () => {
 							</LoginButton>
 						</div>
 						<div className="md:hidden">
-							<IconButton ref={btnRef} onClick={onOpen} className="" aria-label="Search database" borderColor={"#2b6cb0"}  variant="outline" color={'#2b6cb0'} fontSize={25}  _hover={{backgroundColor:"#2b6cb0",color:"white"}}  icon={<HamburgerIcon />} />
+							<IconButton ref={btnRef} onClick={onOpen} className="" aria-label="Search database" borderColor={"#2b6cb0"} variant="outline" color={"#2b6cb0"} fontSize={25} _hover={{ backgroundColor: "#2b6cb0", color: "white" }} icon={<HamburgerIcon />} />
 							<Drawer isOpen={isOpen} placement="right" onClose={onClose} finalFocusRef={btnRef}>
 								<DrawerOverlay />
 								<DrawerContent>
@@ -165,17 +173,16 @@ const Navbar = () => {
 														</div>
 													</RouterLink>
 												</li>
-											
 											</ul>
 										</div>
 									</DrawerBody>
 
 									<DrawerFooter>
-									<RouterLink to="profile">
-														<div className="flex text-[#2b6cb0] text-sm items-center justify-between  p-2 rounded">
-															<span>HELP AND SUPPORT</span>
-														</div>
-													</RouterLink>
+										<RouterLink to="profile">
+											<div className="flex text-[#2b6cb0] text-sm items-center justify-between  p-2 rounded">
+												<span>HELP AND SUPPORT</span>
+											</div>
+										</RouterLink>
 									</DrawerFooter>
 								</DrawerContent>
 							</Drawer>

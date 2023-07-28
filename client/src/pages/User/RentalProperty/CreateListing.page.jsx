@@ -6,7 +6,7 @@ import { Form, Formik } from "formik";
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Baguette, BrandFacebook, BrandInstagram, BrandTelegram, BrandTiktok, BrandTwitter, BrandWhatsapp, BrandYoutube, ClockCancel, Mail, PhoneCall } from "tabler-icons-react";
+import { Baguette, BrandFacebook, BrandInstagram, BrandTelegram, BrandTiktok, BrandTwitter, BrandWhatsapp, BrandYoutube, ClockCancel, Mail, PhoneCall, Trash } from "tabler-icons-react";
 import * as yup from "yup";
 
 import AdPreviewModal from "../../../components/RentalProperty/AdPreview.modal";
@@ -101,6 +101,11 @@ const CreateListingPage = () => {
 			},
 		],
 	};
+	const [navClick, setNavClick] = React.useState();
+
+	React.useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [navClick]);
 
 	const [previewAdValues, setpreviewAdValues] = React.useState(initialValues);
 
@@ -117,15 +122,12 @@ const CreateListingPage = () => {
 		await axios
 			.post("/api/upload", formData)
 			.then(async (res) => {
-				console.log(res.data);
 				await createRentalPost({ ...values, propertyImages: res.data.map((image) => ({ image })) });
 			})
 			.then(() => {
 				navigate("/rentals");
 			})
-			.catch((err) => {
-				console.log("error dil");
-			});
+			.catch((err) => {});
 		setLoading(false);
 	};
 	const handelPreview = (values) => {
@@ -134,14 +136,14 @@ const CreateListingPage = () => {
 	};
 
 	return (
-		<div className="bg-[#EDF2FA] lg:px-20 py-10">
+		<div className="bg-[#EDF2FA] px-4 lg:px-20 py-10">
 			<AdPreviewModal previewAdValues={previewAdValues} isOpen={isAdPreviewOpen} onClose={onAdPreviewClose} />
 			<div className="flex flex-col space-y-8">
 				<Heading color={"#2b6aa0"} size={"lg"}>
 					Create Listing
 				</Heading>
 				<div className="p-4 bg-white lg:rounded-lg lg:shadow-2xl px-2 lg:px-10">
-					<Formik initialValues={initialValues} validationSchema={validationSchema} validateOnBlur={true} onSubmit={handelSubmit}>
+					<Formik initialValues={initialValues} validateOnChange={false} validationSchema={validationSchema} validateOnBlur={false} onSubmit={handelSubmit}>
 						{/* { values, errors, touched, handleChange, handleBlur, handleSubmit } */}
 						{(formik) => (
 							<Form>
@@ -202,20 +204,26 @@ const CreateListingPage = () => {
 											<div className="flex flex-col space-y-2">
 												<div className="flex flex-col space-y-2">
 													{formik.values.propertyPrice.map((price, index) => (
-														<div key={index} className="flex space-x-1">
+														<div key={index} className="flex space-x-1 ">
 															<InputField name={`propertyPrice[${index}].price`} label="Property Price" placeholder="Property Price" type="number" inputRightAddon={"Birr"} />
-															<div className="flex">
-																<InputFieldSelect name={`propertyPrice[${index}].priceType`} label="Property Price Type" options={Price_Type} />
-																<IconButton
-																	onClick={() => {
-																		formik.setFieldValue(
-																			"propertyPrice",
-																			formik.values.propertyPrice.filter((_, i) => i !== index),
-																		);
-																	}}
-																	backgroundColor={"red.400"}
-																	color={"white"}
-																	icon={<DeleteIcon />}
+															<div className="flex items-end space-x-1 w-2/3">
+																<InputFieldSelect
+																	rightIcon={
+																		<IconButton
+																			onClick={() => {
+																				formik.setFieldValue(
+																					"propertyPrice",
+																					formik.values.propertyPrice.filter((_, i) => i !== index),
+																				);
+																			}}
+																			backgroundColor={"red.400"}
+																			color={"white"}
+																			icon={<DeleteIcon />}
+																		/>
+																	}
+																	name={`propertyPrice[${index}].priceType`}
+																	label="Property Price Type"
+																	options={Price_Type}
 																/>
 															</div>
 														</div>
@@ -231,6 +239,8 @@ const CreateListingPage = () => {
 												<InputField name="propertyQuantity" label="Property Quantity" placeholder="Property Quantity" type="number" />
 											</div>
 										</div>
+
+										sigara ?? its killing me men you know it/... tnafeshalesh? slken wsegi gn..
 										<div className="border p-2 flex flex-col space-y-2">
 											<Heading color={"#2b6aa0"} size={"sm"}>
 												Lease Details
@@ -256,23 +266,28 @@ const CreateListingPage = () => {
 												Contact Information
 											</Heading>
 											<div>
-												{/* <InputField name="propertyContact" label="Property Contact" placeholder="Property Contact" /> */}
 												<div className="flex flex-col space-y-2">
 													{formik.values.propertyContact.map((contact, index) => (
 														<div key={index} className="flex space-x-1">
 															<InputField name={`propertyContact[${index}].value`} label="Property Contact" placeholder="Property Contact" type="text" />
-															<div className="flex">
-																<InputFieldSelect name={`propertyContact[${index}].type`} label="Property Contact Type" options={Contact_Type} />
-																<IconButton
-																	onClick={() => {
-																		formik.setFieldValue(
-																			"propertyContact",
-																			formik.values.propertyContact.filter((_, i) => i !== index),
-																		);
-																	}}
-																	backgroundColor={"red.400"}
-																	color={"white"}
-																	icon={<DeleteIcon />}
+															<div className="flex space-x-1">
+																<InputFieldSelect
+																	rightIcon={
+																		<IconButton
+																			onClick={() => {
+																				formik.setFieldValue(
+																					"propertyContact",
+																					formik.values.propertyContact.filter((_, i) => i !== index),
+																				);
+																			}}
+																			backgroundColor={"red.400"}
+																			color={"white"}
+																			icon={<DeleteIcon />}
+																		/>
+																	}
+																	name={`propertyContact[${index}].type`}
+																	label="Property Contact Type"
+																	options={Contact_Type}
 																/>
 															</div>
 														</div>
@@ -311,7 +326,7 @@ const CreateListingPage = () => {
 										</div>
 									</div>
 									<div className="create-post w-full lg:w-2/5 p-4 mt-10 ">
-										<ImageDrop setImages={setImages} images={images} />
+										<ImageDrop allowmultiple={true} setImages={setImages} images={images} />
 									</div>
 								</div>
 							</Form>

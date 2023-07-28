@@ -6,8 +6,9 @@ import React, { useEffect, useState } from "react";
 import { BiBookBookmark, BiCar, BiDish, BiMobile, BiParty, BiRun, BiTable } from "react-icons/bi";
 import { BsBicycle, BsBuildingsFill, BsChevronDown, BsFilterRight } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { ScrollRestoration, useLocation } from "react-router-dom";
 
+import SkeletonPage from "../../components/common/skeleton.page";
 import PropertyCard from "../../components/RentalProperty/PropertyCard";
 import { useRentalPosts } from "../../hooks/rentalPost";
 import InputFieldSelect from "./../../components/RentalProperty/InputField.select";
@@ -19,7 +20,11 @@ const RentalsPage = () => {
 		region: "",
 		city: "",
 	});
+	const [navClick, setNavClick] = React.useState();
 
+	React.useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [navClick]);
 	const { isOpen: isOpenFilter, onOpen: onOpenFilter, onClose: onCloseFilter } = useDisclosure();
 
 	const { rentalsPosts, refetchRentalPosts, rentalsPostsIsFetching, saveRentalPost, isLoading, error } = useRentalPosts(param);
@@ -137,11 +142,9 @@ const RentalsPage = () => {
 					</div>
 				</div>
 			</div>
-			<div className="min-h-screen">
+			<div className="min-h-screen ">
 				{isLoading || rentalsPostsIsFetching || !rentalsPosts ? (
-					<div className="h-full w-full flex justify-center items-center">Loading...</div>
-				) : isLoading || rentalsPostsIsFetching || !rentalsPosts ? (
-					<div>Loading...</div>
+					<SkeletonPage page="rentals" />
 				) : rentalsPosts.length > 0 ? (
 					<div className="grid grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
 						{rentalsPosts &&
@@ -150,8 +153,18 @@ const RentalsPage = () => {
 							})}
 					</div>
 				) : (
-					<div className="h-full w-full ">
-						<h1 className="!font-bold text-sm text-center">Sorry, There is no post of {param.propertyType}</h1>
+					<div className="flex flex-col items-center justify-center h-[50vh]">
+						{param.propertyType ? (
+							<>
+								<div className="text-2xl font-bold">Sorry, There is no post of {param.propertyType}</div>
+								<div className="text-lg font-bold">Try different Catagory or Filter</div>
+							</>
+						) : (
+							<>
+								<div className="text-2xl font-bold">Sorry, There is no post</div>
+								<div className="text-lg font-bold">Try another Time</div>
+							</>
+						)}
 					</div>
 				)}
 			</div>

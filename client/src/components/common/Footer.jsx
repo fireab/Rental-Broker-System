@@ -14,9 +14,7 @@ const Footer = () => {
                 <span className='text-teal-400'>Free</span> Until payment integrated
             </h1>
 
-            <div className='font-semibold'>
-                signup
-            </div>
+            
 
         </div>
        

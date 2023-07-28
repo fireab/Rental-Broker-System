@@ -9,7 +9,7 @@ import "filepond/dist/filepond.min.css";
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginImageResize);
 
-const ImageDrop = ({setImages,images}) => {
+const ImageDrop = ({setImages,images, allowmultiple}) => {
     // const pondRef = useRef(null);
    
     const handleInit = () => {
@@ -26,7 +26,7 @@ const ImageDrop = ({setImages,images}) => {
 				// ref={pondRef}
 				
 				files={images}
-				allowMultiple={true}
+				allowMultiple={allowmultiple}
 				maxFiles={8}
 				// allowMultiple={true}
 				// server="/api/posts/addpost"

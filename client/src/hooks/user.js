@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
-import { changePassword, editUserProfile, fetchUserFollowers, fetchUserFollowing, fetchUserProfile, fetchUserProfileByUsername, followUser } from "../services/user";
+import { changePassword, editUserProfile, fetchUserFollowers, fetchUserFollowing, fetchUserProfile, fetchUserProfileByUsername, fetchUserSearch, followUser, reportPost } from "../services/user";
 
 export const useUser = (params) => {
     const queryClient = useQueryClient();
@@ -27,11 +27,16 @@ export const useUser = (params) => {
         enabled: false,
     });
 
+    const searchUsers = useQuery(["user search",params], fetchUserSearch, {
+        enabled: false,
+    });
 
     const followUserAction = useMutation(followUser, {
-        // enabled: false,
         onSuccess: (data) => {
-            console.log(data, "followed or not");
+            queryClient.invalidateQueries(["follow",params]);
+            userFollowers.refetch();
+            // getUserProfileByUsername.refetch();
+            // queryClient.setQueryData(["follow",params], data);
             return data;
         }
     });
@@ -45,6 +50,8 @@ export const useUser = (params) => {
     const userFollowing = useQuery(["following",params], fetchUserFollowing, {
         enabled: false,
     });
+
+    const actionReportPost = useMutation(reportPost,{})
 
     return {
         getUserProfile: getUserProfile.data,
@@ -66,7 +73,6 @@ export const useUser = (params) => {
         //
         follow: followUserAction.mutateAsync,
         followData: followUserAction.data,
-        refetchFollow: followUserAction.refetch,
         isFollowLoading: followUserAction.isLoading,
         isFollowFetching: followUserAction.isFetching,
 
@@ -74,6 +80,7 @@ export const useUser = (params) => {
         // follwers
 
         followers: userFollowers.data,
+        refetchFollowers: userFollowers.refetch,
         isFollowersLoading: userFollowers.isLoading,
         isFollowersFetching: userFollowers.isFetching,
 
@@ -83,6 +90,19 @@ export const useUser = (params) => {
         refetchFollowing: userFollowing.refetch,
         isFollowingLoading: userFollowing.isLoading,
         isFollowingFetching: userFollowing.isFetching,
+
+        // search
+
+        search: searchUsers.data,
+        refetchSearch: searchUsers.refetch,
+        isSearchLoading: searchUsers.isLoading,
+        isSearchFetching: searchUsers.isFetching,
+
+        // report
+
+        report: actionReportPost.mutateAsync,
+        isReportLoading: actionReportPost.isLoading,
+
 
     }
 };
