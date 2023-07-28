@@ -1,6 +1,4 @@
-// emailService.js
-
-const nodemailer = require("nodemailer");
+import nodemailer from "nodemailer";
 
 // Create a transporter for sending emails
 const transporter = nodemailer.createTransport({
@@ -12,22 +10,24 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-module.exports = {
-  sendVerificationEmail: async (toEmail, verificationCode, name) => {
-    try {
-      // Define the email content
-      const mailOptions = {
-        from: "fire123te@gmail.com",
-        to: toEmail,
-        subject: "Email Verification",
-        text: `dear ${name} Your verification code is: ${verificationCode}`,
-      };
+// Export the sendVerificationEmail function
+const sendVerificationEmail = async (toEmail, verificationCode) => {
+  try {
+    // Define the email content
+    const mailOptions = {
+      from: "fire123te@gmail.com",
+      to: toEmail,
+      subject: "Email Verification",
+      // text: `Dear ${name}, your verification code is: ${verificationCode}`,
+      text: verificationCode,
+    };
 
-      // Send the email
-      const info = await transporter.sendMail(mailOptions);
-      console.log(`Email sent to ${toEmail}: ${info.messageId}`);
-    } catch (error) {
-      console.error("Error sending verification email:", error);
-    }
-  },
+    // Send the email
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`Email sent to ${toEmail}: ${info.messageId}`);
+  } catch (error) {
+    console.error("Error sending verification email:", error);
+  }
 };
+
+export default { sendVerificationEmail };

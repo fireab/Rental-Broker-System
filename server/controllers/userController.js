@@ -1,8 +1,7 @@
-const prisma = require("../config/dbConfig.js");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-
-const fs = require("fs");
+import prisma from "../config/dbConfig.js";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import fs from "fs";
 
 const updateProfile = async (req, res) => {
   console.log(req.body);
@@ -1114,7 +1113,7 @@ const searchUser = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   getUserProfile,
   updateProfile,
   deleteAccount,

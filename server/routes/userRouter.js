@@ -1,10 +1,9 @@
-const express = require("express");
-const multer = require("multer");
-const {
+import express from "express";
+import multer from "multer";
+import {
   getUserProfile,
   updateProfile,
   deleteAccount,
-
   profilePic,
   sendProfileImg,
   deleteProfilePic,
@@ -17,8 +16,8 @@ const {
   getOtherFollowing,
   getFollowers,
   getFollowing,
-} = require("../controllers/userController.js");
-const authenticateUser = require("../middleware/autorization.js");
+} from "../controllers/userController.js";
+import authenticateUser from "../middleware/autorization.js";
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -60,4 +59,4 @@ router.get("/:username/following", authenticateUser, getOtherFollowing);
 router.get("/profileimage/:username", authenticateUser, sendOtherProfileimage);
 router.delete("/profileimage", authenticateUser, deleteProfilePic);
 
-module.exports = router;
+export default router;

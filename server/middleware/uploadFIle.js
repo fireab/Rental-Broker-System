@@ -19,7 +19,7 @@
 /////
 ////////
 
-const multer = require("multer");
+import multer from "multer";
 let storage;
 try {
   storage = multer.diskStorage({
@@ -35,7 +35,7 @@ try {
 }
 const upload = multer({ storage });
 
-module.exports = upload;
+export default upload;
 
 // app.post(
 //   '/api/posts',

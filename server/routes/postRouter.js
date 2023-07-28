@@ -1,5 +1,5 @@
-const express = require("express");
-const {
+import express from "express";
+import {
   addPost,
   deletePost,
   reportPost,
@@ -18,10 +18,11 @@ const {
   suggest,
   getRequests,
   getMyRequests,
-} = require("../controllers/postController.js");
-
-const authenticateUser = require("../middleware/autorization.js");
-const upload = require("../middleware/uploadFIle.js");
+  deleteRequest,
+  deletePostImage,
+} from "../controllers/postController.js";
+import authenticateUser from "../middleware/autorization.js";
+import upload from "../middleware/uploadFIle.js";
 
 const router = express.Router();
 
@@ -29,6 +30,8 @@ const router = express.Router();
 router.post("/addpost", authenticateUser, addPost);
 router.post("/request", authenticateUser, addrequest);
 router.get("/requests", authenticateUser, getRequests);
+router.delete("/request", authenticateUser, deleteRequest);
+
 router.get("/requests/my", authenticateUser, getMyRequests);
 router.get("/getsuggested", authenticateUser, getSuggested);
 router.get("/getposts", authenticateUser, suggest);
@@ -46,6 +49,8 @@ router.post("/:postId/report", authenticateUser, reportPost);
 router.post("/:postId/savepost", authenticateUser, savePost);
 router.delete("/:postId/deletesavedpost", authenticateUser, deleteSavedPosts);
 
+router.delete("/postimage", authenticateUser, deletePostImage);
+
 // router.post("/propost", upload.array("images", 5), postImg);
 
-module.exports = router;
+export default router;

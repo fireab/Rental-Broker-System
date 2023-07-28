@@ -1,4 +1,4 @@
-const {
+import {
   getFirestore,
   collection,
   doc,
@@ -8,9 +8,9 @@ const {
   addDoc,
   query,
   orderBy,
-} = require("firebase/firestore");
-const app = require("../config/firebase.js");
-const { where, limit } = require("firebase/firestore/lite");
+} from "firebase/firestore";
+import app from "../config/firebase.js";
+import { where, limit } from "firebase/firestore/lite";
 
 // Create a Firestore reference
 const db = getFirestore(app);
@@ -213,4 +213,4 @@ const getUsersWithChat = async (req, res) => {
   }
 };
 
-module.exports = { sendMessage, getMessages, getUsersWithChat };
+export { sendMessage, getMessages, getUsersWithChat };

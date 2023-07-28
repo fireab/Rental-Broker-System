@@ -1,17 +1,15 @@
-const express = require("express");
-
-const authenticateUser = require("../middleware/autorization.js");
-const upload = require("../middleware/uploadFIle.js");
-const {
+import express from "express";
+import authenticateUser from "../middleware/autorization.js";
+import upload from "../middleware/uploadFIle.js";
+import {
   sendMessage,
   getMessages,
-
   getUsersWithChat,
-} = require("../controllers/chatController.js");
+} from "../controllers/chatController.js";
 
 const router = express.Router();
 router.post("/messages", authenticateUser, sendMessage);
 router.get("/messages", authenticateUser, getMessages);
 router.get("/partners", authenticateUser, getUsersWithChat);
 
-module.exports = router;
+export default router;

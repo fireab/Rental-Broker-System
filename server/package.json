@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "rental-broker-system-web-server",
   "version": "1.0.0",
   "description": "",
@@ -15,6 +16,7 @@
     "@prisma/client": "^4.14.0",
     "adminjs": "^7.0.6",
     "bcryptjs": "^2.4.3",
+    "connect-pg-simple": "^9.0.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",

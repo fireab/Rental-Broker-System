@@ -1,12 +1,12 @@
-const express = require("express");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
-const authRoutes = require("./routes/authRouter.js");
-const postRoutes = require("./routes/postRouter.js");
-const userRouter = require("./routes/userRouter.js");
-const adminRouter = require("./routes/adminRoutes.js");
-const chatRoutes = require("./routes/chatRoutes.js");
-const multer = require("multer");
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import authRoutes from "./routes/authRouter.js";
+import postRoutes from "./routes/postRouter.js";
+import userRouter from "./routes/userRouter.js";
+import adminRouter from "./routes/adminRoutes.js";
+import chatRoutes from "./routes/chatRoutes.js";
+import multer from "multer";
 
 const app = express();
 // Enable CORS for all routes
@@ -37,11 +37,14 @@ const uploadProfile = multer({ profile });
 
 app.post("/api/upload", upload.array("images"), function (req, res) {
   console.log(req.body);
+
   const files = req.files; // an array of uploaded files
   // Process the files or perform any required operations
   const filenames = files.map((file) => file.filename);
-  res.status(200).json(filenames);
+  console.log("my res:", filenames);
+  return res.status(200).json(filenames);
 });
+
 app.get("/download", (req, res) => {
   const filePath = "./upload"; // Replace with the actual file path
   res.download(filePath);
@@ -58,4 +61,4 @@ app.listen(3032, () => {
   console.log("Server is running on port 3032");
 });
 
-module.exports = storage;
+export default storage;

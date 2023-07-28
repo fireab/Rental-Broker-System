@@ -131,6 +131,7 @@ model Request {
   createdAt           DateTime           @default(now())
   ///new fild
   isBanned            Boolean            @default(false)
+  notBanned           Boolean            @default(true)
   updatedAt           DateTime           @updatedAt
   postExpiration      DateTime?
   propertyQuantity    Int?

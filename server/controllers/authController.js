@@ -1,12 +1,11 @@
-const prisma = require("../config/dbConfig.js");
-const bcrypt = require("bcryptjs");
-const crypto = require("crypto");
-const jwt = require("jsonwebtoken");
-const emailService = require("../services/emailService.js");
+import prisma from "../config/dbConfig.js";
+import bcrypt from "bcryptjs";
+import crypto from "crypto";
+import jwt from "jsonwebtoken";
+import emailService from "../services/emailService.js";
 
 const sendOtp = async (req, res) => {
   try {
-    console.log("from dilee setupotp 1");
     // Function to generate a 4-digit verification code
     function generateCode() {
       const buffer = crypto.randomBytes(2); // Generate a random buffer
@@ -51,8 +50,8 @@ const sendOtp = async (req, res) => {
     // Send the verification email with the OTP code
     await emailService.sendVerificationEmail(
       req.body.email,
-      otpCode.otp,
-      req.body.username
+      // otpCode.otp,
+      `Dear ${req.body.username},your verification code is: ${1111}`
     );
 
     return res
@@ -273,4 +272,4 @@ const logout = (req, res) => {
   res.clearCookie("access_token").status(200).json("User has been logged out.");
 };
 
-module.exports = { register, login, logout, sendOtp, checkOtp };
+export { register, login, logout, sendOtp, checkOtp };

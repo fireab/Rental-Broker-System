@@ -1,5 +1,5 @@
-const express = require("express");
-const {
+import express from "express";
+import {
   login,
   logout,
   getAllUsers,
@@ -11,23 +11,30 @@ const {
   changeCatagory,
   togglePostBan,
   toggleUserBan,
-} = require("../controllers/adminController.js");
-const authenticateUser = require("../middleware/autorization.js");
+  getBandPosts,
+  getprofile,
+} from "../controllers/adminController.js";
+import authenticateUser from "../middleware/autorization.js";
 
 const router = express.Router();
 router.post("/login", login);
 router.post("/logout", logout);
-router.get("/getUsers", authenticateUser, getAllUsers);
-router.get("/profile", authenticateUser, getAdminProfile);
-router.get("/reports", authenticateUser, getallReports);
-router.get("/userposts/:userId", authenticateUser, getallReports);
+router.get("/getUsers", getAllUsers); //not auth
+router.get("/profile", getAdminProfile);
+router.get("/reports", getallReports);
 
-router.get("/posts", authenticateUser, getPosts);
-router.get("/post/:postId", authenticateUser, getPost);
-router.put("/post/:postId/changecatagory", authenticateUser, changeCatagory);
-router.get("/user/:userId", authenticateUser, getUser);
+// router.get("/userposts/:userId", authenticateUser, getallReports);
 
-router.put("/toggleban/user/:userId", authenticateUser, toggleUserBan);
-router.put("/toggleban/post/:postId", authenticateUser, togglePostBan);
+router.get("/posts", getPosts); //getPosts
+router.get("/bannedposts", getBandPosts);
+router.get("/post/:postId", getPost);
+router.put("/post/:postId/changecatagory", changeCatagory);
+// router.get("/user/:userId", getUser);
+router.get("/user/:userId", getprofile);
 
-module.exports = router;
+router.post("/addCostemerCare", authenticateUser);
+
+// router.put("/ban/:userId", toggleUserBan);
+router.put("/ban/:postId", togglePostBan);
+
+export default router;

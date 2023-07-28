@@ -9,9 +9,9 @@
 // //   appId: "1:968367490051:web:5ef32e8d086c19e67d7a36",
 // // };
 
-const app = require("../config/firebase.js");
-const { getAuth, createUserWithEmailAndPassword } = require("firebase/auth");
-const { getFirestore, collection, doc, setDoc } = require("firebase/firestore");
+import app from "../config/firebase.js";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, collection, doc, setDoc } from "firebase/firestore";
 
 const auth = getAuth(app);
 const firestore = getFirestore(app);

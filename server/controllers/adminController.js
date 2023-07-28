@@ -1,7 +1,7 @@
-const prisma = require("../config/dbConfig.js");
-const bcrypt = require("bcryptjs");
-const crypto = require("crypto");
-const jwt = require("jsonwebtoken");
+import prisma from "../config/dbConfig.js";
+import bcrypt from "bcryptjs";
+import crypto from "crypto";
+import jwt from "jsonwebtoken";
 
 const login = async (req, res) => {
   const { email } = req.body;
@@ -64,6 +64,7 @@ const getAllUsers = async (req, res) => {
       lastName: true,
       image: true,
       phoneNumber: true,
+      createdAt: true,
       address: {
         select: {
           region: true,
@@ -93,7 +94,32 @@ const getAdminProfile = async (req, res) => {
 
 const getallReports = async (req, res) => {
   try {
-    const reports = await prisma.report.findMany();
+    const reports = await prisma.report.findMany({
+      select: {
+        createdAt: true,
+
+        reason: true,
+        reportType: true,
+        postId: true,
+        reporterId: true,
+        reporter: true,
+        post: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+    if (!reports) res.status(404).json("no report is found");
+    return res.status(200).json(reports);
+  } catch (error) {
+    // Return error message for internal server error
+    console.log(error);
+    res.status(500).json("Internal server error");
+  }
+};
+const getReport = async (req, res) => {
+  try {
+    const reports = await prisma.report.findMany({
+      orderBy: { createdAt: "desc" },
+    });
     if (!reports) res.status(404).json("no report is found");
     return res.status(200).json(reports);
   } catch (error) {
@@ -104,6 +130,7 @@ const getallReports = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
+  n;
   const { userId } = req.params;
   const users = await prisma.users.findFirst({
     where: { id: userId },
@@ -151,9 +178,98 @@ const getUser = async (req, res) => {
   return res.status(200).json(users);
 };
 
+export const getprofile = async (req, res) => {
+  try {
+    let { userId } = req.params;
+    console.log(userId);
+
+    const user = await prisma.users.findFirst({
+      where: { id: userId },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        phoneNumber: true,
+        createdAt: true,
+        posts: true,
+        address: {
+          select: {
+            region: true,
+            city: true,
+            // region: true,
+          },
+        },
+      },
+    });
+    // Return the user profile
+    if (!user) return res.status(404).json("user is not found!!");
+    const postsCount = await prisma.posts.count({
+      where: { authorId: user.id },
+    });
+    const followersCount = await prisma.userFollower.count({
+      where: { followingId: user.id },
+    });
+
+    const followingCount = await prisma.userFollower.count({
+      where: { followerId: user.id },
+    });
+
+    const userProfile = { postsCount, followersCount, followingCount, ...user };
+
+    // const userProfile = { postsCount, ...user };
+
+    return res.status(200).json(userProfile);
+  } catch (error) {
+    // Return error message for internal server error
+    console.log(error);
+    res.status(500).json("Internal server error");
+  }
+};
+
 const getPosts = async (req, res) => {
   try {
     const allposts = await prisma.posts.findMany({
+      select: {
+        id: true,
+        propertyTitle: true,
+        propertyDescription: true,
+        propertyType: true,
+        postType: true,
+        propertyRegion: true,
+        propertyCity: true,
+        propertyStreet: true,
+        maxLeaseLengthValue: true,
+        maxLeaseLengthType: true,
+        minLeaseLengthValue: true,
+        minLeaseLengthType: true,
+        propertyLeaseTerm: true,
+        authorId: true,
+        isAvailable: true,
+        propertyQuantity: true,
+        propertyImages: true,
+        propertyContact: true,
+        propertyPrice: true,
+        createdAt: true,
+        isBanned: true,
+        author: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+    if (allposts.length === 0) return res.status(200).json([]);
+    // console.log(allposts);
+    return res.status(200).json(allposts);
+  } catch (error) {
+    console.log(error);
+    res.json("Internal server error");
+  }
+};
+
+const getBandPosts = async (req, res) => {
+  try {
+    const allposts = await prisma.posts.findMany({
+      where: { isBanned: true },
       select: {
         id: true,
         propertyTitle: true,
@@ -182,6 +298,7 @@ const getPosts = async (req, res) => {
           },
         },
       },
+      orderBy: { createdAt: "desc" },
     });
     if (allposts.length === 0) return res.status(200).json([]);
     // console.log(allposts);
@@ -195,6 +312,7 @@ const getPosts = async (req, res) => {
 const getPost = async (req, res) => {
   try {
     const { postId } = req.params;
+    console.log(postId);
 
     const post = await prisma.posts.findUnique({
       where: {
@@ -220,12 +338,7 @@ const getPost = async (req, res) => {
         propertyImages: true,
         propertyContact: true,
         propertyPrice: true,
-        savedBy: {
-          where: { usersId: req.userInfo.id },
-          select: {
-            usersId: true,
-          },
-        },
+
         author: {
           select: {
             id: true,
@@ -251,6 +364,7 @@ const getPost = async (req, res) => {
 
     return res.status(200).json(post);
   } catch (error) {
+    console.log(error);
     res.status(500).json("Internal server error");
   }
 };
@@ -281,6 +395,7 @@ const changeCatagory = async (req, res) => {
 const toggleUserBan = async (req, res) => {
   try {
     const { userId } = req.params;
+    console.log(userId, "ban");
 
     const user = await prisma.users.findUnique({
       where: { id: userId },
@@ -309,29 +424,75 @@ const togglePostBan = async (req, res) => {
   try {
     const { postId } = req.params;
 
-    const post = await prisma.posts.findUnique({
+    const post = await prisma.posts.findFirst({
       where: { id: postId },
     });
 
     if (!post) {
+      console.log("no post");
       return res.status(404).json({ message: "Post not found" });
     }
+    console.log("post Found");
 
     const updatedPost = await prisma.posts.update({
       where: { id: postId },
       data: {
         isBanned: !post.isBanned,
       },
+      select: {
+        isBanned: true,
+      },
     });
 
     const message = updatedPost.isBanned ? "Post banned" : "Post unbanned";
-    res.status(200).json({ message });
+    console.log({ message });
+
+    res.status(200).json({ message, isBanned: updatedPost.isBanned });
   } catch (error) {
     res.status(500).json("Internal server error");
   }
 };
 
-module.exports = {
+const registerCustomer = async (req, res) => {
+  try {
+    // Check if the user already exists
+    const userExists = await prisma.customerCare.findFirst({
+      where: {
+        OR: [{ email: req.body.email }, { username: req.body.username }],
+      },
+    });
+
+    // If the user already exists, return an error
+    if (userExists) {
+      return res.status(409).json("User already exists!");
+    }
+
+    // Hash the password and create a user
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(req.body.password, salt);
+
+    // Create a new user in the database
+    const customerCare = await prisma.customerCare.create({
+      data: {
+        username: req.body.username,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        password: hash,
+        phoneNumber: req.body.phoneNumber,
+      },
+    });
+
+    const { password, id, ...other } = user;
+
+    res.status(200).json({ message: "Registration successful.", user: other });
+  } catch (error) {
+    // Handle any internal server errors
+    return res.status(500).json("Internal server error");
+  }
+};
+
+export {
   login,
   logout,
   getAllUsers,
@@ -339,6 +500,7 @@ module.exports = {
   getAdminProfile,
   getallReports,
   getPosts,
+  getBandPosts,
   getPost,
   changeCatagory,
   toggleUserBan,

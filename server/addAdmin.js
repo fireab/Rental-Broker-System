@@ -1,12 +1,12 @@
-const prisma = require("./config/dbConfig.js");
-const bcrypt = require("bcryptjs");
-const crypto = require("crypto");
-const jwt = require("jsonwebtoken");
+import prisma from "./config/dbConfig.js";
+import bcrypt from "bcryptjs";
+import crypto from "crypto";
+import jwt from "jsonwebtoken";
 
 const addAdmin = async () => {
   try {
     const salt = bcrypt.genSaltSync(10);
-    const body = "1234";
+    const body = "admin1234";
     const hash = bcrypt.hashSync(body, salt);
     // Create a new admin user in the database
     const admin = await prisma.admin.create({
@@ -14,9 +14,10 @@ const addAdmin = async () => {
         username: "admin",
         email: "admin@gmail.com",
         password: hash,
-        firstName: "abebe",
-        lastName: "lema",
-        image: "asdfghjk",
+        firstName: "Fireab",
+        lastName: "Tesfaye",
+        image:
+          "https://th.bing.com/th/id/OIP.gzkW9K6IKKQVJVCqQB4gmQAAAA?w=185&h=123&c=7&r=0&o=5&pid=1.7",
         phoneNumber: "0922668923",
       },
     });

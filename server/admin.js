@@ -3,7 +3,7 @@ import AdminJSExpress from "@adminjs/express";
 import express from "express";
 
 const app = express();
-const PORT = 3063;
+const PORT = 3000;
 
 const start = async () => {
   try {
